@@ -15,6 +15,9 @@
 --   PRESS <mask> <hold> <gap> -> OK <frame_when_done>
 --   HOLD <mask> <frames>      -> OK <frame_when_done>   (no release gap)
 --   IDLE <frames>             -> OK <frame_when_done>   (advance, no input)
+--   RUN <mask> <frames>       -> OK <frame>  sent only AFTER the frames have
+--                                elapsed, so the client is frame-synchronous
+--   CAPS                      -> space-separated list of supported commands
 --   STATE <slot>              -> OK      (save state to slot)
 --   LOAD <slot>               -> OK      (load state from slot)
 --   SHOT <path>               -> OK      (screenshot; for humans, not the model)
@@ -36,6 +39,7 @@ local phase = "idle"
 local left = 0
 local mask_now = 0
 local last_frame = -1
+local run_pending = false   -- a RUN command is waiting for its frames to pass
 
 local function tohex(s)
   return (s:gsub(".", function(c) return string.format("%02x", c:byte()) end))
@@ -154,6 +158,15 @@ local function handle(line)
     if not f then reply("ERR bad_args"); return end
     reply("OK " .. tostring(enqueue(0, tonumber(f), 0)))
 
+  elseif cmd == "RUN" then
+    local m, f = rest:match("^(%d+)%s+(%d+)$")
+    if not m then reply("ERR bad_args"); return end
+    enqueue(tonumber(m), math.max(1, tonumber(f)), 0)
+    run_pending = true          -- replied to from the frame callback
+
+  elseif cmd == "CAPS" then
+    reply("PING INFO FRAME READ READM PRESS HOLD IDLE RUN STATE LOAD SHOT CAPS")
+
   elseif cmd == "STATE" then
     local s = tonumber(rest)
     if not s then reply("ERR bad_args"); return end
@@ -219,6 +232,7 @@ local function on_accept()
   client = sock
   rxbuf = ""
   queue = {}; cur = nil; phase = "idle"; left = 0; mask_now = 0
+  run_pending = false
   client:add("received", on_client_data)
   client:add("error", function() client = nil end)
   console:log("poke_auto: agent connected")
@@ -230,6 +244,10 @@ callbacks:add("keysRead", function()
   local f = emu:currentFrame()
   if f ~= last_frame then
     last_frame = f
+    if run_pending and cur == nil and #queue == 0 then
+      run_pending = false
+      reply("OK " .. tostring(f))
+    end
     advance_input()
   end
   emu:setKeys(mask_now)

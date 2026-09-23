@@ -8,3 +8,9 @@ runs/*.png
 *.sav
 *.ss[0-9]
 .env
+.venv-py314-old/
+runs/
+.claude/
+.venv
+scratch/
+roms/
