@@ -267,12 +267,10 @@ class Battle:
         return self._forget_slot is not None
 
     def _forget_move_screen(self, tasks) -> None:
+        from .menus import summary_select_move
         slot = getattr(self, "_forget_slot", None)
         slot = 4 if slot is None else slot
-        # Summary screen move list: cursor starts at the top move.
-        for _ in range(slot):
-            self.ctl.press("DOWN", release=6)
-        self.ctl.press("A", release=20)
+        summary_select_move(self.ctl, slot)
         self._forget_slot = None
         for _ in range(60):
             if not any("ReplaceMove" in t for t in self.game.active_tasks()):
@@ -296,14 +294,31 @@ class Battle:
         choice = self._pending.get(0)
         if choice and choice.kind == "switch":
             return choice.slot
+        if choice and choice.kind == "item":
+            return choice.target
         return self.best_switch()
 
     def _bag_screen(self, tasks) -> None:
-        # Bag use (potions, balls) is driven by items.py when installed.
-        handler = getattr(self, "bag_handler", None)
-        if handler and handler(self, tasks):
+        """In the battle bag: pick the pending item and USE it."""
+        from .menus import bag_select
+        choice = self._pending.get(0)
+        if choice is None or choice.kind != "item":
+            self.ctl.press("B", release=8)
             return
-        self.ctl.press("B", release=8)
+        if "Task_BagMenu_HandleInput" in tasks:
+            try:
+                bag_select(self.ctl, choice.slot)
+            except Exception as exc:          # item ran out: back out and re-decide
+                log.info("BATTLE bag: %s", exc)
+                self._pending.pop(0, None)
+                self.ctl.press("B", release=12)
+                return
+            self.ctl._menu_select(0)            # USE
+            return
+        if any("ItemContext" in t for t in tasks):
+            self.ctl._menu_select(0)
+            return
+        self.ctl.press("A", release=6)
 
     # -- decisions -------------------------------------------------------------------------
     def _foes(self):
@@ -323,7 +338,7 @@ class Battle:
         # Wild battles: run unless we want the XP (or to catch).
         if wild and foes:
             fid, fbm = foes[0]
-            if fbm.species in self.policy.catch_species and getattr(self, "catcher", None):
+            if fbm.species in self.policy.catch_species:
                 c = self.catcher(self, fbm)
                 if c:
                     return c
@@ -343,6 +358,12 @@ class Battle:
         threat = self.threat(foe, me)
         we_first = self._speed(me, me_bm) > self._speed(foe, fbm)
         we_ko = best.score >= 1.0
+        if (not wild or self.policy.important) and me_bm.hp < me_bm.max_hp * 0.35 \
+                and not (we_ko and we_first):
+            potion = self.best_potion(me_bm)
+            if potion and threat < me_bm.hp + potion[1]:
+                return Choice("item", potion[0], target=self.game.battler_party_index(battler),
+                              why=f"heal: hp {me_bm.hp}, threat {threat:.0f}")
         if threat >= me_bm.hp and not (we_ko and we_first):
             sw = self.best_switch(exclude_active=True, against=foe)
             if sw is not None and self._switch_value(sw, foe) > 0.35 and not self._trapped():
@@ -393,6 +414,24 @@ class Battle:
                 best_score, why = 0.01, f"{info.name} (status)"
             out.append(Choice("move", slot, best_target, best_score, why))
         return out
+
+    POTIONS = [("ITEM_HYPER_POTION", 200), ("ITEM_SUPER_POTION", 50), ("ITEM_POTION", 20)]
+    BALLS = ["ITEM_ULTRA_BALL", "ITEM_GREAT_BALL", "ITEM_POKE_BALL"]
+
+    def best_potion(self, me_bm):
+        missing = me_bm.max_hp - me_bm.hp
+        have = [(C(n), heal) for n, heal in self.POTIONS if self.game.has_item(n)]
+        if not have:
+            return None
+        # smallest potion that covers most of the gap, else the biggest
+        enough = [h for h in have if h[1] >= missing * 0.7]
+        return min(enough, key=lambda h: h[1]) if enough else max(have, key=lambda h: h[1])
+
+    def catcher(self, battle, fbm):
+        for n in self.BALLS:
+            if self.game.has_item(n):
+                return Choice("item", C(n), why=f"catch {fbm.species_name}")
+        return None
 
     def threat(self, foe, me) -> float:
         """Highest expected damage the foe's known moves do to us."""

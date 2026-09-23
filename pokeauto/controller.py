@@ -366,6 +366,12 @@ class Controller:
             if step.action in ("cut", "smash"):
                 return False          # object gone now; replan from here
             return self.state() == step.expect
+        if step.action == "bgwarp":
+            self.face(d)
+            self.press("A", release=10)
+            self.pump()
+            s = self.state()
+            return s.map == step.expect.map and (s.x, s.y) == (step.expect.x, step.expect.y)
         if step.action == "door":
             self.face("up")
             moved = self._hold_until_moved("up", max_frames=90)
@@ -526,6 +532,18 @@ class Controller:
         return next((o for o in self.game.objects() if o.local_id == local_id and not o.is_player),
                     None)
 
+    def _talk_offset(self, map_id: str, sx: int, sy: int, ox: int, oy: int) -> bool:
+        """Can someone at (sx,sy) talk to (ox,oy)? Adjacent, or across a counter."""
+        d = abs(ox - sx) + abs(oy - sy)
+        if d == 1:
+            return True
+        if d == 2 and (ox == sx or oy == sy):
+            mx, my = (sx + ox) // 2, (sy + oy) // 2
+            g = self.planner.grid(map_id)
+            from .mapgrid import MB
+            return g.inside(mx, my) and g.behavior(mx, my) == MB["MB_COUNTER"]
+        return False
+
     def talk(self, map_id: str, local_id: int, max_steps: int = 120,
              pump_after: bool = True) -> None:
         """Walk up to an NPC and press A facing them.
@@ -554,7 +572,7 @@ class Controller:
                 self.goto(lambda st: st.map == map_id and abs(st.x - ox) + abs(st.y - oy) <= 2,
                           desc=f"near object {local_id}")
                 continue
-            if s.map == map_id and abs(o.x - s.x) + abs(o.y - s.y) == 1:
+            if s.map == map_id and self._talk_offset(map_id, s.x, s.y, o.x, o.y):
                 self.face(facing_dir(s.x, s.y, o.x, o.y))
                 o2 = self.live_object(local_id)
                 if o2 and (o2.x, o2.y) == (o.x, o.y):
@@ -564,7 +582,10 @@ class Controller:
                             self.pump()
                         return
                 continue
-            plan = self.planner.plan(s, adjacent(map_id, o.x, o.y), self.nav_caps(),
+            ox, oy = o.x, o.y
+            goal = (lambda st: st.map == map_id and
+                    self._talk_offset(map_id, st.x, st.y, ox, oy))
+            plan = self.planner.plan(s, goal, self.nav_caps(),
                                      live=MapGrid.from_ram(self.game),
                                      live_objects=self.game.objects())
             if not plan:

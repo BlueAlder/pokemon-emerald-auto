@@ -38,6 +38,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -95,6 +96,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -233,6 +235,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -305,6 +308,7 @@
 "num": 54,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -397,6 +401,7 @@
 "num": 65,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -609,6 +614,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -754,6 +760,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -818,6 +825,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -915,6 +923,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -1000,6 +1009,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -1051,6 +1061,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -1081,6 +1092,7 @@
 "num": 60,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERWATER",
 "warps": [
 {
@@ -1111,6 +1123,7 @@
 "num": 64,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERWATER",
 "warps": [
 {
@@ -1134,6 +1147,7 @@
 "num": 106,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -1202,6 +1216,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -1279,6 +1294,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -1434,6 +1450,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -1723,6 +1740,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -1809,6 +1827,7 @@
 "num": 74,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": []
 },
@@ -1824,6 +1843,7 @@
 "num": 75,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": []
 },
@@ -1839,6 +1859,7 @@
 "num": 76,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": []
 },
@@ -1868,6 +1889,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -1953,6 +1975,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -2016,6 +2039,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -2083,6 +2107,7 @@
 "num": 27,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -2245,6 +2270,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -2274,6 +2300,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -2376,6 +2403,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -2595,6 +2623,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -2624,6 +2653,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -2774,6 +2804,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -2818,6 +2849,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -2953,6 +2985,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -3078,6 +3111,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -3122,6 +3156,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -3203,6 +3238,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -3325,6 +3361,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -3479,6 +3516,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -3530,6 +3568,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -3619,6 +3658,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -3670,6 +3710,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -3776,6 +3817,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -3855,6 +3897,7 @@
 "num": 39,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -3979,6 +4022,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -4203,6 +4247,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -4292,6 +4337,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -4352,6 +4398,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -4407,6 +4454,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -4451,6 +4499,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -4480,6 +4529,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -4664,6 +4714,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -4780,6 +4831,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -4848,6 +4900,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -4981,6 +5034,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -5114,6 +5168,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -5191,6 +5246,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -5280,6 +5336,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -5376,6 +5433,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -5439,6 +5497,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -5515,6 +5574,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -5559,6 +5619,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -5635,6 +5696,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -5698,6 +5760,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -5735,6 +5798,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -5818,6 +5882,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -6274,6 +6339,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -6758,6 +6824,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -6917,6 +6984,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -7007,6 +7075,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -7205,6 +7274,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -7301,6 +7371,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -7345,6 +7416,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -7467,6 +7539,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -9114,6 +9187,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -9164,6 +9238,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -9187,6 +9262,7 @@
 "num": 38,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -9231,6 +9307,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -9254,6 +9331,7 @@
 "num": 37,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -9284,6 +9362,7 @@
 "num": 39,
 "objects": [],
 "requires_flash": true,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -9314,6 +9393,7 @@
 "num": 40,
 "objects": [],
 "requires_flash": true,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -9344,6 +9424,7 @@
 "num": 41,
 "objects": [],
 "requires_flash": true,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -9570,6 +9651,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -9705,6 +9787,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -9756,6 +9839,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -9907,6 +9991,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_TOWN",
 "warps": [
 {
@@ -10104,6 +10189,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -10273,6 +10359,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -10343,6 +10430,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -10400,6 +10488,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -10470,6 +10559,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -10560,6 +10650,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -10754,6 +10845,7 @@
 "num": 8,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_CITY",
 "warps": [
 {
@@ -10838,6 +10930,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -10882,6 +10975,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -10926,6 +11020,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -10956,6 +11051,7 @@
 "num": 5,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -11000,6 +11096,7 @@
 "num": 6,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -11044,6 +11141,7 @@
 "num": 7,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -11088,6 +11186,7 @@
 "num": 8,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -11118,6 +11217,7 @@
 "num": 9,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -11176,6 +11276,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -11213,6 +11314,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -11296,6 +11398,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -11386,6 +11489,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -11476,6 +11580,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -11580,6 +11685,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -11631,6 +11737,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -11806,6 +11913,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_TOWN",
 "warps": [
 {
@@ -11897,6 +12005,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -11926,6 +12035,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -12018,6 +12128,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -12075,6 +12186,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -12171,6 +12283,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -12215,6 +12328,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -12298,6 +12412,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -12388,6 +12503,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -12491,6 +12607,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -12535,6 +12652,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -12670,6 +12788,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -12864,6 +12983,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_CITY",
 "warps": [
 {
@@ -12996,6 +13116,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -13152,6 +13273,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -13222,6 +13344,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -13279,6 +13402,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -13336,6 +13460,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -13406,6 +13531,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -13476,6 +13602,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -13559,6 +13686,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -13642,6 +13770,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -13732,6 +13861,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -13796,6 +13926,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -13854,6 +13985,7 @@
 }
 ],
 "requires_flash": true,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -14058,6 +14190,7 @@
 }
 ],
 "requires_flash": true,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -14123,6 +14256,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -14265,6 +14399,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -14347,6 +14482,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -14588,6 +14724,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -14854,6 +14991,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_TOWN",
 "warps": [
 {
@@ -15012,6 +15150,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -15263,6 +15402,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -15487,6 +15627,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -15557,6 +15698,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -15627,6 +15769,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -15710,6 +15853,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -15807,6 +15951,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -16273,6 +16418,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_CITY",
 "warps": [
 {
@@ -16865,6 +17011,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -17356,6 +17503,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -17424,6 +17572,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -17553,6 +17702,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -17666,6 +17816,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -17776,6 +17927,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -17879,6 +18031,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -17982,6 +18135,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -18111,6 +18265,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -18162,6 +18317,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -18266,6 +18422,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -18355,6 +18512,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -18412,6 +18570,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -18456,6 +18615,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -18565,6 +18725,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -18622,6 +18783,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -18944,6 +19106,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -19155,6 +19318,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -19192,6 +19356,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -19288,6 +19453,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -19378,6 +19544,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -19533,6 +19700,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -19563,6 +19731,7 @@
 "num": 8,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -19827,6 +19996,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_TOWN",
 "warps": [
 {
@@ -19993,6 +20163,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -20280,6 +20451,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -20432,6 +20604,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -20719,6 +20892,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -20972,6 +21146,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -21081,6 +21256,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -21178,6 +21354,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -21294,6 +21471,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -21324,6 +21502,7 @@
 "num": 93,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -21394,6 +21573,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -21458,6 +21638,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -21495,6 +21676,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -21630,6 +21812,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -21684,6 +21867,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -21707,6 +21891,7 @@
 "num": 102,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -21976,6 +22161,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_CITY",
 "warps": [
 {
@@ -22089,6 +22275,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -22517,6 +22704,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -22697,6 +22885,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -22741,6 +22930,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -22785,6 +22975,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -22855,6 +23046,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -22951,6 +23143,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -23054,6 +23247,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -23243,6 +23437,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -23352,6 +23547,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -23396,6 +23592,7 @@
 "num": 2,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -23468,6 +23665,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -23505,6 +23703,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -23528,6 +23727,7 @@
 "num": 94,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -23558,6 +23758,7 @@
 "num": 95,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -23615,6 +23816,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -23685,6 +23887,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -24118,6 +24321,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_CITY",
 "warps": [
 {
@@ -24262,6 +24466,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -24313,6 +24518,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -24908,6 +25114,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -25049,6 +25256,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -25119,6 +25327,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -25163,6 +25372,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -25233,6 +25443,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -25316,6 +25527,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -25386,6 +25598,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -25489,6 +25702,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -25670,6 +25884,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -25825,6 +26040,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -25929,6 +26145,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -26371,6 +26588,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -26442,6 +26660,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -26512,6 +26731,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -26675,6 +26895,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -26779,6 +27000,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -26864,6 +27086,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -26949,6 +27172,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -27040,6 +27264,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -27164,6 +27389,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -27382,6 +27608,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -27419,6 +27646,7 @@
 "num": 69,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -27463,6 +27691,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -27486,6 +27715,7 @@
 "num": 76,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -27516,6 +27746,7 @@
 "num": 77,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -27546,6 +27777,7 @@
 "num": 78,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -27576,6 +27808,7 @@
 "num": 79,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -27606,6 +27839,7 @@
 "num": 80,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -27636,6 +27870,7 @@
 "num": 81,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -27666,6 +27901,7 @@
 "num": 82,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -27696,6 +27932,7 @@
 "num": 83,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -27726,6 +27963,7 @@
 "num": 84,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -27756,6 +27994,7 @@
 "num": 85,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -27786,6 +28025,7 @@
 "num": 86,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -27816,6 +28056,7 @@
 "num": 68,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -27846,6 +28087,7 @@
 "num": 66,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -27876,6 +28118,7 @@
 "num": 70,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -27940,6 +28183,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -27998,6 +28242,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -28021,6 +28266,7 @@
 "num": 71,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -28051,6 +28297,7 @@
 "num": 72,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -28081,6 +28328,7 @@
 "num": 73,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -28111,6 +28359,7 @@
 "num": 74,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -28151,6 +28400,7 @@
 "num": 52,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -28458,6 +28708,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -28638,6 +28889,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_TOWN",
 "warps": [
 {
@@ -28696,6 +28948,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -28753,6 +29006,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -28823,6 +29077,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -28906,6 +29161,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -28996,6 +29252,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -29115,6 +29372,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_TOWN",
 "warps": [
 {
@@ -29200,6 +29458,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -29270,6 +29529,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -29327,6 +29587,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -29397,6 +29658,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -29454,6 +29716,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -29550,6 +29813,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -29640,6 +29904,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -29960,6 +30225,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_CITY",
 "warps": [
 {
@@ -30303,6 +30569,92 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [
+{
+"dest": "MAP_PETALBURG_CITY_GYM",
+"sx": 1,
+"sy": 105,
+"x": 7,
+"y": 85
+},
+{
+"dest": "MAP_PETALBURG_CITY_GYM",
+"sx": 7,
+"sy": 105,
+"x": 1,
+"y": 98
+},
+{
+"dest": "MAP_PETALBURG_CITY_GYM",
+"sx": 1,
+"sy": 79,
+"x": 7,
+"y": 46
+},
+{
+"dest": "MAP_PETALBURG_CITY_GYM",
+"sx": 7,
+"sy": 79,
+"x": 1,
+"y": 59
+},
+{
+"dest": "MAP_PETALBURG_CITY_GYM",
+"sx": 1,
+"sy": 92,
+"x": 7,
+"y": 59
+},
+{
+"dest": "MAP_PETALBURG_CITY_GYM",
+"sx": 7,
+"sy": 92,
+"x": 1,
+"y": 72
+},
+{
+"dest": "MAP_PETALBURG_CITY_GYM",
+"sx": 7,
+"sy": 40,
+"x": 1,
+"y": 20
+},
+{
+"dest": "MAP_PETALBURG_CITY_GYM",
+"sx": 1,
+"sy": 53,
+"x": 7,
+"y": 20
+},
+{
+"dest": "MAP_PETALBURG_CITY_GYM",
+"sx": 7,
+"sy": 53,
+"x": 1,
+"y": 33
+},
+{
+"dest": "MAP_PETALBURG_CITY_GYM",
+"sx": 1,
+"sy": 66,
+"x": 7,
+"y": 33
+},
+{
+"dest": "MAP_PETALBURG_CITY_GYM",
+"sx": 7,
+"sy": 14,
+"x": 1,
+"y": 7
+},
+{
+"dest": "MAP_PETALBURG_CITY_GYM",
+"sx": 1,
+"sy": 27,
+"x": 7,
+"y": 7
+}
+],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -30612,6 +30964,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -30669,6 +31022,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -30752,6 +31106,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -30848,6 +31203,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -30938,6 +31294,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -31002,6 +31359,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -31282,6 +31640,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -31391,6 +31750,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -31618,6 +31978,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": []
 },
@@ -31783,6 +32144,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": []
 },
@@ -32081,6 +32443,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -32674,6 +33037,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -32773,6 +33137,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -32843,6 +33208,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -32873,6 +33239,7 @@
 "num": 0,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": []
 },
@@ -32888,6 +33255,7 @@
 "num": 1,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -33045,6 +33413,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -33186,6 +33555,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -33312,6 +33682,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": []
 },
@@ -33441,6 +33812,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -33869,6 +34241,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -33945,6 +34318,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -34713,6 +35087,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -34804,6 +35179,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -34881,6 +35257,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -34925,6 +35302,7 @@
 "num": 2,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -35004,6 +35382,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -35096,6 +35475,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -35340,6 +35720,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -35491,6 +35872,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -35668,6 +36050,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -35899,6 +36282,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -36212,6 +36596,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -36313,6 +36698,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -36516,6 +36902,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -36687,6 +37074,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -37827,6 +38215,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -37892,6 +38281,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -37975,6 +38365,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -38235,6 +38626,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -38320,6 +38712,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -38828,6 +39221,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -38892,6 +39286,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -39406,6 +39801,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -39512,6 +39908,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -39582,6 +39979,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -39664,6 +40062,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -40146,6 +40545,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -40680,6 +41080,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -40771,6 +41172,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -41166,6 +41568,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -41203,6 +41606,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -41642,6 +42046,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -42652,6 +43057,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -42774,6 +43180,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -42911,6 +43318,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -43053,6 +43461,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -43973,6 +44382,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -44535,6 +44945,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -44619,6 +45030,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -44674,6 +45086,7 @@
 "num": 37,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -45578,6 +45991,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -45628,6 +46042,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -45852,6 +46267,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_OCEAN_ROUTE",
 "warps": [
 {
@@ -45900,6 +46316,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -46118,6 +46535,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_OCEAN_ROUTE",
 "warps": [
 {
@@ -46275,6 +46693,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_OCEAN_ROUTE",
 "warps": []
 },
@@ -46506,6 +46925,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_OCEAN_ROUTE",
 "warps": []
 },
@@ -46704,6 +47124,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_OCEAN_ROUTE",
 "warps": []
 },
@@ -46801,6 +47222,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_OCEAN_ROUTE",
 "warps": []
 },
@@ -46880,6 +47302,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_OCEAN_ROUTE",
 "warps": []
 },
@@ -47011,6 +47434,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_OCEAN_ROUTE",
 "warps": [
 {
@@ -47176,6 +47600,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_OCEAN_ROUTE",
 "warps": []
 },
@@ -47333,6 +47758,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_OCEAN_ROUTE",
 "warps": []
 },
@@ -47503,6 +47929,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_OCEAN_ROUTE",
 "warps": []
 },
@@ -48034,6 +48461,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_CITY",
 "warps": [
 {
@@ -48161,6 +48589,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -48252,6 +48681,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -48368,6 +48798,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -48459,6 +48890,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -48509,6 +48941,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -48651,6 +49084,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -48701,6 +49135,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -48765,6 +49200,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -48822,6 +49258,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -48932,6 +49369,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -48989,6 +49427,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -49046,6 +49485,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -49116,6 +49556,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -49199,6 +49640,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -49282,6 +49724,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -49372,6 +49815,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -49552,6 +49996,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -49759,6 +50204,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -49930,6 +50376,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": []
 },
@@ -50095,6 +50542,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": []
 },
@@ -50148,6 +50596,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": []
 },
@@ -50203,6 +50652,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -50328,6 +50778,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -50449,6 +50900,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": []
 },
@@ -50513,6 +50965,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -50550,6 +51003,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -50587,6 +51041,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -50683,6 +51138,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -50825,6 +51281,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -50987,6 +51444,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -51051,6 +51509,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -51174,6 +51633,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -51211,6 +51671,7 @@
 "num": 33,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -51248,6 +51709,7 @@
 "num": 34,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -51435,6 +51897,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -51567,6 +52030,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -51681,6 +52145,7 @@
 "num": 72,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -51995,6 +52460,7 @@
 "num": 71,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -57274,6 +57740,7 @@
 "num": 50,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": []
 },
@@ -57289,6 +57756,7 @@
 "num": 51,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": []
 },
@@ -57331,6 +57799,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -57402,6 +57871,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -57500,6 +57970,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -57610,6 +58081,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -57679,6 +58151,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -57709,6 +58182,7 @@
 "num": 79,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -57746,6 +58220,7 @@
 "num": 80,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -57776,6 +58251,7 @@
 "num": 81,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -57813,6 +58289,7 @@
 "num": 82,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -57850,6 +58327,7 @@
 "num": 84,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -57880,6 +58358,7 @@
 "num": 77,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -57924,6 +58403,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -57991,6 +58471,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -58627,6 +59108,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_CITY",
 "warps": [
 {
@@ -58760,6 +59242,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -58789,6 +59272,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -58881,6 +59365,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -59053,6 +59538,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -59124,6 +59610,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -59194,6 +59681,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -59238,6 +59726,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -59601,6 +60090,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -59941,6 +60431,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -60004,6 +60495,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -60094,6 +60586,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -60249,6 +60742,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -60332,6 +60826,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -60409,6 +60904,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -60728,6 +61224,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_CITY",
 "warps": [
 {
@@ -60883,6 +61380,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -61051,6 +61549,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -61101,6 +61600,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -61145,6 +61645,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -61202,6 +61703,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -61272,6 +61774,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -61329,6 +61832,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -61373,6 +61877,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -61430,6 +61935,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -61508,6 +62014,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -61578,6 +62085,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -61622,6 +62130,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -61673,6 +62182,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -61749,6 +62259,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -61839,6 +62350,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -61914,6 +62426,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -61982,6 +62495,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -62199,6 +62713,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -62316,6 +62831,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -62465,6 +62981,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -62589,6 +63106,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -62612,6 +63130,7 @@
 "num": 104,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -62675,6 +63194,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -62705,6 +63225,7 @@
 "num": 61,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -62735,6 +63256,7 @@
 "num": 62,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -62765,6 +63287,7 @@
 "num": 63,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -62795,6 +63318,7 @@
 "num": 64,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -62839,6 +63363,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -62956,6 +63481,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -63007,6 +63533,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -63037,6 +63564,7 @@
 "num": 101,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERWATER",
 "warps": [
 {
@@ -63066,6 +63594,7 @@
 "num": 55,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERWATER",
 "warps": [
 {
@@ -63178,6 +63707,7 @@
 "num": 50,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERWATER",
 "warps": []
 },
@@ -63199,6 +63729,7 @@
 "num": 56,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERWATER",
 "warps": [
 {
@@ -63326,6 +63857,7 @@
 "num": 51,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERWATER",
 "warps": [
 {
@@ -63406,6 +63938,7 @@
 "num": 52,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERWATER",
 "warps": [
 {
@@ -63468,6 +64001,7 @@
 "num": 53,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERWATER",
 "warps": [
 {
@@ -63497,6 +64031,7 @@
 "num": 54,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERWATER",
 "warps": [
 {
@@ -63527,6 +64062,7 @@
 "num": 69,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERWATER",
 "warps": [
 {
@@ -63603,6 +64139,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERWATER",
 "warps": [
 {
@@ -63637,6 +64174,7 @@
 "num": 70,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERWATER",
 "warps": [
 {
@@ -63660,6 +64198,7 @@
 "num": 5,
 "objects": [],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERWATER",
 "warps": [
 {
@@ -63808,6 +64347,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -64073,6 +64613,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_TOWN",
 "warps": [
 {
@@ -64178,6 +64719,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -64207,6 +64749,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": []
 },
@@ -64312,6 +64855,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -64369,6 +64913,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -64426,6 +64971,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -64509,6 +65055,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -64592,6 +65139,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -64682,6 +65230,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -64785,6 +65334,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -64963,6 +65513,7 @@
 }
 ],
 "requires_flash": false,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -65288,6 +65839,7 @@
 }
 ],
 "requires_flash": true,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -65466,6 +66018,7 @@
 }
 ],
 "requires_flash": true,
+"script_warps": [],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {

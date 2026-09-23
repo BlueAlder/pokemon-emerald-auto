@@ -31,22 +31,29 @@ def pocket_of(game, item_id: int) -> str:
     raise Stuck(f"item {const_names()['ITEM_'].get(item_id, item_id)} is not in the bag")
 
 
+def _bag_ready(ctl, timeout: int = 120) -> None:
+    """Wait until the bag accepts input (not opening, not switching pockets)."""
+    for _ in range(timeout):
+        tasks = ctl.game.active_tasks()
+        if "BagMenu" in S.name_at(ctl.game.callback2()) and \
+                "Task_BagMenu_HandleInput" in tasks and "Task_SwitchBagPocket" not in tasks:
+            return
+        ctl.idle(2)
+
+
 def bag_select(ctl, item_id: int) -> None:
     """With the bag open, move to item_id and press A (opens its context menu)."""
     game, emu = ctl.game, ctl.emu
-    for _ in range(80):
-        if "BagMenu" in S.name_at(game.callback2()) and \
-                "Task_BagMenu_HandleInput" in game.active_tasks():
-            break
-        ctl.idle(4)
+    _bag_ready(ctl)
     pocket = pocket_of(game, item_id)
     pidx = BAG_POCKETS.index(pocket)
-    for _ in range(10):
+    for _ in range(12):
         cur = bag_pos(emu)["pocket"]
         if cur == pidx:
             break
-        ctl.press("RIGHT" if cur < pidx else "LEFT", release=16)
-    ctl.idle(10)
+        ctl.press("RIGHT" if cur < pidx else "LEFT", release=4)
+        _bag_ready(ctl)
+    _bag_ready(ctl)
     want = game.bag_order(pocket).index(item_id)
     for _ in range(80):
         cur = bag_pos(emu)["index"][pidx]
@@ -122,3 +129,25 @@ def buy(ctl, clerk_talk, wants: dict[str, int]) -> None:
             return
         ctl.press("A", release=8)
     raise Stuck("shopping did not finish")
+
+
+SUMMARY_MOVE_CURSOR = 0x40C6      # PokemonSummaryScreenData.firstMoveIndex
+
+
+def summary_select_move(ctl, slot: int) -> None:
+    """On the 'forget which move?' summary screen, move the cursor to `slot`
+    (0-3 = known moves, 4 = the new move) and confirm."""
+    emu = ctl.emu
+    for _ in range(60):
+        ptr = emu.u32(S["sMonSummaryScreen"])
+        if 0x02000000 <= ptr < 0x02040000:
+            break
+        ctl.idle(4)
+    ctl.idle(30)                               # let the move page finish sliding in
+    for _ in range(12):
+        ptr = emu.u32(S["sMonSummaryScreen"])
+        cur = emu.u8(ptr + SUMMARY_MOVE_CURSOR)
+        if cur == slot:
+            break
+        ctl.press("DOWN" if cur < slot else "UP", release=8)
+    ctl.press("A", release=30)

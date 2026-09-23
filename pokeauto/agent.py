@@ -209,7 +209,7 @@ class Agent:
                   "ITEM_SUPER_POTION" if badges >= 2 else "ITEM_POTION")
         want = {potion: 10 if badges >= 2 else 5}
         have = self.game.has_item(potion)
-        wants = {potion: max(0, want[potion] - have)}
+        wants = {potion: max(0, want[potion] - have) if have < want[potion] // 2 else 0}
         if badges >= 1 and self.game.has_item("ITEM_POKE_BALL") + self.game.has_item(
                 "ITEM_GREAT_BALL") < 5:
             wants["ITEM_GREAT_BALL" if badges >= 3 else "ITEM_POKE_BALL"] = 5
@@ -358,9 +358,8 @@ class Agent:
                     mon = self.game.party()[target_slot]
                     slot = self.choose_move_to_forget(mon, self.emu.u16(S["gMoveToLearn"]))
                     slot = 4 if slot is None else slot
-                for _ in range(slot):
-                    self.ctl.press("DOWN", release=8)
-                self.ctl.press("A", release=30)
+                from .menus import summary_select_move
+                summary_select_move(self.ctl, slot)
                 continue
             if "BagMenu" in cb and "Task_BagMenu_HandleInput" in tasks \
                     and not self.game.text_printing():
@@ -413,6 +412,11 @@ class Agent:
         self.pump()
         if self.game.party() and m.heal_first and self.needs_heal():
             self.heal()
+        if self.game.badges() >= 2 and self.game.money() > 3000:
+            try:
+                self.restock()
+            except Stuck as exc:
+                log.info("RESTOCK skipped: %s", exc)
         if m.min_level:
             self.grind_to(m.min_level)
 
@@ -515,6 +519,56 @@ class Agent:
                     self.pump()
                     break
         log.info("GRIND done: %s", self.lead())
+
+    def fortree_gym(self) -> None:
+        from .puzzles import fortree_gym
+        fortree_gym(self)
+
+    # -- catching -------------------------------------------------------------------------
+    def catch(self, species: str, maps_to_search: list[str], max_battles: int = 150) -> bool:
+        """Walk the grass of `maps_to_search` until a `species` is caught."""
+        from .mapgrid import MapGrid, has_encounters
+        sid = const(species)
+        before = sum(1 for p in self.game.party() if p.species == sid)
+        self.battle.policy.catch_species = {sid}
+        self.battle.policy.fight_wild = False       # run from everything else
+        try:
+            for _ in range(max_battles):
+                if sum(1 for p in self.game.party() if p.species == sid) > before:
+                    log.info("CAUGHT %s", species)
+                    return True
+                if self.game.has_item("ITEM_POKE_BALL") + self.game.has_item(
+                        "ITEM_GREAT_BALL") + self.game.has_item("ITEM_ULTRA_BALL") == 0:
+                    self.shop({"ITEM_POKE_BALL": 10})
+                if self.needs_heal(0.5):
+                    self.heal()
+                planner = self.ctl.planner
+
+                def in_grass(s):
+                    if s.map not in maps_to_search or s.surfing:
+                        return False
+                    g = planner.grid(s.map)
+                    return g.inside(s.x, s.y) and has_encounters(g.behavior(s.x, s.y))
+                self.ctl.goto(in_grass, caps=self.ctl.nav_caps(avoid_grass=0.0),
+                              desc=f"grass for {species}")
+                grid = MapGrid.from_ram(self.game)
+                x, y = self.game.pos()
+                dirs = [d for d, (dx, dy) in (("left", (-1, 0)), ("right", (1, 0)),
+                                               ("up", (0, -1)), ("down", (0, 1)))
+                        if grid.inside(x + dx, y + dy)
+                        and has_encounters(grid.behavior(x + dx, y + dy))
+                        and not grid.collision(x + dx, y + dy)]
+                d = dirs[0] if dirs else "left"
+                back = {"left": "right", "right": "left", "up": "down", "down": "up"}[d]
+                for i in range(300):
+                    self.ctl._hold_until_moved(d if i % 2 == 0 else back)
+                    if self.game.mode().kind != "overworld":
+                        self.pump()
+                        break
+            return False
+        finally:
+            self.battle.policy.catch_species = set()
+            self.battle.policy.fight_wild = True
 
     # -- status --------------------------------------------------------------------------
     def status_line(self) -> str:

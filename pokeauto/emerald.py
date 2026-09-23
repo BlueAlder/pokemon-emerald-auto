@@ -67,6 +67,26 @@ def _starter_ui(ctl, m):
         ctl.idle(4)
 
 
+def petalburg_gym(a):
+    """Norman's gym is a chain of rooms; each room's exit door only opens once
+    its trainer is beaten. Speed -> Confusion -> Strength -> Norman."""
+    gym = "MAP_PETALBURG_CITY_GYM"
+    rooms = [((1, 105), None),                                    # entrance -> SPEED
+             ((1, 79), "PetalburgCity_Gym_EventScript_Randall"),   # SPEED -> CONFUSION
+             ((7, 40), "PetalburgCity_Gym_EventScript_Parker"),    # CONFUSION -> STRENGTH
+             ((7, 14), "PetalburgCity_Gym_EventScript_Jody")]      # STRENGTH -> NORMAN
+    for (dx, dy), trainer in rooms:
+        x, y = a.game.pos()
+        if a.game.map_id() == gym and y < dy:
+            continue                      # already past this door (rooms go north)
+        if trainer:
+            from .route import object_id
+            a.talk(gym, object_id(gym, trainer))
+        a.interact(gym, dx, dy, "up")
+    from .route import object_id
+    a.talk(gym, object_id(gym, "PetalburgCity_Gym_EventScript_Norman"))
+
+
 ROUTE: list[Milestone] = [
     Milestone("leave_truck", var_ge("VAR_LITTLEROOT_INTRO_STATE", 3), [
         call("boot"),
@@ -169,4 +189,34 @@ ROUTE: list[Milestone] = [
               [goto("MAP_LAVARIDGE_TOWN_GYM_1F"),
                talk_s("MAP_LAVARIDGE_TOWN_GYM_1F", "EventScript_Flannery")],
               min_level=34, important=True),
+
+    # -- an HM carrier, Norman, Surf -------------------------------------------------------
+    Milestone("catch_marill", lambda a: any(p.species_name in ("MARILL", "AZUMARILL")
+                                            for p in a.game.party()),
+              [call("catch", "SPECIES_MARILL", ["MAP_ROUTE112", "MAP_ROUTE104", "MAP_ROUTE120"])],
+              hint="catch a Marill to carry HM moves"),
+    Milestone("badge_balance", badges(5),
+              [goto("MAP_PETALBURG_CITY_GYM"), petalburg_gym],
+              min_level=40, important=True, hint="beat Norman at the Petalburg Gym"),
+    Milestone("surf", flag("FLAG_RECEIVED_HM_SURF"),
+              [goto("MAP_PETALBURG_CITY"), goto("MAP_PETALBURG_CITY_WALLYS_HOUSE")],
+              hint="get HM03 Surf from Wally's father in Petalburg"),
+    Milestone("teach_surf", lambda a: any(p.knows("MOVE_SURF") for p in a.game.party()),
+              [call("teach", "ITEM_HM03", ["SWAMPERT", "MARSHTOMP"], "MOVE_WATER_GUN")]),
+
+    # -- Route 119, the Weather Institute, Fortree ---------------------------------------------
+    Milestone("weather_institute", var_ge("VAR_WEATHER_INSTITUTE_STATE", 1),
+              [goto("MAP_ROUTE119_WEATHER_INSTITUTE_2F"),
+               talk_s("MAP_ROUTE119_WEATHER_INSTITUTE_2F", "EventScript_Shelly")],
+              min_level=42, important=True, hint="drive Team Aqua out of the Weather Institute"),
+    Milestone("reach_fortree", flag("FLAG_VISITED_FORTREE_CITY"), [goto("MAP_FORTREE_CITY")]),
+    Milestone("devon_scope", flag("FLAG_RECEIVED_DEVON_SCOPE"),
+              [goto("MAP_ROUTE120"), talk_s("MAP_ROUTE120", "Route120_EventScript_Steven")],
+              hint="meet Steven on the Route 120 bridge and get the Devon Scope"),
+    Milestone("fortree_kecleon", flag("FLAG_KECLEON_FLED_FORTREE"),
+              [goto("MAP_FORTREE_CITY"), talk_s("MAP_FORTREE_CITY", "FortreeCity_EventScript_Kecleon")],
+              hint="reveal the invisible Kecleon blocking the Fortree Gym"),
+    Milestone("badge_feather", badges(6),
+              [goto("MAP_FORTREE_CITY_GYM"), call("fortree_gym")],
+              min_level=44, important=True, hint="beat Winona at the Fortree Gym"),
 ]

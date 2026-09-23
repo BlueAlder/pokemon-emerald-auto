@@ -110,7 +110,7 @@ class Planner:
         spawned = set()
         if live_objects is not None:
             for o in live_objects:
-                if o.is_player or o.invisible:
+                if o.is_player:            # invisible objects (Kecleon) still block
                     continue
                 spawned.add(o.local_id)
                 target = (obs.trees if o.graphics_id == GFX_TREE else
@@ -261,6 +261,13 @@ class Planner:
                         continue
                 dx, dy = DELTA[d]
                 tx, ty = s.x + dx, s.y + dy
+                # Scripted doors (signs whose script warps): face, press A, confirm.
+                for sw in maps()[s.map].get("script_warps", ()):
+                    if (sw["sx"], sw["sy"]) == (tx, ty) and sw["dest"] in maps():
+                        dg = self.grid(sw["dest"])
+                        de = dg.elevation(sw["x"], sw["y"]) if dg.inside(sw["x"], sw["y"]) else 3
+                        nxt.append((State(sw["dest"], sw["x"], sw["y"],
+                                          de if de not in (0, 15) else 3), "bgwarp", 8.0))
                 # Doors: press north into them from the tile below.
                 if d == "up" and g.inside(tx, ty) and g.behavior(tx, ty) == DOOR:
                     w = self.warp_at(s.map, tx, ty)

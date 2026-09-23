@@ -166,6 +166,54 @@ def main() -> int:
                     for b in (j.get("bg_events") or [])],
         }
 
+    # Scripted warps: bg events (signs, doors) whose script ends in a warp,
+    # e.g. the Petalburg Gym room doors ("Enter the SPEED room?" -> warpdoor).
+    for mname, (g, n) in map_names.items():
+        mid = json.loads((decomp / "data/maps" / mname / "map.json").read_text())["id"]
+        path = decomp / "data/maps" / mname / "scripts.inc"
+        if not path.exists():
+            continue
+        labels: dict[str, list[str]] = {}
+        cur = None
+        for line in path.read_text().splitlines():
+            m = re.match(r"^(\w+)::?$", line)
+            if m:
+                cur = m.group(1)
+                labels[cur] = []
+            elif cur:
+                labels[cur].append(line.strip())
+
+        def resolve(label, env, depth=0):
+            for line in labels.get(label, []):
+                m = re.match(r"setvar (VAR_0x800[89]), (\d+)", line)
+                if m:
+                    env[m.group(1)] = int(m.group(2))
+                m = re.match(r"warp(?:door|silent|mossdeepgym|teleport)?\s+(MAP_\w+),\s*(\w+),\s*(\w+)", line)
+                if m:
+                    x = env.get(m.group(2), m.group(2))
+                    y = env.get(m.group(3), m.group(3))
+                    try:
+                        return {"dest": m.group(1), "x": int(x), "y": int(y)}
+                    except ValueError:
+                        return None
+                m = re.match(r"goto(?:_if_\w+)?\s+(?:[^,]+,\s*)*(\w+)$", line)
+                if m and depth < 4 and m.group(1) in labels and "YES" in line or \
+                        (m and line.startswith("goto ") and depth < 4):
+                    r = resolve(m.group(1), dict(env), depth + 1)
+                    if r:
+                        return r
+                if line in ("end", "return"):
+                    return None
+            return None
+
+        script_warps = []
+        for b in maps[mid]["bgs"]:
+            if b.get("type") == "sign" and b.get("script"):
+                r = resolve(b["script"], {})
+                if r:
+                    script_warps.append({"sx": b["x"], "sy": b["y"], **r})
+        maps[mid]["script_warps"] = script_warps
+
     # Per-behaviour tile flags (surfable, has encounters, ...) from
     # sTileBitAttributes in metatile_behavior.c, keyed by the numeric MB_ value.
     src = (decomp / "src" / "metatile_behavior.c").read_text()
