@@ -10,7 +10,8 @@ Assumes the default player (Brendan); rival house maps are chosen by gender.
 from __future__ import annotations
 
 from .route import (Milestone, all_of, any_of, badges, call, flag, goto, has_item, interact,
-                    party_size, talk, talk_s, trainer_beaten, var_ge)
+                    party_size, prefer, reachable, answer, talk, talk_s, trainer_beaten, unless,
+                    var_ge)
 
 
 def _male(a) -> bool:
@@ -102,4 +103,52 @@ ROUTE: list[Milestone] = [
               [goto("MAP_RUSTBORO_CITY_GYM"),
                talk_s("MAP_RUSTBORO_CITY_GYM", "EventScript_Roxanne")],
               min_level=15, important=True),
+
+    # -- Devon Goods, Mr. Briney, Dewford ------------------------------------------
+    Milestone("goods_stolen", any_of(flag("FLAG_DEVON_GOODS_STOLEN"),
+                                     flag("FLAG_RECOVERED_DEVON_GOODS")),
+              [goto("MAP_RUSTBORO_CITY", 23, 22)]),
+    Milestone("recover_goods", flag("FLAG_RECOVERED_DEVON_GOODS"),
+              [goto("MAP_RUSTURF_TUNNEL"), talk_s("MAP_RUSTURF_TUNNEL", "EventScript_Grunt")],
+              min_level=16),
+    Milestone("pokenav", flag("FLAG_RECEIVED_POKENAV"),
+              [goto("MAP_RUSTBORO_CITY", 30, 11)]),
+    Milestone("sail_dewford", flag("FLAG_VISITED_DEWFORD_TOWN"),
+              [goto("MAP_ROUTE104_MR_BRINEYS_HOUSE"),
+               talk_s("MAP_ROUTE104_MR_BRINEYS_HOUSE", "EventScript_Briney")]),
+    Milestone("badge_knuckle", badges(2),
+              [goto("MAP_DEWFORD_TOWN_GYM"), talk_s("MAP_DEWFORD_TOWN_GYM", "EventScript_Brawly")],
+              min_level=20, important=True),
+    Milestone("steven_letter", flag("FLAG_DELIVERED_STEVEN_LETTER"),
+              [goto("MAP_GRANITE_CAVE_STEVENS_ROOM"),
+               talk_s("MAP_GRANITE_CAVE_STEVENS_ROOM", "EventScript_Steven")], min_level=21),
+    Milestone("sail_slateport", flag("FLAG_VISITED_SLATEPORT_CITY"),
+              [prefer("SLATEPORT"),
+               unless(reachable("MAP_SLATEPORT_CITY"), goto("MAP_DEWFORD_TOWN"),
+                      talk_s("MAP_DEWFORD_TOWN", "EventScript_Briney")),
+               goto("MAP_SLATEPORT_CITY")]),
+
+    # -- Slateport, Mauville ---------------------------------------------------------
+    Milestone("shipyard", any_of(flag("FLAG_DOCK_REJECTED_DEVON_GOODS"),
+                                 flag("FLAG_DELIVERED_DEVON_GOODS")),
+              [goto("MAP_SLATEPORT_CITY_STERNS_SHIPYARD_1F"),
+               talk_s("MAP_SLATEPORT_CITY_STERNS_SHIPYARD_1F", "EventScript_Dock")]),
+    Milestone("deliver_goods", flag("FLAG_DELIVERED_DEVON_GOODS"),
+              [goto("MAP_SLATEPORT_CITY_OCEANIC_MUSEUM_1F", 9, 7),
+               goto("MAP_SLATEPORT_CITY_OCEANIC_MUSEUM_2F"),
+               talk_s("MAP_SLATEPORT_CITY_OCEANIC_MUSEUM_2F", "EventScript_CaptStern")],
+              min_level=24),
+    Milestone("reach_mauville", flag("FLAG_VISITED_MAUVILLE_CITY"),
+              [goto("MAP_MAUVILLE_CITY")]),
+    Milestone("rock_smash", flag("FLAG_RECEIVED_HM_ROCK_SMASH"),
+              [goto("MAP_MAUVILLE_CITY_HOUSE1"),
+               talk_s("MAP_MAUVILLE_CITY_HOUSE1", "EventScript_RockSmashDude")]),
+    Milestone("wally_mauville", flag("FLAG_DEFEATED_WALLY_MAUVILLE"),
+              [answer("battle me", True), goto("MAP_MAUVILLE_CITY"),
+               talk_s("MAP_MAUVILLE_CITY", "EventScript_Wally")], min_level=27),
+    Milestone("badge_dynamo", badges(3),
+              [goto("MAP_MAUVILLE_CITY_GYM"),
+               call("goto_puzzle", "MAP_MAUVILLE_CITY_GYM", 5, 2),
+               talk_s("MAP_MAUVILLE_CITY_GYM", "EventScript_Wattson")],
+              min_level=27, important=True),
 ]

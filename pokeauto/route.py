@@ -116,6 +116,43 @@ def interact(map_id: str, x: int, y: int, direction: str | None = None):
     return act
 
 
+def reachable(map_id: str):
+    """Predicate: the planner can walk us to map_id from here right now."""
+    from .nav import at as _at
+
+    def pred(a):
+        a.pump()
+        return a.ctl.planner.plan(a.ctl.state(), _at(map_id), a.ctl.nav_caps()) is not None
+    return pred
+
+
+def unless(pred, *acts):
+    """Run acts only if pred does not hold (e.g. take a boat unless we can walk)."""
+    def act(a):
+        if not pred(a):
+            for x in acts:
+                x(a)
+                a.pump()
+    act.__name__ = "unless(" + ",".join(getattr(x, "__name__", "?") for x in acts) + ")"
+    return act
+
+
+def answer(pattern: str, yes: bool):
+    """Override the yes/no policy for prompts matching pattern (this run onward)."""
+    def act(a):
+        a.ctl.prompts.overrides.insert(0, (pattern, yes))
+    act.__name__ = f"answer {pattern}={yes}"
+    return act
+
+
+def prefer(*patterns: str):
+    """Set multichoice preferences (regexes on option labels) for what follows."""
+    def act(a):
+        a.ctl.multichoice_prefs = list(patterns)
+    act.__name__ = f"prefer {patterns}"
+    return act
+
+
 def call(fn_name: str, *args, **kw):
     def act(a):
         getattr(a, fn_name)(*args, **kw)

@@ -38,6 +38,7 @@ class Agent:
         self.battle = Battle(self.ctl, self.data, advisor=brain.battle_advice if brain else None)
         self.ctl.battle = self.battle
         self.battle.move_learner = self.choose_move_to_forget
+        self.ctl.health_check = self._health_check
         self.started = time.time()
 
     # -- conveniences --------------------------------------------------------------
@@ -54,6 +55,11 @@ class Agent:
 
     def talk(self, map_id: str, local_id: int):
         self.ctl.talk(map_id, local_id)
+
+    def goto_puzzle(self, map_id: str, x: int, y: int):
+        from .nav import adjacent as _adj
+        self.goto(map_id)
+        self.ctl.goto_puzzle(_adj(map_id, x, y), desc=f"{map_id}({x},{y})")
 
     def interact(self, map_id: str, x: int, y: int, direction: str | None = None):
         self.ctl.interact(map_id, x, y, direction)
@@ -146,6 +152,14 @@ class Agent:
         low_pp = all(sum(mv.pp for mv in m.moves) < 4 for m in party if not m.fainted)
         return (self.party_hp() < threshold or lead.hp_frac < 0.35 or lead.fainted
                 or low_pp)
+
+    def _health_check(self) -> bool:
+        """Called between steps of every walk: detour to heal before it is too late."""
+        if self.game.party() and self.needs_heal(0.4):
+            log.info("HEALTH low (party %.0f%%) - detouring to heal", 100 * self.party_hp())
+            self.heal()
+            return True
+        return False
 
     def heal(self) -> None:
         """Walk to the nearest reachable Pokemon Center and heal."""

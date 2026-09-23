@@ -69,6 +69,7 @@ class NavCaps:
     waterfall: bool = False
     avoid_grass: float = 0.0    # extra cost per tall-grass step (encounters)
     avoid_triggers: bool = True
+    triggers_block: bool = False  # treat coord triggers as walls (puzzles)
 
     def grid_caps(self) -> Caps:
         return Caps(surf=self.surf, waterfall=self.waterfall)
@@ -133,6 +134,10 @@ class Planner:
                 except (ValueError, KeyError):
                     pass
         return obs
+
+    @staticmethod
+    def _all_triggers(map_id: str) -> set:
+        return {(c["x"], c["y"]) for c in maps()[map_id]["coords"] if c.get("type") == "trigger"}
 
     def _in_view(self, x: int, y: int) -> bool:
         px, py = self.game.pos()
@@ -251,6 +256,8 @@ class Planner:
                     if w and (a := self.arrive(w)):
                         nxt.append((a, "door", 2.0))
                 blocked = ob.walls | ob.trees | ob.rocks
+                if caps.triggers_block:
+                    blocked = blocked | ob.triggers | self._all_triggers(s.map)
                 r = g.step(s.pos, d, gcaps, blocked)
                 if r == "edge":
                     e = self.edge(s, d)

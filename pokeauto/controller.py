@@ -46,7 +46,7 @@ class Prompts:
     rules: list[tuple[str, bool]] = field(default_factory=lambda: [
         (r"nickname", False),
         (r"give .* a nickname", False),
-        (r"save the game|want to save|SAVE", False),
+        (r"\bsave the game|want to save|Would you like to save", False),
         (r"(Surf|Cut|Strength|ROCK SMASH|Rock Smash|Waterfall|Dive|Flash)\?", True),
         (r"use (SURF|CUT|STRENGTH|ROCK SMASH|WATERFALL|DIVE|FLASH)", True),
         (r"stop learning|Stop trying to teach", False),
@@ -54,6 +54,7 @@ class Prompts:
         (r"Would you like to (rest|heal)", True),
         (r"switch POKéMON\?|change POKéMON\?", False),   # battle "will you switch?"
         (r"(throw|toss) away", False),
+        (r"How about a little battle|want to battle\?", False),   # optional rival fights
     ])
     overrides: list[tuple[str, bool]] = field(default_factory=list)
     unknown: object = None       # callable(text) -> bool | None
@@ -83,8 +84,11 @@ class Controller:
         self.battle = battle                  # set by the runner
         self.prompts = prompts or Prompts()
         self.on_unknown_screen = on_unknown_screen
-        self.multichoice_handler = None       # callable(text, options:int) -> index
+        self.multichoice_handler = None       # callable(text, labels) -> index (Jev)
+        self.multichoice_prefs: list[str] = []  # regexes, first matching label wins
         self.ui_handlers: dict[str, object] = {}
+        self.health_check = None              # callable() -> True if it detoured to heal
+        self._in_health_check = False
         self.stats = {"frames": 0, "steps": 0, "battles": 0, "prompts": 0}
         self._last_prompt = None
         self.trace: list[str] = []
@@ -195,6 +199,7 @@ class Controller:
         ans = self.prompts.answer(text)
         self.stats["prompts"] += 1
         log.info("PROMPT %r -> %s", text[-80:], "YES" if ans else "NO")
+        log.debug("PROMPT full %r tasks=%s", text, self.game.active_tasks())
         if ans:
             self._menu_select(0)
         else:
@@ -219,17 +224,47 @@ class Controller:
             self.press("DOWN" if cur < index else "UP", release=4)
         self.press("A", release=8)
 
+    def multichoice_labels(self) -> list[str]:
+        from .game import decode_text
+        data = self.game.task_data("Task_HandleMultichoiceInput")
+        if not data:
+            return []
+        mid = data[7]
+        base = S["sMultichoiceLists"] + mid * 8
+        list_ptr, count = struct.unpack("<IB", self.emu.read(base, 5))
+        labels = []
+        for i in range(count):
+            text_ptr = self.emu.u32(list_ptr + i * 8)
+            labels.append(decode_text(self.emu.read(text_ptr, 40)).replace("\n", " "))
+        return labels
+
     def _answer_multichoice(self) -> None:
         menu = self._menu()
         text = self._prompt_text()
-        n = menu["max"] - menu["min"] + 1
-        idx = 0
-        if self.multichoice_handler:
-            chosen = self.multichoice_handler(text, n)
-            if chosen is not None:
-                idx = chosen
-        log.info("MULTICHOICE %r (%d options) -> %d", text[-60:], n, idx)
+        labels = self.multichoice_labels()
+        idx = menu["cursor"]                     # the game's default
+        for pattern in self.multichoice_prefs:
+            hit = next((i for i, l in enumerate(labels) if re.search(pattern, l, re.I)), None)
+            if hit is not None:
+                idx = hit
+                break
+        else:
+            # A prompt that names one of its own options ("Please select the
+            # POKéNAV.") wants that option.
+            named = [i for i, l in enumerate(labels) if l.strip() and l.strip() in text]
+            if named:
+                idx = named[0]
+            elif self.multichoice_handler:
+                chosen = self.multichoice_handler(text, labels)
+                if chosen is not None:
+                    idx = chosen
+        log.info("MULTICHOICE %r %s -> %s", text[-60:], labels,
+                 labels[idx] if idx < len(labels) else idx)
         self._menu_select(idx)
+        for _ in range(20):
+            if "Task_HandleMultichoiceInput" not in self.game.active_tasks():
+                break
+            self.idle(2)
 
     def _other_step(self, m) -> None:
         tasks = m.tasks
@@ -237,6 +272,9 @@ class Controller:
             if key in m.callback2 or any(key in t for t in tasks):
                 handler(self, m)
                 return
+        if "Pokenav" in m.callback2 or any("Pokenav" in t for t in tasks):
+            self._pokenav_step()
+            return
         if any("Task_SetClock_HandleInput" in t for t in tasks):
             self.press("A", release=10)
             return
@@ -250,6 +288,26 @@ class Controller:
             if self.on_unknown_screen(self, m):
                 return
         self.idle(6)
+
+    def _pokenav_step(self) -> None:
+        """Leave the PokeNav. The Rustboro tutorial insists on calling Mr. Stone
+        first: MATCH CALL (3rd item) -> first contact -> CALL -> dismiss."""
+        self._pokenav_tries = getattr(self, "_pokenav_tries", 0) + 1
+        for _ in range(4):
+            self.press("B", release=12)
+        if "Pokenav" not in S.name_at(self.game.callback2()):
+            self._pokenav_tries = 0
+            return
+        if self._pokenav_tries % 2 == 0:
+            for _ in range(4):
+                self.press("UP", release=8)
+            for key in ("DOWN", "DOWN", "A"):
+                self.press(key, release=20)
+            self.idle(40)
+            for key in ("A", "A"):             # contact -> CALL
+                self.press(key, release=30)
+            for _ in range(8):                 # dismiss the conversation
+                self.press("A", release=20)
 
     # -- field abilities ------------------------------------------------------
     def nav_caps(self, avoid_grass: float = 0.5) -> NavCaps:
@@ -332,6 +390,13 @@ class Controller:
             s = self.state()
             if goal(s):
                 return
+            if self.health_check and not self._in_health_check:
+                self._in_health_check = True
+                try:
+                    if self.health_check():
+                        continue          # we detoured to heal; replan from here
+                finally:
+                    self._in_health_check = False
             live = MapGrid.from_ram(self.game)
             plan = self.planner.plan(s, goal, caps or self.nav_caps(), live=live,
                                      live_objects=self.game.objects())
@@ -359,35 +424,109 @@ class Controller:
                 if failures > max_replans:
                     raise Stuck(f"could not reach {desc or goal.__name__}; last at {self.state()}")
 
+    def goto_puzzle(self, goal, desc: str = "", max_depth: int = 5) -> None:
+        """goto, but if the goal is walled off, search the map's switch tiles.
+
+        Gym puzzles (Mauville's barriers, etc.) are coord-event switches that
+        rewrite the live grid. A depth-first search over switch sequences --
+        using savestates to back out of dead ends -- finds a working order
+        without any hand-written solution. Paths never cross a switch except
+        on purpose.
+        """
+        block = NavCaps(**{**self.nav_caps().__dict__, "triggers_block": True})
+
+        def reachable() -> bool:
+            s = self.state()
+            return goal(s) or self.planner.plan(
+                s, goal, block, live=MapGrid.from_ram(self.game),
+                live_objects=self.game.objects()) is not None
+
+        def switches() -> list[tuple[int, int]]:
+            s = self.state()
+            live = MapGrid.from_ram(self.game)
+            out = []
+            for c in maps()[s.map]["coords"]:
+                if c.get("type") != "trigger":
+                    continue
+                t = (c["x"], c["y"])
+                if t == (s.x, s.y):
+                    continue
+                p = self.planner.plan(s, at(s.map, *t), block_to(t), live=live,
+                                      live_objects=self.game.objects())
+                if p is not None:
+                    out.append((len(p), t))
+            return [t for _, t in sorted(out)]
+
+        def block_to(t):
+            # walls on every switch except the one we are heading for
+            return NavCaps(**{**block.__dict__, "triggers_block": False, "avoid_triggers": True})
+
+        def search(depth: int, used: tuple) -> bool:
+            self.pump()
+            if reachable():
+                return True
+            if depth == 0:
+                return False
+            for t in switches():
+                if t in used[-1:]:
+                    continue
+                snap = self.emu.save_state()
+                log.info("PUZZLE try switch %s (depth %d) for %s", t, max_depth - depth + 1, desc)
+                try:
+                    self.goto(at(self.state().map, *t), caps=block_to(t), desc="switch")
+                    if search(depth - 1, used + (t,)):
+                        return True
+                except Stuck:
+                    pass
+                self.emu.load_state(snap)
+            return False
+
+        if not search(max_depth, ()):
+            raise Stuck(f"puzzle: could not open a way to {desc}")
+        self.goto(goal, caps=block, desc=desc)
+
     # -- interacting --------------------------------------------------------------
     def live_object(self, local_id: int):
         return next((o for o in self.game.objects() if o.local_id == local_id and not o.is_player),
                     None)
 
-    def talk(self, map_id: str, local_id: int, max_tries: int = 8) -> None:
-        """Walk up to an NPC (who may wander) and press A facing them."""
+    def talk(self, map_id: str, local_id: int, max_steps: int = 120) -> None:
+        """Walk up to an NPC and press A facing them.
+
+        NPCs wander, so this chases: one planned step at a time toward where
+        the NPC is *now*, pressing A the moment we are adjacent.
+        """
         template = next((t for t in maps()[map_id]["objects"] if t["local_id"] == local_id), None)
-        for _ in range(max_tries):
-            self.goto(at(map_id), desc=f"{map_id}")
+        self.goto(at(map_id), desc=f"{map_id}")
+        for _ in range(max_steps):
+            self.pump()
             o = self.live_object(local_id)
-            if o is None and template:
-                # Objects only spawn near the camera: walk toward where the
-                # map data puts them, then look again.
-                self.goto(lambda s: s.map == map_id and abs(s.x - template["x"]) <= 3
-                          and abs(s.y - template["y"]) <= 3,
-                          desc=f"towards object {local_id}")
-                o = self.live_object(local_id)
             if o is None:
-                raise Stuck(f"object {local_id} is not on {map_id}")
-            self.goto(adjacent(map_id, o.x, o.y), desc=f"next to object {local_id}")
-            o = self.live_object(local_id)
+                if template is None:
+                    raise Stuck(f"object {local_id} is not on {map_id}")
+                # Objects only spawn near the camera: head for the map data position.
+                self.goto(lambda s: s.map == map_id and abs(s.x - template["x"]) <= 3
+                          and abs(s.y - template["y"]) <= 3, desc=f"towards object {local_id}")
+                if self.live_object(local_id) is None:
+                    raise Stuck(f"object {local_id} is not on {map_id}")
+                continue
             s = self.state()
-            if o and abs(o.x - s.x) + abs(o.y - s.y) == 1:
+            if s.map == map_id and abs(o.x - s.x) + abs(o.y - s.y) == 1:
                 self.face(facing_dir(s.x, s.y, o.x, o.y))
-                self.press("A", release=10)
-                if self.game.mode().kind != "overworld":
-                    self.pump()
-                    return
+                o2 = self.live_object(local_id)
+                if o2 and (o2.x, o2.y) == (o.x, o.y):
+                    self.press("A", release=10)
+                    if self.game.mode().kind != "overworld":
+                        self.pump()
+                        return
+                continue
+            plan = self.planner.plan(s, adjacent(map_id, o.x, o.y), self.nav_caps(),
+                                     live=MapGrid.from_ram(self.game),
+                                     live_objects=self.game.objects())
+            if not plan:
+                self.idle(20)          # blocked for now; let it wander
+                continue
+            self._execute(plan[0])
         raise Stuck(f"could not talk to object {local_id} on {map_id}")
 
     def interact(self, map_id: str, x: int, y: int, direction: str | None = None) -> None:
