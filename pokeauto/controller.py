@@ -380,6 +380,27 @@ class Controller:
         s = self.state()
         return s.map == step.expect.map and (s.x, s.y) == (step.expect.x, step.expect.y)
 
+    def _learn_pushback(self, before: State, step: Step) -> None:
+        """A step onto a trigger tile that ran a script and did not leave us
+        where planned means the trigger turned us back: never plan across that
+        trigger (or its siblings with the same script) again this milestone."""
+        e = step.expect
+        if e.map != before.map:
+            return
+        coords = [c for c in maps()[e.map]["coords"] if c.get("type") == "trigger"]
+        hit = next((c for c in coords if (c["x"], c["y"]) == (e.x, e.y)), None)
+        if hit is None:
+            return
+        now = self.state()
+        if (now.x, now.y) == (e.x, e.y) or now.map != e.map:
+            return
+        if abs(now.x - before.x) + abs(now.y - before.y) > 2:
+            return          # moved somewhere else entirely (warp, cutscene)
+        tiles = {(e.map, c["x"], c["y"]) for c in coords if c["script"] == hit["script"]}
+        log.info("LEARN trigger %s at (%d,%d) turned us back - avoiding %d tile(s)",
+                 hit["script"], e.x, e.y, len(tiles))
+        self.planner.learned_blocks |= tiles
+
     def goto(self, goal, caps: NavCaps | None = None, max_replans: int = 30,
              desc: str = "") -> None:
         """Walk until goal(State) holds, replanning around surprises."""
@@ -398,8 +419,17 @@ class Controller:
                 finally:
                     self._in_health_check = False
             live = MapGrid.from_ram(self.game)
-            plan = self.planner.plan(s, goal, caps or self.nav_caps(), live=live,
-                                     live_objects=self.game.objects())
+            use = caps or self.nav_caps()
+            plan = self.planner.plan(s, goal, use, live=live, live_objects=self.game.objects())
+            if plan is None and use.active_triggers_block:
+                # The only way (or the goal itself) is across a story trigger:
+                # relax triggers on this map first, then everywhere.
+                for relaxed in ({"trigger_exempt_map": s.map}, {"active_triggers_block": False}):
+                    soft = NavCaps(**{**use.__dict__, **relaxed})
+                    plan = self.planner.plan(s, goal, soft, live=live,
+                                             live_objects=self.game.objects())
+                    if plan is not None:
+                        break
             if plan is None:
                 # Maybe an NPC is standing in the only corridor: wait, retry.
                 failures += 1
@@ -413,10 +443,16 @@ class Controller:
                 last_state = s
             ok = True
             for step in plan:
+                before = self.state()
                 if not self._execute(step):
+                    self._learn_pushback(before, step)
                     ok = False
                     break
                 if not self.free():
+                    # a script started (trainer, trigger...): let it finish,
+                    # then check it did not turn us back
+                    self.pump()
+                    self._learn_pushback(before, step)
                     ok = False
                     break
             if not ok:
@@ -490,7 +526,8 @@ class Controller:
         return next((o for o in self.game.objects() if o.local_id == local_id and not o.is_player),
                     None)
 
-    def talk(self, map_id: str, local_id: int, max_steps: int = 120) -> None:
+    def talk(self, map_id: str, local_id: int, max_steps: int = 120,
+             pump_after: bool = True) -> None:
         """Walk up to an NPC and press A facing them.
 
         NPCs wander, so this chases: one planned step at a time toward where
@@ -511,13 +548,20 @@ class Controller:
                     raise Stuck(f"object {local_id} is not on {map_id}")
                 continue
             s = self.state()
+            if s.map != map_id or abs(o.x - s.x) + abs(o.y - s.y) > 3:
+                # far away: walk the whole way, then chase once close
+                ox, oy = o.x, o.y
+                self.goto(lambda st: st.map == map_id and abs(st.x - ox) + abs(st.y - oy) <= 2,
+                          desc=f"near object {local_id}")
+                continue
             if s.map == map_id and abs(o.x - s.x) + abs(o.y - s.y) == 1:
                 self.face(facing_dir(s.x, s.y, o.x, o.y))
                 o2 = self.live_object(local_id)
                 if o2 and (o2.x, o2.y) == (o.x, o.y):
                     self.press("A", release=10)
                     if self.game.mode().kind != "overworld":
-                        self.pump()
+                        if pump_after:
+                            self.pump()
                         return
                 continue
             plan = self.planner.plan(s, adjacent(map_id, o.x, o.y), self.nav_caps(),

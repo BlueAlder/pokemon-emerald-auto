@@ -69,7 +69,9 @@ class NavCaps:
     waterfall: bool = False
     avoid_grass: float = 0.0    # extra cost per tall-grass step (encounters)
     avoid_triggers: bool = True
-    triggers_block: bool = False  # treat coord triggers as walls (puzzles)
+    triggers_block: bool = False  # treat every coord trigger as a wall (puzzles)
+    active_triggers_block: bool = True  # triggers that would fire now are walls
+    trigger_exempt_map: str = ""        # ...except on this map
 
     def grid_caps(self) -> Caps:
         return Caps(surf=self.surf, waterfall=self.waterfall)
@@ -87,6 +89,9 @@ class Planner:
     def __init__(self, game):
         self.game = game
         self.emu = game.emu
+        # Tiles whose trigger script turned us back ("the sandstorm is too
+        # strong"). Learned during play; cleared when a milestone completes.
+        self.learned_blocks: set[tuple[str, int, int]] = set()
 
     # -- per-map data -----------------------------------------------------------
     def grid(self, map_id: str, live: MapGrid | None = None) -> MapGrid:
@@ -129,10 +134,15 @@ class Planner:
         for c in info["coords"]:
             if c.get("type") == "trigger" and c.get("var") and c.get("var") in _CONSTS:
                 try:
-                    if self.game.var(c["var"]) == int(str(c["var_value"]), 0):
+                    # VAR_TEMP_* are reset and rewritten by scripts as you walk
+                    # (Route 111's sun/sandstorm pair), so a snapshot of them
+                    # says nothing about the moment we arrive: assume active.
+                    if (c["var"].startswith("VAR_TEMP_")
+                            or self.game.var(c["var"]) == int(str(c["var_value"]), 0)):
                         obs.triggers.add((c["x"], c["y"]))
                 except (ValueError, KeyError):
                     pass
+        obs.walls |= {(x, y) for (m, x, y) in self.learned_blocks if m == map_id}
         return obs
 
     @staticmethod
@@ -222,6 +232,7 @@ class Planner:
             return obst[m]
 
         gcaps = caps.grid_caps()
+        goal_tiles = getattr(goal, "tiles", set())
         tie = itertools.count()
         dist = {start: 0.0}
         prev: dict[State, tuple[State, Step]] = {}
@@ -258,6 +269,10 @@ class Planner:
                 blocked = ob.walls | ob.trees | ob.rocks
                 if caps.triggers_block:
                     blocked = blocked | ob.triggers | self._all_triggers(s.map)
+                elif caps.active_triggers_block and s.map != caps.trigger_exempt_map:
+                    blocked = blocked | ob.triggers
+                if goal_tiles:
+                    blocked = blocked - {(gx, gy) for (gm, gx, gy) in goal_tiles if gm == s.map}
                 r = g.step(s.pos, d, gcaps, blocked)
                 if r == "edge":
                     e = self.edge(s, d)
@@ -320,6 +335,8 @@ def at(map_id: str, x: int | None = None, y: int | None = None):
     def goal(s: State) -> bool:
         return s.map == map_id and (x is None or (s.x == x and s.y == y))
     goal.__name__ = f"at({map_id},{x},{y})"
+    # A goal tile may itself be a story trigger we mean to step on.
+    goal.tiles = {(map_id, x, y)} if x is not None else set()
     return goal
 
 

@@ -8,6 +8,7 @@ narrow hooks in `brain.py` (unknown prompts, stuck recovery, close battle calls)
 from __future__ import annotations
 
 import logging
+import re
 import struct
 import time
 
@@ -39,6 +40,8 @@ class Agent:
         self.ctl.battle = self.battle
         self.battle.move_learner = self.choose_move_to_forget
         self.ctl.health_check = self._health_check
+        if brain:
+            self.ctl.multichoice_handler = brain.multichoice
         self.started = time.time()
 
     # -- conveniences --------------------------------------------------------------
@@ -181,6 +184,38 @@ class Agent:
         log.info("HEALED at %s (party hp %.0f%%)", center, 100 * self.party_hp())
         del start
 
+    # -- shopping -------------------------------------------------------------------------
+    MARTS = [m for m in maps() if m.endswith("_MART") or "DEPARTMENT_STORE_2F" in m]
+
+    def shop(self, wants: dict[str, int]) -> None:
+        """Walk to the nearest reachable Mart and buy `wants` (capped by money)."""
+        from .menus import buy
+        wants = {k: v for k, v in wants.items() if v > 0}
+        if not wants:
+            return
+        self.ctl.goto(lambda s: s.map in self.MARTS, desc="nearest Mart")
+        mart = self.game.map_id()
+        clerk = next((o for o in maps()[mart]["objects"] if "MART_EMPLOYEE" in o["gfx"]), None)
+        if clerk is None:
+            raise Stuck(f"no clerk in {mart}")
+        buy(self.ctl, lambda: self.ctl.talk(mart, clerk["local_id"], pump_after=False), wants)
+        self.pump()
+        log.info("SHOPPED at %s: %s money now %d", mart, wants, self.game.money())
+
+    def restock(self) -> None:
+        """Keep a sensible stock of healing items and balls for the stage we are at."""
+        badges = self.game.badges()
+        potion = ("ITEM_HYPER_POTION" if badges >= 6 else
+                  "ITEM_SUPER_POTION" if badges >= 2 else "ITEM_POTION")
+        want = {potion: 10 if badges >= 2 else 5}
+        have = self.game.has_item(potion)
+        wants = {potion: max(0, want[potion] - have)}
+        if badges >= 1 and self.game.has_item("ITEM_POKE_BALL") + self.game.has_item(
+                "ITEM_GREAT_BALL") < 5:
+            wants["ITEM_GREAT_BALL" if badges >= 3 else "ITEM_POKE_BALL"] = 5
+        if sum(wants.values()) and self.game.money() > 1500:
+            self.shop(wants)
+
     # -- move learning ------------------------------------------------------------------
     KEEP_MOVES = {"MOVE_SURF", "MOVE_STRENGTH", "MOVE_CUT", "MOVE_ROCK_SMASH",
                   "MOVE_WATERFALL", "MOVE_DIVE", "MOVE_FLASH", "MOVE_FLY"}
@@ -209,11 +244,20 @@ class Agent:
         stat = mon.attack if info.type < C("TYPE_MYSTERY") else mon.sp_attack
         return power * stab * (info.accuracy or 100) / 100 * stat / 100
 
+    def hm_moves(self) -> set[int]:
+        """Move ids taught by HMs -- these can never be forgotten normally."""
+        if not hasattr(self, "_hm_moves"):
+            self._hm_moves = {self.emu.u16(S["sTMHMMoves"] + i * 2) for i in range(50, 58)}
+        return self._hm_moves
+
     def choose_move_to_forget(self, mon, new_move: int) -> int | None:
         """Slot to replace with new_move, or None to skip learning it."""
         new_v = self.move_value(mon, new_move)
         vals = []
         for i, mv in enumerate(mon.moves):
+            if mv.id in self.hm_moves():
+                vals.append(1e9)          # HMs cannot be deleted
+                continue
             v = self.move_value(mon, mv.id)
             # keep type coverage: a move that is the only one of its type is worth more
             t = self.data.move(mv.id).type
@@ -228,9 +272,144 @@ class Agent:
         log.info("LEARN %s: skip %s", mon.species_name, const_names()["MOVE_"].get(new_move))
         return None
 
+    # -- bag ------------------------------------------------------------------------------
+    BAG_POCKETS = ["items", "balls", "tmhm", "berries", "key"]   # bag UI order
+
+    def _bag_pos(self) -> dict:
+        raw = self.emu.read(S["gBagPosition"], 28)
+        cursor = struct.unpack_from("<5H", raw, 8)
+        scroll = struct.unpack_from("<5H", raw, 18)
+        return {"pocket": raw[5], "index": [c + s for c, s in zip(cursor, scroll)]}
+
+    def _pocket_of(self, item_id: int) -> str:
+        for p in self.BAG_POCKETS:
+            if item_id in self.game.bag_order(p):
+                return p
+        raise Stuck(f"item {item_id} is not in the bag")
+
+    def use_item(self, item: str, target_slot: int = 0, forget_slot: int | None = None,
+                 teach_ok: bool = True) -> None:
+        """Use an item from the bag on a party member (TMs/HMs, potions, ...).
+
+        forget_slot: which known move a TM/HM replaces when the mon already
+        knows four (None = let choose_move_to_forget decide).
+        """
+        iid = const(item)
+        pocket = self._pocket_of(iid)
+        self.open_start_menu("BAG")
+        for _ in range(60):
+            if "BagMenu" in S.name_at(self.game.callback2()):
+                break
+            self.ctl.idle(4)
+        self.ctl.idle(20)
+        pidx = self.BAG_POCKETS.index(pocket)
+        for _ in range(8):
+            cur = self._bag_pos()["pocket"]
+            if cur == pidx:
+                break
+            self.ctl.press("RIGHT" if cur < pidx else "LEFT", release=16)
+        order = self.game.bag_order(pocket)
+        want = order.index(iid)
+        for _ in range(80):
+            cur = self._bag_pos()["index"][pidx]
+            if cur == want:
+                break
+            self.ctl.press("DOWN" if cur < want else "UP", release=6)
+        self.ctl.press("A", release=16)                  # context menu
+        self.ctl._menu_select(0)                         # USE
+        self._drive_item_flow(target_slot, forget_slot, teach_ok)
+
+    def _drive_item_flow(self, target_slot: int, forget_slot: int | None, teach_ok: bool,
+                         max_iters: int = 300) -> None:
+        """Answer everything between 'USE' and being back in the field."""
+        for _ in range(max_iters):
+            m = self.game.mode()
+            cb = m.callback2
+            tasks = m.tasks
+            text = self.game.string_var4().replace("\n", " ")
+            log.debug("ITEM FLOW %s %s %r", cb, tasks[-3:], text[-40:])
+            if m.kind == "overworld" and self.ctl.free():
+                return
+            if any("YesNo" in t or "YesOrNo" in t for t in tasks):
+                ans = True
+                if re.search(r"delete|forget|make room", text, re.I):
+                    ans = teach_ok
+                elif re.search(r"Stop (trying to teach|learning)|give up", text, re.I):
+                    ans = True
+                elif re.search(r"Teach", text, re.I):
+                    ans = teach_ok
+                log.info("ITEM PROMPT %r -> %s", text[-60:], "YES" if ans else "NO")
+                if ans:
+                    self.ctl._menu_select(0)
+                else:
+                    self.ctl.press("B", release=12)
+                continue
+            if any("Task_HandleChooseMonInput" in t for t in tasks):
+                addr = S["gPartyMenu"] + 9
+                for _ in range(8):
+                    if struct.unpack("b", self.emu.read(addr, 1))[0] == target_slot:
+                        break
+                    self.ctl.press("DOWN", release=5)
+                self.ctl.press("A", release=16)
+                continue
+            if any("ReplaceMove" in t for t in tasks) or "Summary" in cb:
+                slot = forget_slot
+                if slot is None:
+                    mon = self.game.party()[target_slot]
+                    slot = self.choose_move_to_forget(mon, self.emu.u16(S["gMoveToLearn"]))
+                    slot = 4 if slot is None else slot
+                for _ in range(slot):
+                    self.ctl.press("DOWN", release=8)
+                self.ctl.press("A", release=30)
+                continue
+            if "BagMenu" in cb and "Task_BagMenu_HandleInput" in tasks \
+                    and not self.game.text_printing():
+                self.ctl.press("B", release=12)          # done: leave the bag
+                continue
+            if any("StartMenu" in t for t in tasks):
+                self.ctl.press("B", release=12)
+                continue
+            self.ctl.press("A", release=8)               # advance messages
+        raise Stuck("item use flow did not return to the field")
+
+    def teach(self, item: str, species_pref: list[str] | None = None,
+              replace: str | None = None) -> None:
+        """Teach a TM/HM to the best party member that can learn it."""
+        from .data import tmhm_index
+        idx = tmhm_index(item)
+        party = self.game.party()
+        move_name = self._tmhm_move(item)
+        if any(p.knows(move_name) for p in party):
+            return
+        able = [p for p in party if not p.is_egg and self.data.can_learn_tmhm(p.species, idx)]
+        if species_pref:
+            able.sort(key=lambda p: next((i for i, s in enumerate(species_pref)
+                                          if s in p.species_name), 99))
+        if not able:
+            raise Stuck(f"nobody can learn {item}")
+        mon = able[0]
+        forget = None
+        if len(mon.moves) >= 4:
+            if replace:
+                forget = next(i for i, mv in enumerate(mon.moves) if mv.const == replace)
+            else:
+                forget = min((i for i in range(4) if mon.moves[i].id not in self.hm_moves()),
+                             key=lambda i: self.move_value(mon, mon.moves[i].id))
+        log.info("TEACH %s (%s) to %s, replacing slot %s", item, move_name, mon.species_name, forget)
+        self.use_item(item, target_slot=mon.slot, forget_slot=forget)
+
+    def _tmhm_move(self, item: str) -> str:
+        """ITEM_HM06 -> MOVE_ROCK_SMASH, via the ROM's TM/HM move table."""
+        from .data import tmhm_index
+        idx = tmhm_index(item)
+        mid = self.emu.u16(S["sTMHMMoves"] + idx * 2)
+        return const_names()["MOVE_"].get(mid, "")
+
     # -- milestone hooks ----------------------------------------------------------------
     def before_milestone(self, m) -> None:
         self.battle.policy.important = m.important
+        if self.brain:
+            self.brain.goal = m.hint or m.name.replace("_", " ")
         self.pump()
         if self.game.party() and m.heal_first and self.needs_heal():
             self.heal()
@@ -247,6 +426,51 @@ class Agent:
             pass
         if self.brain and exc is not None:
             self.brain.note_stuck(self, m, exc)
+
+    def jev_recover(self, milestone, exc) -> None:
+        """Ask Jev which concrete action on this map might unblock `milestone`."""
+        if not self.brain:
+            return
+        self.pump()
+        here = self.game.map_id()
+        info = maps()[here]
+        options: dict[str, str] = {}
+        actions: dict[str, object] = {}
+
+        def human(script: str) -> str:
+            name = script.split("EventScript_")[-1]
+            return re.sub(r"(?<!^)(?=[A-Z])", " ", name)
+
+        for i, w in enumerate(info["warps"]):
+            dest = w["dest"][4:].replace("_", " ").title()
+            key = f"exit_{i}"
+            options[key] = f"go through the exit at ({w['x']},{w['y']}) to {dest}"
+            actions[key] = lambda w=w: self.ctl.goto(
+                lambda s, w=w: s.map != here, desc=f"exit {w['dest']}")
+        for o in info["objects"]:
+            if o["script"] in ("0x0", "") or "ItemBall" in o["script"] or "Berry" in o["script"]:
+                continue
+            if o["flag"] not in ("0", "") and self.game.flag(o["flag"]):
+                continue
+            key = f"talk_{o['local_id']}"
+            options[key] = f"talk to {human(o['script'])} ({o['gfx'][14:].lower()})"
+            actions[key] = lambda o=o: self.talk(here, o["local_id"])
+        for i, b in enumerate(info["bgs"]):
+            if b.get("type") == "sign" and b.get("script"):
+                key = f"read_{i}"
+                options[key] = f"read/examine {human(b['script'])}"
+                actions[key] = lambda b=b: self.interact(here, b["x"], b["y"])
+        context = {"my_goal": milestone.hint or milestone.name.replace("_", " "),
+                   "where_i_am": here[4:].replace("_", " ").title(),
+                   "what_went_wrong": str(exc)[:200],
+                   "last_text_on_screen": self.game.string_var4()[-200:]}
+        pick = self.brain.recover(context, options)
+        if pick and pick in actions:
+            try:
+                actions[pick]()
+                self.pump()
+            except Stuck as e:
+                log.info("JEV recovery action failed: %s", e)
 
     # -- grinding -------------------------------------------------------------------------
     def lead(self):

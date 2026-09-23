@@ -31,6 +31,7 @@ class Milestone:
     heal_first: bool = True
     important: bool = False       # boss fight inside: let the advisor weigh in
     attempts: int = 4
+    hint: str = ""                # plain-English goal, shown to Jev only if stuck
 
     def run(self, agent) -> None:
         for act in self.actions:
@@ -207,6 +208,7 @@ class RouteRunner:
                 log.error("ROUTE failed at %s", m.name)
                 return False
             self.history.append((m.name, time.time() - t0))
+            a.ctl.planner.learned_blocks.clear()      # story state changed
             log.info("--- done %s (%.0fs elapsed, game %s)", m.name, time.time() - t0,
                      a.game.play_time())
             if self.checkpoint:

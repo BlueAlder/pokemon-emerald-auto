@@ -115,6 +115,10 @@ class Battle:
                      for t in tasks):
                 self._party_menu(tasks)
                 handled = True
+            elif any("CantForgetHMs" in t for t in tasks):
+                self.ctl.press("A", release=10)      # dismiss "HM moves can't be forgotten"
+                self._forget_slot = 4                  # then give up on the new move
+                handled = True
             elif any("ReplaceMove" in t for t in tasks) or "Summary" in cb:
                 self._forget_move_screen(tasks)
                 handled = True

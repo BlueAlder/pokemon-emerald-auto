@@ -151,4 +151,22 @@ ROUTE: list[Milestone] = [
                call("goto_puzzle", "MAP_MAUVILLE_CITY_GYM", 5, 2),
                talk_s("MAP_MAUVILLE_CITY_GYM", "EventScript_Wattson")],
               min_level=27, important=True),
+
+    # -- Rock Smash north, Meteor Falls, Mt. Chimney, Lavaridge -----------------------------
+    Milestone("teach_rock_smash", lambda a: any(p.knows("MOVE_ROCK_SMASH") for p in a.game.party()),
+              [call("teach", "ITEM_HM06")]),
+    Milestone("meteor_falls", var_ge("VAR_METEOR_FALLS_STATE", 1),
+              [goto("MAP_METEOR_FALLS_1F_1R", 14, 18)], min_level=30),
+    Milestone("mt_chimney", flag("FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY"),
+              [unless(reachable("MAP_MT_CHIMNEY"),
+                      goto("MAP_ROUTE112_CABLE_CAR_STATION"),
+                      talk_s("MAP_ROUTE112_CABLE_CAR_STATION", "EventScript_Attendant")),
+               goto("MAP_MT_CHIMNEY"), talk_s("MAP_MT_CHIMNEY", "EventScript_Maxie")],
+              min_level=32, important=True),
+    Milestone("reach_lavaridge", flag("FLAG_VISITED_LAVARIDGE_TOWN"),
+              [goto("MAP_LAVARIDGE_TOWN")]),
+    Milestone("badge_heat", badges(4),
+              [goto("MAP_LAVARIDGE_TOWN_GYM_1F"),
+               talk_s("MAP_LAVARIDGE_TOWN_GYM_1F", "EventScript_Flannery")],
+              min_level=34, important=True),
 ]
