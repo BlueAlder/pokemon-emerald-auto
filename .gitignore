@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+runs/rom_tables.json
+runs/*.log
+runs/*.png
+*.gba
+*.sav
+*.ss[0-9]
+.env

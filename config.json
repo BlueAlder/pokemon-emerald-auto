@@ -1,0 +1,9 @@
+{
+  "_comment": [
+    "Optional RAM address overrides for non-US or ROM-hack builds.",
+    "Defaults target Pokemon Emerald US (game code BPEE) and are validated",
+    "live by scripts/doctor.py. Values may be decimal or 0x-prefixed hex.",
+    "Example: {\"addresses\": {\"player_party\": \"0x020244EC\"}}"
+  ],
+  "addresses": {}
+}
