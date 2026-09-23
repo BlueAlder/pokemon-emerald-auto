@@ -54,6 +54,16 @@ def main() -> int:
     load_dotenv()
     runs = ROOT / "runs"
     (runs / "checkpoints").mkdir(parents=True, exist_ok=True)
+    lock = runs / "play.lock"
+    if lock.exists():
+        try:
+            os.kill(int(lock.read_text()), 0)
+            sys.exit(f"another run (pid {lock.read_text()}) is using {runs}; stop it first")
+        except (ProcessLookupError, ValueError):
+            pass
+    lock.write_text(str(os.getpid()))
+    import atexit
+    atexit.register(lambda: lock.unlink(missing_ok=True))
     logging.basicConfig(level=getattr(logging, args.log.upper()),
                         format="%(asctime)s %(message)s", datefmt="%H:%M:%S",
                         handlers=[logging.StreamHandler(),

@@ -74,9 +74,17 @@ class Battle:
                                                           "CB2_EndWildBattle", "CB2_EndTrainerBattle"))
 
     # -- UI driver --------------------------------------------------------------------
+    def _no_item_fallback(self, battler: int) -> Choice:
+        mons = self.game.battle_mons()
+        me_bm = mons[battler]
+        opts = self.move_options(me_bm, combatant_from_battle(self.data, me_bm), self._foes())
+        return max(opts, key=lambda c: c.score) if opts else Choice("move", 0, why="struggle")
+
     def run(self) -> None:
         """Drive the battle until control returns to the field."""
         self._pending.clear()
+        self._items_disabled = False
+        self._item_count_before = None
         idle = 0
         start = self.emu.frame
         while True:
@@ -158,7 +166,20 @@ class Battle:
         self.ctl.press("A", release=6)
 
     def _choose_action(self, battler: int) -> None:
+        # Back at the action menu after an item choice that did not consume the
+        # item ("it won't have any effect", wrong target...): stop using items
+        # this battle instead of looping.
+        last = self._pending.get(battler)
+        if last and last.kind == "item" and self._item_count_before is not None:
+            if self.game.has_item(last.slot) >= self._item_count_before:
+                log.info("BATTLE item %s had no effect; no more items this battle", last.slot)
+                self._items_disabled = True
+        self._item_count_before = None
         choice = self.decide(battler)
+        if choice.kind == "item" and self._items_disabled:
+            choice = self._no_item_fallback(battler)
+        if choice.kind == "item":
+            self._item_count_before = self.game.has_item(choice.slot)
         self._pending[battler] = choice
         self.turns += 1
         me = self.game.battle_mons()[battler]

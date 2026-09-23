@@ -126,6 +126,55 @@ class GatePuzzle:
         return None
 
 
+def solve_boulders(grid: MapGrid, start: tuple[int, int], boulders: frozenset, goal,
+                   walls: set, elev: int = 3, max_nodes: int = 400_000) -> list[str] | None:
+    """Sokoban search with the game's Strength rule (TryPushBoulder).
+
+    Walking into a boulder pushes it one tile if the tile beyond is free (map
+    collision, elevation and other objects); the player stays where they are.
+    State is (player, boulders); returns the direction presses.
+    """
+    from .mapgrid import Caps, MB
+    caps = Caps()
+    door = {MB.get("MB_NON_ANIMATED_DOOR"), MB.get("MB_WATER_DOOR"), MB.get("MB_DEEP_SOUTH_WARP")}
+    root = (start, boulders)
+    seen = {root: None}
+    q = deque([root])
+    n = 0
+    while q:
+        node = q.popleft()
+        (x, y), bs = node
+        if goal(x, y, bs):
+            path = []
+            while seen[node] is not None:
+                node, d = seen[node]
+                path.append(d)
+            return path[::-1]
+        n += 1
+        if n > max_nodes:
+            return None
+        for d, (dx, dy) in DELTA.items():
+            tx, ty = x + dx, y + dy
+            if (tx, ty) in bs:
+                bx, by = tx + dx, ty + dy
+                if not grid.inside(bx, by) or grid.collision(bx, by) or (bx, by) in bs \
+                        or (bx, by) in walls or grid.behavior(bx, by) in door:
+                    continue
+                be = grid.elevation(bx, by)
+                if be not in (0, 15) and be != elev:
+                    continue
+                nxt = ((x, y), (bs - {(tx, ty)}) | {(bx, by)})
+            else:
+                r = grid.step(Pos(x, y, elev), d, caps, walls | bs)
+                if r is None or r == "edge":
+                    continue
+                nxt = ((r.x, r.y), bs)
+            if nxt not in seen:
+                seen[nxt] = (node, d)
+                q.append(nxt)
+    return None
+
+
 def read_orientations(game, count: int) -> tuple:
     return tuple(game.emu.read(game.sb1() + 0x139C + (const("VAR_TEMP_0") - 0x4000) * 2, count))
 

@@ -84,6 +84,17 @@ def goto(map_id: str, x: int | None = None, y: int | None = None):
     return act
 
 
+def trigger(map_id: str, script: str):
+    """Walk onto whichever tile of the coord-event `script` is reachable."""
+    def act(a):
+        from .nav import at_any
+        from .symbols import maps
+        tiles = [(c["x"], c["y"]) for c in maps()[map_id]["coords"] if c.get("script") == script]
+        a.ctl.goto(at_any(map_id, tiles), desc=f"trigger {script}")
+    act.__name__ = f"trigger {map_id} {script}"
+    return act
+
+
 def talk(map_id: str, local_id: int):
     def act(a):
         a.talk(map_id, local_id)

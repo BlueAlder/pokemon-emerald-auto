@@ -315,6 +315,8 @@ class Controller:
         knows = lambda mv: any(p.knows(mv) for p in party)
         f = self.game.flag
         return NavCaps(
+            strength=knows("MOVE_STRENGTH") and f("FLAG_BADGE04_GET"),
+            dive=knows("MOVE_DIVE") and f("FLAG_BADGE07_GET"),
             surf=knows("MOVE_SURF") and f("FLAG_BADGE05_GET"),
             cut=knows("MOVE_CUT") and f("FLAG_BADGE01_GET"),
             smash=knows("MOVE_ROCK_SMASH") and f("FLAG_BADGE03_GET"),
@@ -350,8 +352,10 @@ class Controller:
     def face(self, direction: str) -> None:
         if self.game.facing() == direction:
             return
-        for _ in range(3):
-            self.emu.run(keymask(direction.upper()), 1)
+        # A short tap turns in place; 3 frames survives the mGBA bridge's input
+        # latency (1 frame was dropped there) and is still too short to walk.
+        for hold in (3, 3, 5):
+            self.emu.run(keymask(direction.upper()), hold)
             self.emu.run(0, 8)
             if self.game.facing() == direction:
                 return
@@ -366,6 +370,15 @@ class Controller:
             if step.action in ("cut", "smash"):
                 return False          # object gone now; replan from here
             return self.state() == step.expect
+        if step.action == "dive":
+            self.press("A", release=10)
+            self.pump()
+            return self.state().map == step.expect.map
+        if step.action == "transport":
+            self.face(d)
+            self.press("A", release=10)
+            self.pump()
+            return self.state().map == step.expect.map
         if step.action == "bgwarp":
             self.face(d)
             self.press("A", release=10)
@@ -378,13 +391,33 @@ class Controller:
             self.pump()
             return moved and self.game.map_id() == step.expect.map
         moved = self._hold_until_moved(d, max_frames=60 if step.action != "walk" else 40)
-        if step.action in ("warp", "arrow", "edge"):
-            self.pump()
         self.stats["steps"] += 1
+        if step.action in ("warp", "arrow", "edge"):
+            # Map changes take a fade; judge by where we end up, not by timing.
+            self.pump()
+            s = self.state()
+            return s.map == step.expect.map and (s.x, s.y) == (step.expect.x, step.expect.y)
         if not moved:
             return False
         s = self.state()
         return s.map == step.expect.map and (s.x, s.y) == (step.expect.x, step.expect.y)
+
+    def _run_steps(self, steps: list[Step], start: State) -> bool:
+        """Execute steps; False at the first surprise (the caller decides)."""
+        for step in steps:
+            before = self.state()
+            if not self._execute(step):
+                log.debug("STEP %s %s expected %s got %s (mode %s)", step.action, step.direction,
+                          step.expect, self.state(), self.game.mode().kind)
+                self._learn_pushback(before, step)
+                return False
+            if not self.free():
+                # a script started (trainer, trigger...): let it finish,
+                # then check it did not turn us back
+                self.pump()
+                self._learn_pushback(before, step)
+                return False
+        return True
 
     def _learn_pushback(self, before: State, step: Step) -> None:
         """A step onto a trigger tile that ran a script and did not leave us
@@ -412,11 +445,30 @@ class Controller:
         """Walk until goal(State) holds, replanning around surprises."""
         failures = 0
         last_state = None
+        tried_triggers: set = set()
+        plan: list[Step] | None = None
         while True:
             self.pump()
             s = self.state()
             if goal(s):
                 return
+            # Resume the current plan after an interruption (a battle, a
+            # message) if we are still standing on it: re-planning long
+            # cross-region routes is the expensive part.
+            if plan:
+                where = next((i for i, st in enumerate(plan) if st.expect == s), None)
+                if where is not None and where + 1 < len(plan):
+                    rest = plan[where + 1:]
+                    if self._run_steps(rest, s):
+                        plan = None
+                    else:
+                        plan = rest
+                        failures += 1
+                        if failures > max_replans:
+                            raise Stuck(f"could not reach {desc or goal.__name__}; "
+                                        f"last at {self.state()}")
+                    continue
+            plan = None
             if self.health_check and not self._in_health_check:
                 self._in_health_check = True
                 try:
@@ -436,6 +488,23 @@ class Controller:
                                              live_objects=self.game.objects())
                     if plan is not None:
                         break
+            if plan is None and self._try_boulders(s, goal, use):
+                continue
+            if plan is None and use.strength:
+                # Boulders on a later map: head there; the push puzzle is
+                # solved on arrival (_try_boulders, current map only).
+                shove = NavCaps(**{**use.__dict__, "ignore_boulders": True})
+                plan = self.planner.plan(s, goal, shove, live=live,
+                                         live_objects=self.game.objects())
+            if plan is None and self._try_story_triggers(s, tried_triggers):
+                continue
+            if plan is None:
+                # Story NPCs (hide-flagged) may be what blocks us; walk up to
+                # them -- the trigger that moves them is usually right there.
+                bold = NavCaps(**{**use.__dict__, "ignore_story_objects": True,
+                                  "active_triggers_block": False})
+                plan = self.planner.plan(s, goal, bold, live=live,
+                                         live_objects=self.game.objects())
             if plan is None:
                 # Maybe an NPC is standing in the only corridor: wait, retry.
                 failures += 1
@@ -447,24 +516,92 @@ class Controller:
                 log.info("GOTO %s: %d steps from %s (%d,%d)", desc or goal.__name__,
                          len(plan), s.map, s.x, s.y)
                 last_state = s
-            ok = True
-            for step in plan:
-                before = self.state()
-                if not self._execute(step):
-                    self._learn_pushback(before, step)
-                    ok = False
-                    break
-                if not self.free():
-                    # a script started (trainer, trigger...): let it finish,
-                    # then check it did not turn us back
-                    self.pump()
-                    self._learn_pushback(before, step)
-                    ok = False
-                    break
+            ok = self._run_steps(plan, s)
+            if ok:
+                plan = None
             if not ok:
                 failures += 1
                 if failures > max_replans:
                     raise Stuck(f"could not reach {desc or goal.__name__}; last at {self.state()}")
+
+    def _try_story_triggers(self, s: State, tried: set) -> bool:
+        """No route: step on the nearest reachable active trigger on this map
+        that we have not tried yet (scripts often clear a blockade)."""
+        obs = self.planner.obstacles(s.map, self.game.objects())
+        live = MapGrid.from_ram(self.game)
+        best = None
+        for t in obs.triggers:
+            if (s.map, t) in tried or t == (s.x, s.y):
+                continue
+            p = self.planner.plan(s, at(s.map, *t), NavCaps(**{**self.nav_caps().__dict__,
+                                                               "active_triggers_block": True}),
+                                  live=live, live_objects=self.game.objects())
+            if p is not None and (best is None or len(p) < len(best[1])):
+                best = (t, p)
+        if best is None:
+            return False
+        tried.add((s.map, best[0]))
+        script = next((c["script"] for c in maps()[s.map]["coords"]
+                       if (c["x"], c["y"]) == best[0]), "?")
+        log.info("STORY no route; stepping on trigger %s (%s) to see if it opens one",
+                 best[0], script)
+        for step in best[1]:
+            if not self._execute(step) or not self.free():
+                break
+        self.pump()
+        return True
+
+    def _try_boulders(self, s: State, goal, caps: NavCaps) -> bool:
+        """No route: if Strength boulders are in the way on this map, solve the
+        push puzzle to wherever the boulder-free plan leaves this map."""
+        from .puzzles import solve_boulders
+        if not caps.strength:
+            return False
+        live = MapGrid.from_ram(self.game)
+        objs = self.game.objects()
+        obs = self.planner.obstacles(s.map, objs)
+        if not obs.boulders:
+            return False
+        loose = NavCaps(**{**caps.__dict__, "ignore_boulders": True,
+                           "active_triggers_block": False, "ignore_story_objects": True})
+        plan = self.planner.plan(s, goal, loose, live=live, live_objects=objs)
+        if not plan:
+            return False
+        # The last tile of this map the ideal route stands on.
+        target = (s.x, s.y)
+        for st in plan:
+            if st.expect.map != s.map:
+                break
+            target = (st.expect.x, st.expect.y)
+        walls = obs.walls | obs.trees | obs.rocks
+        path = solve_boulders(live, (s.x, s.y), frozenset(obs.boulders),
+                              lambda x, y, bs: (x, y) == target, walls, s.elev)
+        if not path:
+            log.info("BOULDERS no push sequence to %s on %s", target, s.map)
+            return False
+        log.info("BOULDERS %d moves to reach %s on %s", len(path), target, s.map)
+        boulders = set(obs.boulders)
+        for d in path:
+            x, y = self.game.pos()
+            dx, dy = DELTA[d]
+            if (x + dx, y + dy) in boulders:
+                self.face(d)
+                if not self.game.flag("FLAG_SYS_USE_STRENGTH"):
+                    self.press("A", release=10)      # "use STRENGTH?" -> yes
+                    self.pump()
+                for _ in range(40):
+                    self.emu.run(keymask(d.upper()), 2)
+                    now = {(o.x, o.y) for o in self.game.objects()
+                           if (o.x, o.y) == (x + 2 * dx, y + 2 * dy)}
+                    if now:
+                        break
+                self.emu.run(0, 20)
+                boulders.discard((x + dx, y + dy))
+                boulders.add((x + 2 * dx, y + 2 * dy))
+            elif not self._hold_until_moved(d):
+                self.pump()
+                return True        # replan from wherever we are
+        return True
 
     def goto_puzzle(self, goal, desc: str = "", max_depth: int = 5) -> None:
         """goto, but if the goal is walled off, search the map's switch tiles.

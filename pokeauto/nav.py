@@ -38,6 +38,20 @@ GFX_ROCK = const("OBJ_EVENT_GFX_BREAKABLE_ROCK")
 GFX_BOULDER = const("OBJ_EVENT_GFX_PUSHABLE_BOULDER")
 
 DOOR = MB["MB_ANIMATED_DOOR"]
+EXIT_SOUTH = frozenset(const(n) for n in ("MB_ANIMATED_DOOR", "MB_NON_ANIMATED_DOOR",
+                                          "MB_WATER_DOOR", "MB_DEEP_SOUTH_WARP"))
+DIVEABLE = frozenset(const(n) for n in ("MB_INTERIOR_DEEP_WATER", "MB_DEEP_WATER",
+                                        "MB_SOOTOPOLIS_DEEP_WATER"))
+NO_EMERGE = frozenset(const(n) for n in ("MB_NO_SURFACING", "MB_SEAWEED_NO_SURFACING"))
+
+# Scripted transports: talk to an NPC, say yes, arrive somewhere else. The
+# engine does these with specials (CableCarWarp), so map data cannot show them.
+TRANSPORTS = [
+    {"map": "MAP_ROUTE112_CABLE_CAR_STATION", "npc": 1,
+     "dest": ("MAP_MT_CHIMNEY_CABLE_CAR_STATION", 6, 7), "cost": 60.0},
+    {"map": "MAP_MT_CHIMNEY_CABLE_CAR_STATION", "npc": 1,
+     "dest": ("MAP_ROUTE112_CABLE_CAR_STATION", 6, 7), "cost": 60.0},
+]
 
 
 @dataclass(frozen=True)
@@ -67,11 +81,15 @@ class NavCaps:
     cut: bool = False
     smash: bool = False
     waterfall: bool = False
+    strength: bool = False
+    dive: bool = False
+    ignore_boulders: bool = False  # plan as if boulders could be shoved aside
     avoid_grass: float = 0.0    # extra cost per tall-grass step (encounters)
     avoid_triggers: bool = True
     triggers_block: bool = False  # treat every coord trigger as a wall (puzzles)
     active_triggers_block: bool = True  # triggers that would fire now are walls
     trigger_exempt_map: str = ""        # ...except on this map
+    ignore_story_objects: bool = False  # plan through NPCs that a script may move away
 
     def grid_caps(self) -> Caps:
         return Caps(surf=self.surf, waterfall=self.waterfall)
@@ -83,6 +101,8 @@ class Obstacles:
     trees: set = field(default_factory=set)       # cuttable
     rocks: set = field(default_factory=set)       # smashable
     triggers: set = field(default_factory=set)    # active coord scripts (soft)
+    boulders: set = field(default_factory=set)    # Strength boulders
+    soft: set = field(default_factory=set)        # NPCs placed by map data only
 
 
 class Planner:
@@ -99,7 +119,7 @@ class Planner:
             return live
         return MapGrid.from_rom(self.emu, map_id)
 
-    def obstacles(self, map_id: str, live_objects=None) -> Obstacles:
+    def obstacles(self, map_id: str, live_objects=None, ignore_story: bool = False) -> Obstacles:
         """Objects in the way on `map_id`.
 
         live_objects (Game.objects() on the current map) wins for anything it
@@ -108,28 +128,44 @@ class Planner:
         info = maps()[map_id]
         obs = Obstacles()
         spawned = set()
+        # "Story" objects: NPCs a script can hide or move. Never boulders,
+        # rocks or trees -- those are physical and handled by their own rules.
+        story = {t["local_id"] for t in info["objects"]
+                 if t["flag"] not in ("0", "")
+                 and _CONSTS.get(t["gfx"], -1) not in (GFX_TREE, GFX_ROCK, GFX_BOULDER)}
         if live_objects is not None:
             for o in live_objects:
                 if o.is_player:            # invisible objects (Kecleon) still block
                     continue
                 spawned.add(o.local_id)
+                if ignore_story and o.local_id in story:
+                    continue
                 target = (obs.trees if o.graphics_id == GFX_TREE else
-                          obs.rocks if o.graphics_id == GFX_ROCK else obs.walls)
+                          obs.rocks if o.graphics_id == GFX_ROCK else
+                          obs.boulders if o.graphics_id == GFX_BOULDER else obs.walls)
                 target.add((o.x, o.y))
         for t in info["objects"]:
             if t["local_id"] in spawned:
                 continue
             flag = t["flag"]
-            if flag and flag != "0" and self._flag(flag):
-                continue            # hidden by its flag
+            if flag and flag != "0" and (self._flag(flag)
+                                         or (ignore_story and t["local_id"] in story)):
+                continue            # hidden by its flag (or may be moved by a script)
             gfx = const(t["gfx"]) if t["gfx"] in _CONSTS else -1
             mv = const(t["movement"]) if t["movement"] in _CONSTS else 0
             if gfx == GFX_TREE:
                 obs.trees.add((t["x"], t["y"]))
             elif gfx == GFX_ROCK:
                 obs.rocks.add((t["x"], t["y"]))
-            elif mv in STATIONARY or gfx == GFX_BOULDER:
+            elif gfx == GFX_BOULDER:
                 if live_objects is None or not self._in_view(t["x"], t["y"]):
+                    obs.boulders.add((t["x"], t["y"]))
+            elif mv in STATIONARY:
+                if live_objects is None:
+                    # A map we are not on: scripts move people around at load
+                    # time (setobjectxyperm), so template spots are guesses.
+                    obs.soft.add((t["x"], t["y"]))
+                elif not self._in_view(t["x"], t["y"]):
                     obs.walls.add((t["x"], t["y"]))
         for c in info["coords"]:
             if c.get("type") == "trigger" and c.get("var") and c.get("var") in _CONSTS:
@@ -167,7 +203,7 @@ class Planner:
                 return w
         return None
 
-    def arrive(self, warp: dict) -> State | None:
+    def arrive(self, warp: dict, facing: str = "down") -> State | None:
         dest, dest_warp = warp["dest"], warp["dest_warp"]
         if dest == "MAP_DYNAMIC":
             # SaveBlock1.dynamicWarp: s8 group, s8 num, s8 warpId, pad, s16 x, s16 y
@@ -190,10 +226,19 @@ class Planner:
         dw = dws[dest_warp]
         g = self.grid(dest)
         x, y = dw["x"], dw["y"]
-        if g.inside(x, y) and g.behavior(x, y) == DOOR:
-            y += 1                       # walk out of the doorway
+        if g.inside(x, y):
+            b = g.behavior(x, y)
+            # Task_ExitDoor walks south; Task_ExitNonAnimDoor walks one step in
+            # the direction the player faced when entering (if it can).
+            step = "down" if b == DOOR else facing if b in EXIT_SOUTH else None
+            if step:
+                dx, dy = DELTA[step]
+                if g.inside(x + dx, y + dy) and not g.collision(x + dx, y + dy):
+                    x, y = x + dx, y + dy
         elev = g.elevation(x, y) if g.inside(x, y) else 3
-        return State(dest, x, y, elev if elev not in (0, 15) else 3, False)
+        # Arriving on an elevation-0 (transition) tile leaves the player at 0,
+        # free to step onto any level; 15 (multi-level) keeps the default.
+        return State(dest, x, y, 3 if elev == 15 else elev, False)
 
     def edge(self, s: State, d: str) -> State | None:
         info = maps()[s.map]
@@ -214,10 +259,64 @@ class Planner:
             return State(c["map"], nx, ny, s.elev if te in (0, 15) else te, s.surfing)
         return None
 
+    # -- map graph ----------------------------------------------------------------
+    _map_graph: dict[str, set[str]] | None = None
+
+    @classmethod
+    def map_graph(cls) -> dict[str, set[str]]:
+        """Static map adjacency (warps + connections), for goal-directed search."""
+        if cls._map_graph is None:
+            g: dict[str, set[str]] = {}
+            for mid, info in maps().items():
+                out = g.setdefault(mid, set())
+                for w in info["warps"]:
+                    if w["dest"] in maps():
+                        out.add(w["dest"])
+                for c in info["connections"]:
+                    if c["map"] in maps():
+                        out.add(c["map"])
+                for sw in info.get("script_warps", ()):
+                    out.add(sw["dest"])
+            for tr in TRANSPORTS:
+                g.setdefault(tr["map"], set()).add(tr["dest"][0])
+            cls._map_graph = g
+        return cls._map_graph
+
+    @classmethod
+    def map_distances(cls, goals: set[str]) -> dict[str, int]:
+        """Hops from every map to the nearest goal map (reverse BFS)."""
+        rev: dict[str, set[str]] = {}
+        for a, outs in cls.map_graph().items():
+            for b in outs:
+                rev.setdefault(b, set()).add(a)
+        dist = {g: 0 for g in goals}
+        frontier = list(goals)
+        while frontier:
+            nxt = []
+            for m in frontier:
+                for p in rev.get(m, ()):
+                    if p not in dist:
+                        dist[p] = dist[m] + 1
+                        nxt.append(p)
+            frontier = nxt
+        return dist
+
     # -- search -------------------------------------------------------------------
     def plan(self, start: State, goal, caps: NavCaps, live: MapGrid | None = None,
-             live_objects=None, max_nodes: int = 400_000) -> list[Step] | None:
-        """Cheapest action sequence from start to a state satisfying goal(State)."""
+             live_objects=None, max_nodes: int = 800_000) -> list[Step] | None:
+        """Cheapest action sequence from start to a state satisfying goal(State).
+
+        Searches a corridor of maps around the shortest map path first and
+        widens it if that fails (one-way ledges and transports can make the
+        real route longer than the map graph suggests)."""
+        for slack in (2, 6, None):
+            r = self._plan(start, goal, caps, live, live_objects, max_nodes, slack)
+            if r is not None or not getattr(goal, "maps", None):
+                return r
+        return None
+
+    def _plan(self, start: State, goal, caps: NavCaps, live, live_objects, max_nodes,
+              slack) -> list[Step] | None:
         grids: dict[str, MapGrid] = {}
         obst: dict[str, Obstacles] = {}
 
@@ -228,19 +327,32 @@ class Planner:
 
         def O(m):
             if m not in obst:
-                obst[m] = self.obstacles(m, live_objects if (live and m == live.map_id) else None)
+                obst[m] = self.obstacles(m, live_objects if (live and m == live.map_id) else None,
+                                         ignore_story=caps.ignore_story_objects)
             return obst[m]
 
         gcaps = caps.grid_caps()
         goal_tiles = getattr(goal, "tiles", set())
+        goal_maps = getattr(goal, "maps", None)
+        # Goal-directed: map hops to the goal give an admissible heuristic
+        # (each hop costs at least one step) and let us skip maps that lead
+        # away from it -- without this, Surf opens the whole sea to the search.
+        hops = self.map_distances(goal_maps) if goal_maps else None
+        limit = (hops.get(start.map, 99) + slack) if (hops and slack is not None) else None
+
+        def h(st: State) -> float:
+            return float(hops.get(st.map, 50)) if hops else 0.0
+
+        self._h = h
         tie = itertools.count()
         dist = {start: 0.0}
         prev: dict[State, tuple[State, Step]] = {}
-        heap = [(0.0, next(tie), start)]
+        heap = [(h(start), next(tie), start)]
         expanded = 0
         while heap:
-            cost, _, s = heapq.heappop(heap)
-            if cost > dist.get(s, 1e18):
+            _f, _, s = heapq.heappop(heap)
+            cost = dist.get(s, 1e18)
+            if limit is not None and hops.get(s.map, 99) > limit:
                 continue
             if goal(s):
                 return self._unwind(prev, start, s)
@@ -249,18 +361,42 @@ class Planner:
                 return None
             g, ob = G(s.map), O(s.map)
             here_b = g.behavior(s.x, s.y) if g.inside(s.x, s.y) else 0
+            # Dive / emerge: press A on the current tile (TrySetDiveWarp).
+            if caps.dive and s.surfing:
+                for c in maps()[s.map]["connections"]:
+                    if c["direction"] == "dive" and here_b in DIVEABLE and c["map"] in maps():
+                        dg = G(c["map"])
+                        if dg.inside(s.x, s.y) and not dg.collision(s.x, s.y):
+                            self._relax((State(c["map"], s.x, s.y, dg.elevation(s.x, s.y), True),
+                                         "dive", 10.0), s, "up", dist, prev, heap, tie, cost)
+                    if c["direction"] == "emerge" and here_b not in NO_EMERGE and c["map"] in maps():
+                        eg = G(c["map"])
+                        if eg.inside(s.x, s.y) and not eg.collision(s.x, s.y):
+                            ee = eg.elevation(s.x, s.y)
+                            self._relax((State(c["map"], s.x, s.y, 3 if ee == 15 else ee, True),
+                                         "dive", 10.0), s, "up", dist, prev, heap, tie, cost)
             for d in DELTA:
                 nxt: list[tuple[State, str, float]] = []
                 # Arrow warps fire when pressing their direction on them.
                 if here_b in ARROW_WARPS[d]:
                     w = self.warp_at(s.map, s.x, s.y)
-                    if w and (a := self.arrive(w)):
+                    if w and (a := self.arrive(w, d)):
                         nxt.append((a, "arrow", 2.0))
                         for item in nxt:
                             self._relax(item, s, d, dist, prev, heap, tie, cost)
                         continue
                 dx, dy = DELTA[d]
                 tx, ty = s.x + dx, s.y + dy
+                # Scripted transports (cable car): talk to the attendant.
+                for tr in TRANSPORTS:
+                    if tr["map"] != s.map:
+                        continue
+                    npc = next(o for o in maps()[s.map]["objects"] if o["local_id"] == tr["npc"])
+                    if (npc["x"], npc["y"]) == (tx, ty) or (
+                            (npc["x"], npc["y"]) == (tx + dx, ty + dy) and g.inside(tx, ty)
+                            and g.behavior(tx, ty) == MB["MB_COUNTER"]):
+                        dm, dxx, dyy = tr["dest"]
+                        nxt.append((State(dm, dxx, dyy, 3), "transport", tr["cost"]))
                 # Scripted doors (signs whose script warps): face, press A, confirm.
                 for sw in maps()[s.map].get("script_warps", ()):
                     if (sw["sx"], sw["sy"]) == (tx, ty) and sw["dest"] in maps():
@@ -271,9 +407,11 @@ class Planner:
                 # Doors: press north into them from the tile below.
                 if d == "up" and g.inside(tx, ty) and g.behavior(tx, ty) == DOOR:
                     w = self.warp_at(s.map, tx, ty)
-                    if w and (a := self.arrive(w)):
+                    if w and (a := self.arrive(w, "up")):
                         nxt.append((a, "door", 2.0))
                 blocked = ob.walls | ob.trees | ob.rocks
+                if not caps.ignore_boulders:
+                    blocked = blocked | ob.boulders
                 if caps.triggers_block:
                     blocked = blocked | ob.triggers | self._all_triggers(s.map)
                 elif caps.active_triggers_block and s.map != caps.trigger_exempt_map:
@@ -294,12 +432,14 @@ class Planner:
                         step_cost += caps.avoid_grass
                     if caps.avoid_triggers and (r.x, r.y) in ob.triggers:
                         step_cost += 40
+                    if (r.x, r.y) in ob.soft:
+                        step_cost += 25
                     if action == "surf":
                         step_cost += 6
                     tb = g.behavior(r.x, r.y)
                     w = self.warp_at(s.map, r.x, r.y) if tb in STEP_WARPS else None
                     if w:
-                        a = self.arrive(w)
+                        a = self.arrive(w, d)
                         if a:
                             nxt.append((a, "warp", step_cost + 2))
                         # stepping on a warp tile always warps; no plain state
@@ -315,14 +455,15 @@ class Planner:
                     self._relax(item, s, d, dist, prev, heap, tie, cost)
         return None
 
-    @staticmethod
-    def _relax(item, s, d, dist, prev, heap, tie, cost):
+    def _relax(self, item, s, d, dist, prev, heap, tie, cost):
         ns, action, c = item
         nc = cost + c
         if nc < dist.get(ns, 1e18):
             dist[ns] = nc
             prev[ns] = (s, Step(action, d, ns))
-            heapq.heappush(heap, (nc, next(tie), ns))
+            heapq.heappush(heap, (nc + self._h(ns), next(tie), ns))
+
+    _h = staticmethod(lambda st: 0.0)
 
     @staticmethod
     def _unwind(prev, start, end) -> list[Step]:
@@ -344,6 +485,19 @@ def at(map_id: str, x: int | None = None, y: int | None = None):
     goal.__name__ = f"at({map_id},{x},{y})"
     # A goal tile may itself be a story trigger we mean to step on.
     goal.tiles = {(map_id, x, y)} if x is not None else set()
+    goal.maps = {map_id}
+    return goal
+
+
+def at_any(map_id: str, tiles):
+    """Goal: stand on any of `tiles` of map_id (e.g. any tile of a trigger)."""
+    tiles = {tuple(t) for t in tiles}
+
+    def goal(s: State) -> bool:
+        return s.map == map_id and (s.x, s.y) in tiles
+    goal.__name__ = f"at_any({map_id},{sorted(tiles)})"
+    goal.tiles = {(map_id, x, y) for x, y in tiles}
+    goal.maps = {map_id}
     return goal
 
 
@@ -352,6 +506,7 @@ def adjacent(map_id: str, x: int, y: int):
     def goal(s: State) -> bool:
         return s.map == map_id and abs(s.x - x) + abs(s.y - y) == 1
     goal.__name__ = f"adjacent({map_id},{x},{y})"
+    goal.maps = {map_id}
     return goal
 
 

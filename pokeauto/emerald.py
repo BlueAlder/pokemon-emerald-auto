@@ -10,7 +10,7 @@ Assumes the default player (Brendan); rival house maps are chosen by gender.
 from __future__ import annotations
 
 from .route import (Milestone, all_of, any_of, badges, call, flag, goto, has_item, interact,
-                    party_size, prefer, reachable, answer, talk, talk_s, trainer_beaten, unless,
+                    party_size, prefer, reachable, answer, trigger, talk, talk_s, trainer_beaten, unless,
                     var_ge)
 
 
@@ -175,6 +175,9 @@ ROUTE: list[Milestone] = [
     # -- Rock Smash north, Meteor Falls, Mt. Chimney, Lavaridge -----------------------------
     Milestone("teach_rock_smash", lambda a: any(p.knows("MOVE_ROCK_SMASH") for p in a.game.party()),
               [call("teach", "ITEM_HM06")]),
+    Milestone("get_strength", flag("FLAG_RECEIVED_HM_STRENGTH"),
+              [goto("MAP_RUSTURF_TUNNEL"), interact("MAP_RUSTURF_TUNNEL", 24, 5)],
+              hint="smash the rocks in Rusturf Tunnel so Wanda's boyfriend gives HM04 Strength"),
     Milestone("meteor_falls", var_ge("VAR_METEOR_FALLS_STATE", 1),
               [goto("MAP_METEOR_FALLS_1F_1R", 14, 18)], min_level=30),
     Milestone("mt_chimney", flag("FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY"),
@@ -195,6 +198,8 @@ ROUTE: list[Milestone] = [
                                             for p in a.game.party()),
               [call("catch", "SPECIES_MARILL", ["MAP_ROUTE112", "MAP_ROUTE104", "MAP_ROUTE120"])],
               hint="catch a Marill to carry HM moves"),
+    Milestone("teach_strength", lambda a: any(p.knows("MOVE_STRENGTH") for p in a.game.party()),
+              [call("teach", "ITEM_HM04", ["AZUMARILL", "MARILL"])]),
     Milestone("badge_balance", badges(5),
               [goto("MAP_PETALBURG_CITY_GYM"), petalburg_gym],
               min_level=40, important=True, hint="beat Norman at the Petalburg Gym"),
@@ -219,4 +224,48 @@ ROUTE: list[Milestone] = [
     Milestone("badge_feather", badges(6),
               [goto("MAP_FORTREE_CITY_GYM"), call("fortree_gym")],
               min_level=44, important=True, hint="beat Winona at the Fortree Gym"),
+
+    # -- Lilycove, Mt. Pyre, the Magma Hideout, the harbor, the Aqua Hideout -------------
+    Milestone("reach_lilycove", flag("FLAG_VISITED_LILYCOVE_CITY"), [goto("MAP_LILYCOVE_CITY")]),
+    Milestone("mt_pyre_summit", var_ge("VAR_MT_PYRE_STATE", 1),
+              [goto("MAP_MT_PYRE_SUMMIT", 23, 7)], min_level=46, important=True,
+              hint="climb Mt. Pyre and stop Team Aqua at the summit"),
+    Milestone("magma_emblem", has_item("ITEM_MAGMA_EMBLEM"),
+              [goto("MAP_MT_PYRE_SUMMIT"), talk_s("MAP_MT_PYRE_SUMMIT", "EventScript_OldLady")],
+              hint="get the Magma Emblem from the old lady at Mt. Pyre's summit"),
+    Milestone("open_magma_hideout", var_ge("VAR_JAGGED_PASS_STATE", 2),
+              [goto("MAP_JAGGED_PASS"),
+               trigger("MAP_JAGGED_PASS", "JaggedPass_EventScript_OpenMagmaHideout")],
+              hint="use the Magma Emblem to open the hidden entrance on Jagged Pass"),
+    Milestone("magma_hideout", flag("FLAG_GROUDON_AWAKENED_MAGMA_HIDEOUT"),
+              [goto("MAP_MAGMA_HIDEOUT_4F"), talk_s("MAP_MAGMA_HIDEOUT_4F", "EventScript_Maxie")],
+              min_level=48, important=True, hint="stop Maxie deep inside the Magma Hideout"),
+    Milestone("slateport_harbor", var_ge("VAR_SLATEPORT_HARBOR_STATE", 2),
+              [goto("MAP_SLATEPORT_CITY_HARBOR", 8, 12)],
+              hint="see Team Aqua steal the submarine at Slateport Harbor"),
+    Milestone("aqua_hideout", flag("FLAG_HIDE_LILYCOVE_CITY_AQUA_GRUNTS"),
+              [goto("MAP_AQUA_HIDEOUT_B2F"), goto("MAP_AQUA_HIDEOUT_B2F", 28, 17),
+               talk_s("MAP_AQUA_HIDEOUT_B2F", "EventScript_Matt")],
+              min_level=48, important=True, hint="clear the Team Aqua Hideout in Lilycove"),
+    Milestone("reach_mossdeep", flag("FLAG_VISITED_MOSSDEEP_CITY"), [goto("MAP_MOSSDEEP_CITY")]),
+
+    # -- Mossdeep, the Space Center, Dive, Seafloor Cavern ---------------------------------
+    Milestone("badge_mind", badges(7),
+              [goto("MAP_MOSSDEEP_CITY_GYM"), call("goto_puzzle", "MAP_MOSSDEEP_CITY_GYM", 23, 7),
+               talk_s("MAP_MOSSDEEP_CITY_GYM", "EventScript_TateAndLiza")],
+              min_level=54, important=True, hint="beat Tate and Liza at the Mossdeep Gym"),
+    Milestone("space_center", flag("FLAG_DEFEATED_MAGMA_SPACE_CENTER"),
+              [goto("MAP_MOSSDEEP_CITY_SPACE_CENTER_2F"),
+               talk_s("MAP_MOSSDEEP_CITY_SPACE_CENTER_2F", "SpaceCenter_2F_EventScript_Steven")],
+              min_level=55, important=True, hint="stop Team Magma at the Mossdeep Space Center"),
+    Milestone("dive", flag("FLAG_RECEIVED_HM_DIVE"),
+              [goto("MAP_MOSSDEEP_CITY_STEVENS_HOUSE"),
+               talk_s("MAP_MOSSDEEP_CITY_STEVENS_HOUSE", "StevensHouse_EventScript_Steven")],
+              hint="get HM08 Dive from Steven in Mossdeep"),
+    Milestone("teach_dive", lambda a: any(p.knows("MOVE_DIVE") for p in a.game.party()),
+              [call("teach", "ITEM_HM08", ["AZUMARILL", "MARILL"])]),
+    Milestone("seafloor_cavern", var_ge("VAR_SEAFLOOR_CAVERN_STATE", 1),
+              [goto("MAP_SEAFLOOR_CAVERN_ROOM9"),
+               trigger("MAP_SEAFLOOR_CAVERN_ROOM9", "SeafloorCavern_Room9_EventScript_ArchieAwakenKyogre")],
+              min_level=56, important=True, hint="stop Archie in the Seafloor Cavern"),
 ]
