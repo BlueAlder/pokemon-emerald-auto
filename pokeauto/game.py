@@ -366,7 +366,9 @@ class Game:
             return Mode("overworld", name, tasks)
         if "NamingScreen" in name:
             return Mode("naming", name, tasks)
-        if "Title" in name or "Intro" in name or "MainMenu" in name or "CopyrightScreen" in name:
+        if ("Title" in name or "Intro" in name or "MainMenu" in name or "CopyrightScreen" in name
+                or any(("TitleScreen" in t or "NewGameBirchSpeech" in t or "MainMenu" in t)
+                       for t in tasks)):
             return Mode("title", name, tasks)
         if "Evolution" in name:
             return Mode("evolution", name, tasks)

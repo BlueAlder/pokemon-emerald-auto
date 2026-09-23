@@ -89,6 +89,20 @@ class Controller:
         self._last_prompt = None
         self.trace: list[str] = []
 
+    def snapshot(self, tag: str) -> None:
+        """Save a screenshot + screen state for post-mortem debugging."""
+        from pathlib import Path
+        out = Path(__file__).resolve().parent.parent / "runs" / "debug"
+        out.mkdir(parents=True, exist_ok=True)
+        n = len(list(out.glob("*.png")))
+        path = out / f"{n:03d}_{tag}.png"
+        try:
+            self.emu.screenshot(str(path))
+        except Exception:
+            pass
+        log.warning("SNAPSHOT %s: %s | text=%r", path.name, self.game.mode(),
+                    self.game.string_var4()[:80])
+
     # -- primitive input ------------------------------------------------------
     def press(self, *buttons: str, hold: int = 3, release: int = 5) -> None:
         self.emu.press(*buttons, hold=hold, release=release)
@@ -131,6 +145,7 @@ class Controller:
                 self.idle(2)
                 continue
             if self.emu.frame - start > max_frames:
+                self.snapshot("pump_timeout")
                 raise Stuck(f"pump timed out in {m}")
             if m.kind == "battle":
                 if self.battle is None:
@@ -143,6 +158,11 @@ class Controller:
                 continue
             if m.kind == "evolution":
                 self.press("A", release=10)      # never B: let it evolve
+                continue
+            if m.kind == "title":
+                # Title screen, main menu, Birch's speech: A advances all of it
+                # (NEW GAME / CONTINUE is the first option either way).
+                self.press("A", hold=3, release=20)
                 continue
             if m.kind == "naming":
                 # A nickname screen we did not avoid: accept the default.
@@ -179,6 +199,10 @@ class Controller:
             self._menu_select(0)
         else:
             self.press("B", release=8)
+        for _ in range(20):          # wait for the prompt to close
+            if not any("YesNo" in t for t in self.game.active_tasks()):
+                break
+            self.idle(2)
 
     def _menu(self) -> dict:
         raw = self.emu.read(S.all("sMenu")[2], 12)   # menu.c's sMenu
@@ -342,9 +366,17 @@ class Controller:
 
     def talk(self, map_id: str, local_id: int, max_tries: int = 8) -> None:
         """Walk up to an NPC (who may wander) and press A facing them."""
+        template = next((t for t in maps()[map_id]["objects"] if t["local_id"] == local_id), None)
         for _ in range(max_tries):
             self.goto(at(map_id), desc=f"{map_id}")
             o = self.live_object(local_id)
+            if o is None and template:
+                # Objects only spawn near the camera: walk toward where the
+                # map data puts them, then look again.
+                self.goto(lambda s: s.map == map_id and abs(s.x - template["x"]) <= 3
+                          and abs(s.y - template["y"]) <= 3,
+                          desc=f"towards object {local_id}")
+                o = self.live_object(local_id)
             if o is None:
                 raise Stuck(f"object {local_id} is not on {map_id}")
             self.goto(adjacent(map_id, o.x, o.y), desc=f"next to object {local_id}")

@@ -1,0 +1,178 @@
+"""The route: an ordered list of milestones, each with a completion test.
+
+A Milestone's `done` predicate reads monotonic game state (flags, vars,
+badges, items, party), so progress is a fact the game itself records, and a
+run can resume from any save: the runner simply skips milestones already done.
+
+`actions` are ordinary Python callables over the Agent. They should be
+idempotent (goto / talk / interact), because a milestone may be retried after
+a whiteout or a surprise.
+"""
+from __future__ import annotations
+
+import logging
+import time
+import traceback
+from dataclasses import dataclass, field
+from typing import Callable
+
+from .controller import Stuck
+from .symbols import const
+
+log = logging.getLogger("pokeauto")
+
+
+@dataclass
+class Milestone:
+    name: str
+    done: Callable
+    actions: list[Callable] = field(default_factory=list)
+    min_level: int = 0            # grind the lead to this level first
+    heal_first: bool = True
+    important: bool = False       # boss fight inside: let the advisor weigh in
+    attempts: int = 4
+
+    def run(self, agent) -> None:
+        for act in self.actions:
+            if self.done(agent):
+                return
+            act(agent)
+            agent.pump()
+
+
+# -- predicate helpers ---------------------------------------------------------------
+
+def flag(name: str):
+    return lambda a: a.game.flag(name)
+
+
+def var_ge(name: str, value: int):
+    return lambda a: a.game.var(name) >= value
+
+
+def badges(n: int):
+    return lambda a: a.game.badges() >= n
+
+
+def has_item(name: str):
+    return lambda a: a.game.has_item(name) > 0
+
+
+def party_size(n: int):
+    return lambda a: len(a.game.party()) >= n
+
+
+def all_of(*preds):
+    return lambda a: all(p(a) for p in preds)
+
+
+def any_of(*preds):
+    return lambda a: any(p(a) for p in preds)
+
+
+def trainer_beaten(trainer: str):
+    return lambda a: a.game.flag(const("TRAINER_FLAGS_START") + const(trainer))
+
+
+# -- action helpers --------------------------------------------------------------------
+
+def goto(map_id: str, x: int | None = None, y: int | None = None):
+    def act(a):
+        a.goto(map_id, x, y)
+    act.__name__ = f"goto {map_id} {x},{y}"
+    return act
+
+
+def talk(map_id: str, local_id: int):
+    def act(a):
+        a.talk(map_id, local_id)
+    act.__name__ = f"talk {map_id} #{local_id}"
+    return act
+
+
+def object_id(map_id: str, pattern: str) -> int:
+    """Local id of the first object whose script/name/graphics contains pattern."""
+    from .symbols import maps
+    for o in maps()[map_id]["objects"]:
+        if pattern in o["script"] or pattern == o["name"] or pattern in o["gfx"]:
+            return o["local_id"]
+    raise KeyError(f"no object matching {pattern!r} on {map_id}")
+
+
+def talk_s(map_id: str, pattern: str):
+    """Talk to the object on map_id whose script (or name/gfx) matches pattern."""
+    lid = object_id(map_id, pattern)
+
+    def act(a):
+        a.talk(map_id, lid)
+    act.__name__ = f"talk {map_id} {pattern}"
+    return act
+
+
+def interact(map_id: str, x: int, y: int, direction: str | None = None):
+    def act(a):
+        a.interact(map_id, x, y, direction)
+    act.__name__ = f"interact {map_id} ({x},{y})"
+    return act
+
+
+def call(fn_name: str, *args, **kw):
+    def act(a):
+        getattr(a, fn_name)(*args, **kw)
+    act.__name__ = f"{fn_name}{args}"
+    return act
+
+
+# -- runner ---------------------------------------------------------------------------------
+
+class RouteRunner:
+    def __init__(self, agent, milestones: list[Milestone], checkpoint=None):
+        self.agent = agent
+        self.milestones = milestones
+        self.checkpoint = checkpoint      # callable(name) -> None (save a state)
+        self.history: list[tuple[str, float]] = []
+
+    def current(self) -> Milestone | None:
+        for m in self.milestones:
+            if not m.done(self.agent):
+                return m
+        return None
+
+    def run(self, stop_after: str | None = None, max_seconds: float | None = None) -> bool:
+        a = self.agent
+        t0 = time.time()
+        while True:
+            m = self.current()
+            if m is None:
+                log.info("ROUTE complete")
+                return True
+            if max_seconds and time.time() - t0 > max_seconds:
+                log.info("ROUTE time budget exhausted at %s", m.name)
+                return False
+            log.info("=== MILESTONE %s === %s", m.name, a.status_line())
+            ok = False
+            for attempt in range(m.attempts):
+                try:
+                    a.before_milestone(m)
+                    m.run(a)
+                    a.pump()
+                    if m.done(a):
+                        ok = True
+                        break
+                    log.warning("milestone %s not done after attempt %d", m.name, attempt + 1)
+                except Stuck as exc:
+                    log.warning("milestone %s stuck (attempt %d): %s", m.name, attempt + 1, exc)
+                    a.recover(m, exc)
+                except Exception:
+                    log.error("milestone %s crashed:\n%s", m.name, traceback.format_exc())
+                    a.recover(m, None)
+            if not ok:
+                log.error("ROUTE failed at %s", m.name)
+                return False
+            self.history.append((m.name, time.time() - t0))
+            log.info("--- done %s (%.0fs elapsed, game %s)", m.name, time.time() - t0,
+                     a.game.play_time())
+            if self.checkpoint:
+                self.checkpoint(m.name)
+            if stop_after and m.name == stop_after:
+                return True

@@ -34,6 +34,11 @@ HEADERS = {
     "event_objects.h": ("OBJ_EVENT_GFX_",),
     "trainer_types.h": ("TRAINER_TYPE_",),
     "event_object_movement.h": ("MOVEMENT_TYPE_",),
+    "abilities.h": ("ABILITY_",),
+    "battle_move_effects.h": ("EFFECT_",),
+    "pokemon.h": ("TYPE_", "STAT_", "GROWTH_"),
+    "hold_effects.h": ("HOLD_EFFECT_",),
+    "battle.h": ("BATTLE_TYPE_", "B_OUTCOME_", "STATUS1_", "STATUS2_"),
 }
 
 DEFINE = re.compile(r"^\s*#define\s+(\w+)\s+(.+?)\s*(//.*)?$")

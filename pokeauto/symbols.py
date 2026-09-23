@@ -73,8 +73,14 @@ def const(name: str) -> int:
 @lru_cache(maxsize=1)
 def const_names() -> dict[str, dict[int, str]]:
     """Reverse lookup per prefix: const_names()['SPECIES_'][283] == 'SPECIES_MUDKIP'."""
+    # Sub-families that share a prefix with a main family (MOVE_EFFECT_* vs
+    # MOVE_*) must not shadow it.
+    sub = ("MOVE_EFFECT_", "MOVE_TARGET_", "TRAINER_TYPE_", "TRAINER_FLAGS_",
+           "TRAINER_PIC_", "TRAINER_CLASS_", "ITEM_HAS_", "SPECIES_FLAG", "FLAG_HIDDEN_ITEMS_")
     out: dict[str, dict[int, str]] = {}
     for name, value in constants().items():
+        if name.startswith(sub):
+            continue
         prefix = name.split("_", 1)[0] + "_"
         out.setdefault(prefix, {}).setdefault(value, name)
     return out
