@@ -15,6 +15,7 @@ import re
 import struct
 from dataclasses import dataclass, field
 
+from .emu import keymask
 from .data import (GameData, combatant_from_battle, combatant_from_party, estimate_damage)
 from .symbols import const, const_names, symbols
 
@@ -151,6 +152,11 @@ class Battle:
                 if cb == "BattleMainCB2" and (self.game.text_waiting() or idle > 30):
                     self.ctl.press("B", hold=2, release=4)
                     idle = 0
+                elif cb == "BattleMainCB2" and self.game.text_printing():
+                    # Holding B while a message prints skips the per-letter
+                    # delay (RenderText); released before any box can open.
+                    self.emu.run(keymask("B"), 3)
+                    idle += 1
                 elif cb != "BattleMainCB2" and self.game.mode().kind in ("overworld", "script"):
                     return
                 elif cb != "BattleMainCB2" and self.game.text_waiting():

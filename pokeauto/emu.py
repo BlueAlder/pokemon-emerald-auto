@@ -121,6 +121,9 @@ class HeadlessEmu(Emu):
         self._mask_cache: dict[int, object] = {}
         self.frame = 0
         self.on_frames = None     # optional hook(emu) called after each run()
+        # memory.blocks hands out a fresh copy of a whole block (256 KB of
+        # EWRAM) per access: keep one per block until the next frame runs.
+        self._blocks: dict[int, bytes] = {}
 
     def _retro_mask(self, keys: int):
         arr = self._mask_cache.get(keys)
@@ -138,14 +141,18 @@ class HeadlessEmu(Emu):
             self.em.set_button_mask(mask, 0)
             self.em.step()
         self.frame += frames
+        self._blocks.clear()
         if self.on_frames:
             self.on_frames(self)
 
     def _read_ram(self, addr: int, n: int) -> bytes:
         base = addr & 0xFF000000
-        block = self.data.memory.blocks.get(base)
+        block = self._blocks.get(base)
         if block is None:
-            return b"\x00" * n
+            block = self.data.memory.blocks.get(base)
+            if block is None:
+                return b"\x00" * n
+            self._blocks[base] = block
         o = addr - base
         return bytes(block[o:o + n])
 
@@ -154,6 +161,7 @@ class HeadlessEmu(Emu):
 
     def load_state(self, blob: bytes) -> None:
         self.em.set_state(blob)
+        self._blocks.clear()
 
     def screen(self):
         return self.em.get_screen()
