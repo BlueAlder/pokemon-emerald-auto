@@ -436,6 +436,15 @@ class Planner:
                             ee = eg.elevation(s.x, s.y)
                             self._relax((State(c["map"], s.x, s.y, 3 if ee == 15 else ee, True),
                                          "dive", 10.0), s, "up", dist, prev, heap, tie, cost)
+            # Waterfall: face it while surfing, A, and ride to the top.
+            if caps.waterfall and s.surfing and g.inside(s.x, s.y - 1) \
+                    and g.behavior(s.x, s.y - 1) == MB["MB_WATERFALL"]:
+                ty = s.y - 1
+                while g.inside(s.x, ty) and g.behavior(s.x, ty) == MB["MB_WATERFALL"]:
+                    ty -= 1
+                if g.inside(s.x, ty) and not g.collision(s.x, ty):
+                    self._relax((State(s.map, s.x, ty, s.elev, True), "waterfall",
+                                 4.0 + (s.y - ty)), s, "up", dist, prev, heap, tie, cost)
             for d in DELTA:
                 nxt: list[tuple[State, str, float]] = []
                 # Arrow warps fire when pressing their direction on them.

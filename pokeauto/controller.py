@@ -416,6 +416,18 @@ class Controller:
             self.pump()
             s = self.state()
             return s.map == step.expect.map and (s.x, s.y) == (step.expect.x, step.expect.y)
+        if step.action == "waterfall":
+            self.face("up")
+            self.press("A", release=10)          # "Would you like to use WATERFALL?" -> yes
+            self.pump()
+            for _ in range(900):                 # the climb is a scripted ride
+                if self.free() and self.game.avatar()["tile_transition"] == 0 \
+                        and self.state() == step.expect:
+                    break
+                self.emu.run(0, 2)
+                if not self.free():
+                    self.pump()
+            return self.state() == step.expect
         if step.action == "slide":
             # Onto a current / walk tile: it carries us; wait for the ride to end.
             self._hold_until_moved(d, max_frames=40)

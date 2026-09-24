@@ -93,6 +93,8 @@ class Battle:
         self._shift_tries = {}
         self._items_disabled = False
         self._item_count_before = None
+        self._trapped_now = False
+        self._log_start = len(self.log)
         idle = 0
         start = self.emu.frame
         while True:
@@ -542,8 +544,14 @@ class Battle:
         return spe
 
     def _run_blocked(self) -> bool:
-        return bool(self.game.battle_type() & (C("BATTLE_TYPE_TRAINER") |
-                                                C("BATTLE_TYPE_FIRST_BATTLE")))
+        # "Can't escape!" = trapped (Mean Look, Arena Trap...): fight instead.
+        if "escape" in self.game.battle_text().lower() and "can't" in self.game.battle_text().lower():
+            self._trapped_now = True
+        recent = self.log[getattr(self, "_log_start", 0):][-3:]
+        if len(recent) == 3 and all(" -> run " in c for c in recent):
+            self._trapped_now = True           # three Run choices in a row: not getting away
+        return getattr(self, "_trapped_now", False) or bool(
+            self.game.battle_type() & (C("BATTLE_TYPE_TRAINER") | C("BATTLE_TYPE_FIRST_BATTLE")))
 
     def _trapped(self) -> bool:
         return False

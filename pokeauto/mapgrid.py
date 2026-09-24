@@ -81,12 +81,13 @@ CARRY = {const("MB_WALK_EAST"): "right", const("MB_WALK_WEST"): "left",
          const("MB_EASTWARD_CURRENT"): "right", const("MB_WESTWARD_CURRENT"): "left",
          const("MB_NORTHWARD_CURRENT"): "up", const("MB_SOUTHWARD_CURRENT"): "down",
          const("MB_SLIDE_EAST"): "right", const("MB_SLIDE_WEST"): "left",
-         const("MB_SLIDE_NORTH"): "up", const("MB_SLIDE_SOUTH"): "down"}
+         const("MB_SLIDE_NORTH"): "up", const("MB_SLIDE_SOUTH"): "down",
+         const("MB_WATERFALL"): "down"}      # surfing onto a waterfall washes you down
 
 FORCED = frozenset(
     [b for b in range(const("MB_WALK_EAST"), const("MB_TRICK_HOUSE_PUZZLE_8_FLOOR") + 1)
      if b not in CARRY]
-    + [const("MB_MUDDY_SLOPE"), const("MB_CRACKED_FLOOR"), const("MB_WATERFALL"),
+    + [const("MB_MUDDY_SLOPE"), const("MB_CRACKED_FLOOR"),
        const("MB_ICE"), const("MB_SECRET_BASE_JUMP_MAT"), const("MB_SECRET_BASE_SPIN_MAT")])
 
 
@@ -225,8 +226,7 @@ class MapGrid:
         if (tx, ty) in blocked:
             return None
         if tb in FORCED and not caps.allow_forced:
-            if not (tb == MB["MB_WATERFALL"] and caps.waterfall):
-                return None
+            return None        # (waterfalls are climbed as one planner edge)
         te = self.elevation(tx, ty)
         mismatch = (p.elev != ELEV_TRANSITION and te not in (ELEV_TRANSITION, ELEV_MULTI)
                     and te != p.elev)
