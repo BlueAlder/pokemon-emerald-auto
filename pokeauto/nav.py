@@ -272,9 +272,12 @@ class Planner:
         x, y = dw["x"], dw["y"]
         if g.inside(x, y):
             b = g.behavior(x, y)
-            # Task_ExitDoor walks south; Task_ExitNonAnimDoor walks one step in
-            # the direction the player faced when entering (if it can).
-            step = "down" if b == DOOR else facing if b in EXIT_SOUTH else None
+            # Task_ExitDoor walks south; Task_ExitNonAnimDoor walks one step the
+            # way GetAdjustedInitialDirection faces us: south off stairs and
+            # water doors, north off a deep south warp.
+            step = ("down" if b == DOOR else
+                    "up" if b == const("MB_DEEP_SOUTH_WARP") else
+                    "down" if b in EXIT_SOUTH else None)
             if step:
                 dx, dy = DELTA[step]
                 if g.inside(x + dx, y + dy) and not g.collision(x + dx, y + dy):
