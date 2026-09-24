@@ -79,7 +79,9 @@ ARROW_WARPS = {"up": _mb("MB_NORTH_ARROW_WARP", "MB_STAIRS_OUTSIDE_ABANDONED_SHI
 CARRY = {const("MB_WALK_EAST"): "right", const("MB_WALK_WEST"): "left",
          const("MB_WALK_NORTH"): "up", const("MB_WALK_SOUTH"): "down",
          const("MB_EASTWARD_CURRENT"): "right", const("MB_WESTWARD_CURRENT"): "left",
-         const("MB_NORTHWARD_CURRENT"): "up", const("MB_SOUTHWARD_CURRENT"): "down"}
+         const("MB_NORTHWARD_CURRENT"): "up", const("MB_SOUTHWARD_CURRENT"): "down",
+         const("MB_SLIDE_EAST"): "right", const("MB_SLIDE_WEST"): "left",
+         const("MB_SLIDE_NORTH"): "up", const("MB_SLIDE_SOUTH"): "down"}
 
 FORCED = frozenset(
     [b for b in range(const("MB_WALK_EAST"), const("MB_TRICK_HOUSE_PUZZLE_8_FLOOR") + 1)

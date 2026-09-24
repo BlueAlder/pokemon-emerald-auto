@@ -455,7 +455,10 @@ def ice_gym(agent, map_id: str, leader_pattern: str, badge_count: int) -> None:
             ctl.planner.learned_blocks |= {(map_id, x, y) for x, y in ice}
             lx, ly = leader["x"], leader["y"]
             s = ctl.state()
-            if (s.x, s.y) not in ice:
+            # Mid-room means standing on ice with uncracked ice next to us.
+            mid_room = (s.x, s.y) in ice and any(
+                (s.x + dx, s.y + dy) in thin for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)))
+            if not mid_room:
                 goal = lambda st: st.map == map_id and abs(st.x - lx) + abs(st.y - ly) == 1
                 if ctl.planner.plan(s, goal, ctl.nav_caps(), live=g,
                                     live_objects=agent.game.objects()) is not None:
@@ -481,7 +484,7 @@ def ice_gym(agent, map_id: str, leader_pattern: str, badge_count: int) -> None:
                                                for dx, dy in ((0, -1), (0, 1), (1, 0), (-1, 0)))}
                 if not ends:
                     continue
-                if (s.x, s.y) in ice:
+                if mid_room:
                     if not any(abs(s.x - x) + abs(s.y - y) == 1 for x, y in comp):
                         continue
                     path = ice_path((s.x, s.y), comp, ends)

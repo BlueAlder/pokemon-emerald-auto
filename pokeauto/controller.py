@@ -294,6 +294,9 @@ class Controller:
         if "PartyMenu" in m.callback2 and self.emu.u8(S["gPartyMenu"] + 8) & 0xF == 4:
             self._choose_half_step(tasks)
             return
+        if "BagMenu" in m.callback2 and "Task_BagMenu_HandleInput" in tasks:
+            self.press("B", release=12)               # a bag nobody is using: close it
+            return
         for key, handler in self.ui_handlers.items():
             if key in m.callback2 or any(key in t for t in tasks):
                 handler(self, m)

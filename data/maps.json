@@ -47625,6 +47625,14 @@
 "coords": [],
 "group": 0,
 "layout": "LAYOUT_ROUTE131",
+"layout_overrides": [
+{
+"layout": 319,
+"op": "always",
+"value": 0,
+"var": ""
+}
+],
 "mapsec": "MAPSEC_ROUTE_131",
 "name": "Route131",
 "num": 46,
@@ -61788,6 +61796,7 @@
 "connections": [],
 "coords": [],
 "group": 15,
+"hole_warp": "MAP_SOOTOPOLIS_CITY_GYM_B1F",
 "layout": "LAYOUT_SOOTOPOLIS_CITY_GYM_1F",
 "mapsec": "MAPSEC_SOOTOPOLIS_CITY",
 "name": "SootopolisCity_Gym_1F",

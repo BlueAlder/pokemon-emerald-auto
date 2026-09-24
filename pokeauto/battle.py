@@ -155,6 +155,14 @@ class Battle:
                     return
                 elif cb != "BattleMainCB2" and self.game.text_waiting():
                     self.ctl.press("A", release=4)
+                elif cb != "BattleMainCB2" and idle > 100:
+                    # Stuck in a menu transition (bag/party) nobody drives:
+                    # back out, and stop using items this battle.
+                    log.info("BATTLE stuck in %s; backing out, no more items", cb)
+                    self._items_disabled = True
+                    self._pending.clear()
+                    self.ctl.press("B", release=10)
+                    idle = 0
                 else:
                     self.ctl.idle(3)
                     idle += 1
@@ -380,6 +388,9 @@ class Battle:
             return
         if any("ItemContext" in t for t in tasks):
             self.ctl._menu_select(0)
+            return
+        if not tasks or self.game.fading():
+            self.ctl.idle(3)                    # a screen transition: let it finish
             return
         self.ctl.press("A", release=6)
 

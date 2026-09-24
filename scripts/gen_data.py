@@ -213,7 +213,7 @@ def main() -> int:
         # conditional layout swaps (Sky Pillar is "clean" until Rayquaza wakes).
         for body in labels.values():
             for line in body:
-                m = re.match(r"setholewarp (MAP_\w+)", line)
+                m = re.match(r"(?:setholewarp|warphole) (MAP_\w+)", line)
                 if m:
                     maps[mid]["hole_warp"] = m.group(1)
                 m = re.match(r"setdivewarp (MAP_\w+), (\d+), (\d+)", line)
@@ -223,6 +223,14 @@ def main() -> int:
         overrides = []
         for body in labels.values():
             for line in body:
+                m = re.match(r"call (\w+)$", line)
+                if m and m.group(1) in labels:
+                    for tl in labels[m.group(1)]:
+                        lm = re.match(r"setmaplayoutindex (LAYOUT_\w+)", tl)
+                        if lm and lm.group(1) in layout_ids:
+                            overrides.append({"op": "always", "var": "", "value": 0,
+                                              "layout": layout_ids[lm.group(1)]})
+                    continue
                 m = re.match(r"call_if_(lt|le|eq|ne|ge|gt) (VAR_\w+), (\w+), (\w+)$", line)
                 if not m or m.group(4) not in labels:
                     continue

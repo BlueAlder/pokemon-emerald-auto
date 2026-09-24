@@ -105,7 +105,7 @@ class Obstacles:
     soft: set = field(default_factory=set)        # NPCs placed by map data only
 
 
-FALL_TILES = {MB["MB_CRACKED_FLOOR"], MB["MB_CRACKED_FLOOR_HOLE"]}
+FALL_TILES = {MB["MB_CRACKED_FLOOR"], MB["MB_CRACKED_FLOOR_HOLE"], const("MB_CRACKED_ICE")}
 
 
 class Planner:
@@ -150,6 +150,9 @@ class Planner:
         for o in maps()[map_id].get("layout_overrides", ()):
             if o["var"] == "VAR_RESULT":
                 continue
+            if o["op"] == "always":
+                from .mapgrid import layout_grid
+                return layout_grid(self.emu, o["layout"], map_id)
             v = self.game.var(o["var"])
             if {"lt": v < o["value"], "le": v <= o["value"], "eq": v == o["value"],
                     "ne": v != o["value"], "ge": v >= o["value"], "gt": v > o["value"]}[o["op"]]:
@@ -281,6 +284,7 @@ class Planner:
         # free to step onto any level; 15 (multi-level) keeps the default.
         # Through a water door you arrive still surfing.
         wet = g.inside(x, y) and (surfable(g.behavior(x, y)) or elev == 1)
+        wet = wet or maps()[dest].get("type") == "MAP_TYPE_UNDERWATER"   # still diving
         return State(dest, x, y, 3 if elev == 15 else elev, wet)
 
     def edge(self, s: State, d: str) -> State | None:
@@ -408,13 +412,15 @@ class Planner:
             if caps.dive and s.surfing:
                 # Maps whose dive/emerge is a script (setdivewarp), not a connection.
                 dw = maps()[s.map].get("dive_warp")
-                if dw and here_b in DIVEABLE and dw["dest"] in maps() and not any(
+                if dw and here_b in DIVEABLE and dw["dest"] in maps() \
+                        and maps()[s.map].get("type") != "MAP_TYPE_UNDERWATER" and not any(
                         c["direction"] == "dive" for c in maps()[s.map]["connections"]):
                     dg = G(dw["dest"])
                     self._relax((State(dw["dest"], dw["x"], dw["y"],
                                        dg.elevation(dw["x"], dw["y"]), True),
                                  "dive", 10.0), s, "up", dist, prev, heap, tie, cost)
-                land = self.emerge_target(s.map)
+                underwater = maps()[s.map].get("type") == "MAP_TYPE_UNDERWATER"
+                land = self.emerge_target(s.map) if underwater else None
                 if land and here_b not in NO_EMERGE and not any(
                         c["direction"] == "emerge" for c in maps()[s.map]["connections"]):
                     self._relax((land, "dive", 10.0), s, "up", dist, prev, heap, tie, cost)

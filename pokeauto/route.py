@@ -90,11 +90,27 @@ def trigger(map_id: str, script: str):
     def act(a):
         from .nav import at_any
         from .symbols import maps
-        tiles = [(c["x"], c["y"]) for c in maps()[map_id]["coords"]
-                 if (c.get("script") or "").endswith(script)]
-        if not tiles:
+        events = [c for c in maps()[map_id]["coords"]
+                  if (c.get("script") or "").endswith(script)]
+        if not events:
             raise ValueError(f"no coord event {script!r} on {map_id}")
-        a.ctl.goto(at_any(map_id, tiles), desc=f"trigger {script}")
+        tiles = [(c["x"], c["y"]) for c in events]
+        on_tile = at_any(map_id, tiles)
+        var, value = events[0].get("var"), events[0].get("var_value")
+
+        def fired() -> bool:
+            # The trigger's condition no longer holds: its script has run
+            # (cutscenes often warp us away before we "arrive").
+            try:
+                return bool(var) and a.game.var(var) != int(str(value), 0)
+            except (KeyError, ValueError):
+                return False
+
+        def goal(st):
+            return on_tile(st) or fired()
+        goal.maps = getattr(on_tile, "maps", {map_id})
+        if not fired():
+            a.ctl.goto(goal, desc=f"trigger {script}")
     act.__name__ = f"trigger {map_id} {script}"
     return act
 
@@ -186,7 +202,18 @@ class RouteRunner:
         self.history: list[tuple[str, float]] = []
 
     def current(self) -> Milestone | None:
-        for m in self.milestones:
+        """The first unfinished milestone after the latest finished one.
+
+        The route is ordered, so a later milestone being done implies the
+        earlier ones are -- even if the game later clears one of their flags
+        (the rival's Rayquaza call clears FLAG_DEFEATED_MAGMA_SPACE_CENTER).
+        """
+        last = -1
+        for i in range(len(self.milestones) - 1, -1, -1):
+            if self.milestones[i].done(self.agent):
+                last = i
+                break
+        for m in self.milestones[last + 1:]:
             if not m.done(self.agent):
                 return m
         return None
