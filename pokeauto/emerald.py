@@ -376,7 +376,10 @@ ROUTE: list[Milestone] = [
     Milestone("sidney", flag("FLAG_DEFEATED_ELITE_4_SIDNEY"),
               [call("heal_with_items"), e4_room("MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM"),
                talk_s("MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM", "EventScript_Sidney")],
-              heal_first=False, important=True, hint="beat Sidney of the Elite Four"),
+              # Whiting out restarts the challenge here, so this is also where
+              # the team gets stronger between attempts (grinding is free).
+              heal_first=False, min_level=74, team_level=66, team_size=4, important=True,
+              hint="beat Sidney of the Elite Four"),
     Milestone("phoebe", flag("FLAG_DEFEATED_ELITE_4_PHOEBE"),
               [call("heal_with_items"), e4_room("MAP_EVER_GRANDE_CITY_PHOEBES_ROOM"),
                talk_s("MAP_EVER_GRANDE_CITY_PHOEBES_ROOM", "EventScript_Phoebe")],

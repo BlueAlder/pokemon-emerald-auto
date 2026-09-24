@@ -100,10 +100,10 @@ class Battle:
         while True:
             if self.battle_over():
                 return
-            if self.emu.frame - start > 60 * 60 * 10:
+            if self.emu.frame - start > 60 * 60 * 30:
                 from .controller import Stuck
                 self.ctl.snapshot("battle_timeout")
-                raise Stuck(f"battle ran 10 game-minutes: {self.game.mode()} "
+                raise Stuck(f"battle ran 30 game-minutes: {self.game.mode()} "
                             f"cmd={self.script_command()} ctrl={self.game.battle_controller(0)}")
             cb = S.name_at(self.game.callback2())
             tasks = self.game.active_tasks()
