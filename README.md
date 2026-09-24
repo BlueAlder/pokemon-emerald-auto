@@ -84,6 +84,9 @@ cp .env.example .env            # optional: add your TypeSafe key
 ./.venv/bin/python scripts/play.py --backend mgba                # drive the mGBA app (watchable)
 ```
 
+* On macOS, run long jobs under `caffeinate -dimsu`. Without it, background
+  processes can be throttled to a few percent of a CPU while the machine
+  idles, which makes a one-hour playthrough take most of a day.
 * The headless backend runs the mGBA core in-process (stable-retro) with no
   frame limit. `runs/live.png` is refreshed every few seconds so you can watch.
 * Checkpoints go to `runs/checkpoints/<milestone>.state`, the log to

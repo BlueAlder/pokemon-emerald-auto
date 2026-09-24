@@ -617,14 +617,22 @@ class Agent:
                      "SCORCHED_SLAB", "ABANDONED_SHIP", "NEW_MAUVILLE", "METEOR_FALLS_B1F_2R",
                      "METEOR_FALLS_STEVENS_CAVE")
 
+    def _grind_usable_maps(self) -> set[str]:
+        """Maps worth pacing in: they have a wild table, are not on the
+        exclusion list, and have not already failed to produce encounters."""
+        dead = self.__dict__.get("_grind_dead", set())
+        return {m for m in self.data.wild_land()
+                if not any(x in m for x in self.GRIND_EXCLUDE) and m not in dead}
+
     def grind_maps(self, level: int) -> set[str]:
         """Maps whose wild levels suit a L`level` trainee: tough enough to pay,
         weak enough to win against. Falls back to the strongest easy ones."""
         caps = self.ctl.nav_caps()
         key = (caps.surf, caps.waterfall, caps.dive, caps.strength)
         blocked = getattr(self, "_grind_blocked", {}).get(key, set())
+        usable = self._grind_usable_maps()
         table = {m: v for m, v in self.data.wild_land().items()
-                 if not any(x in m for x in self.GRIND_EXCLUDE) and m not in blocked}
+                 if m in usable and m not in blocked}
         good = {m for m, mons in table.items()
                 if max(hi for _, hi, _ in mons) <= level + 2
                 and max(hi for _, hi, _ in mons) >= level - 10}
@@ -654,6 +662,7 @@ class Agent:
         planner = self.ctl.planner
         battles = 0
         spot = None            # (map, x, y, direction, back)
+        dry = 0                # consecutive spots without an encounter
         spots: set[str] = set()
         while self.lead().level < level and battles < max_battles:
             if self.needs_heal(0.55):
@@ -670,9 +679,13 @@ class Agent:
             if spot is None:
                 spots = set(want)
 
+                usable = self._grind_usable_maps()
+
                 def in_grass(s):
                     if spots and s.map not in spots:
                         return False
+                    if s.map not in usable:
+                        return False       # excluded, no wild table, or no encounters seen
                     g = planner.grid(s.map)
                     return g.inside(s.x, s.y) and has_encounters(g.behavior(s.x, s.y)) \
                         and not s.surfing
@@ -720,8 +733,15 @@ class Agent:
                 elif i - moved > 6:
                     break               # we are not actually moving: pick a new spot
             if not fought:
-                log.info("GRIND no encounter at %s after %d moves; moving on", spot[:3], moved)
+                log.info("GRIND no encounter at %s after %d moves; never grinding there again",
+                         spot[:3], moved)
+                self.__dict__.setdefault("_grind_dead", set()).add(spot[0])
                 spot = None
+                dry += 1
+                if dry > 8:
+                    raise Stuck("grinding: nowhere left that produces encounters")
+            else:
+                dry = 0
         log.info("GRIND done: %s after %d battles", self.lead(), battles)
 
     def train(self, level: int, members: int = 2) -> None:
