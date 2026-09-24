@@ -213,13 +213,48 @@ class Agent:
         return (self.party_hp() < threshold or lead.hp_frac < 0.35 or lead.fainted
                 or low_pp)
 
+    # Rooms that lock behind you: no way back to a Pokemon Center.
+    NO_CENTER_MAPS = ("MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM", "MAP_EVER_GRANDE_CITY_PHOEBES_ROOM",
+                      "MAP_EVER_GRANDE_CITY_GLACIAS_ROOM", "MAP_EVER_GRANDE_CITY_DRAKES_ROOM",
+                      "MAP_EVER_GRANDE_CITY_CHAMPIONS_ROOM", "MAP_EVER_GRANDE_CITY_HALL")
+
     def _health_check(self) -> bool:
         """Called between steps of every walk: detour to heal before it is too late."""
         if self.game.party() and self.needs_heal(0.4):
+            if self.game.map_id().startswith(self.NO_CENTER_MAPS):
+                self.heal_with_items()
+                return False
             log.info("HEALTH low (party %.0f%%) - detouring to heal", 100 * self.party_hp())
             self.heal()
             return True
         return False
+
+    def heal_with_items(self, min_frac: float = 0.8) -> None:
+        """Revive and top up the party from the bag (inside the Elite Four)."""
+        for mon in self.game.party():
+            if mon.is_egg:
+                continue
+            slot = mon.slot
+            if mon.fainted:
+                item = next((n for n in ("ITEM_MAX_REVIVE", "ITEM_REVIVE")
+                             if self.game.has_item(n)), None)
+                if item is None:
+                    continue
+                self.use_item(item, slot)
+                mon = self.game.party()[slot]
+            if mon.fainted:
+                continue
+            status = mon.status & 0xFF
+            if mon.hp_frac < min_frac or status:
+                missing = mon.max_hp - mon.hp
+                choices = (["ITEM_FULL_RESTORE", "ITEM_FULL_HEAL"] if status else []) + (
+                    ["ITEM_HYPER_POTION"] if missing <= 200 else []) + [
+                    "ITEM_MAX_POTION", "ITEM_FULL_RESTORE", "ITEM_HYPER_POTION"]
+                item = next((n for n in choices if self.game.has_item(n)), None)
+                if item and (mon.hp_frac < min_frac or item in ("ITEM_FULL_HEAL",
+                                                                "ITEM_FULL_RESTORE")):
+                    self.use_item(item, slot)
+        log.info("ITEM HEAL done: %s", self.status_line())
 
     def heal(self) -> None:
         """Walk to the nearest reachable Pokemon Center and heal."""
@@ -242,22 +277,54 @@ class Agent:
         del start
 
     # -- shopping -------------------------------------------------------------------------
-    MARTS = [m for m in maps() if m.endswith("_MART") or "DEPARTMENT_STORE_2F" in m]
+
+    MART_EXCLUDE = ("BATTLE_FRONTIER", "TRAINER_HILL")
 
     def shop(self, wants: dict[str, int]) -> None:
-        """Walk to the nearest reachable Mart and buy `wants` (capped by money)."""
+        """Buy `wants` (capped by money) at the nearest Marts that stock them."""
         from .menus import buy
         wants = {k: v for k, v in wants.items() if v > 0}
-        if not wants:
-            return
-        self.ctl.goto(lambda s: s.map in self.MARTS, desc="nearest Mart")
-        mart = self.game.map_id()
-        clerk = next((o for o in maps()[mart]["objects"] if "MART_EMPLOYEE" in o["gfx"]), None)
-        if clerk is None:
-            raise Stuck(f"no clerk in {mart}")
-        buy(self.ctl, lambda: self.ctl.talk(mart, clerk["local_id"], pump_after=False), wants)
-        self.pump()
-        log.info("SHOPPED at %s: %s money now %d", mart, wants, self.game.money())
+        stock = [(mid, m["script"], set(m["items"])) for mid, info in maps().items()
+                 if not any(x in mid for x in self.MART_EXCLUDE)
+                 for m in info.get("marts", ())]
+        for _ in range(4):
+            if not wants:
+                return
+            best = max(len(set(wants) & items) for _, _, items in stock)
+            if best == 0:
+                log.info("SHOP nobody sells %s", sorted(wants))
+                return
+            places = {mid for mid, _, items in stock if len(set(wants) & items) == best}
+
+            def at_mart(st, places=places):
+                return st.map in places
+            at_mart.maps = places
+            self.ctl.goto(at_mart, desc="nearest Mart with " + ",".join(sorted(wants)))
+            here = self.game.map_id()
+            script, items = max(((sc, it) for mid, sc, it in stock if mid == here),
+                                key=lambda z: len(set(wants) & z[1]))
+            clerk = next((o for o in maps()[here]["objects"] if o["script"] == script), None)
+            if clerk is None:
+                raise Stuck(f"no clerk for {script} in {here}")
+            basket = {k: v for k, v in wants.items() if k in items}
+            buy(self.ctl, lambda: self.ctl.talk(here, clerk["local_id"], pump_after=False), basket)
+            self.pump()
+            log.info("SHOPPED at %s: %s money now %d", here, basket, self.game.money())
+            wants = {k: v for k, v in wants.items() if k not in basket}
+
+    def league_supplies(self) -> None:
+        """Stock up for the Elite Four: no Pokemon Center between the five fights."""
+        budget = self.game.money() - 2000
+        wants = {}
+        for item, price, n in (("ITEM_FULL_RESTORE", 3000, 12), ("ITEM_REVIVE", 1500, 8),
+                               ("ITEM_MAX_POTION", 2500, 8), ("ITEM_FULL_HEAL", 600, 5)):
+            k = max(0, n - self.game.has_item(item))
+            k = min(k, max(0, budget) // price)
+            if k:
+                wants[item] = k
+                budget -= k * price
+        log.info("LEAGUE supplies: %s", wants)
+        self.shop(wants)
 
     def restock(self) -> None:
         """Keep a sensible stock of healing items and balls for the stage we are at."""
@@ -469,7 +536,8 @@ class Agent:
         self.pump()
         if self.game.party() and m.heal_first and self.needs_heal():
             self.heal()
-        if self.game.badges() >= 2 and self.game.money() > 3000:
+        if self.game.badges() >= 2 and self.game.money() > 3000 \
+                and not self.game.map_id().startswith(self.NO_CENTER_MAPS):
             try:
                 self.restock()
             except Stuck as exc:
@@ -683,6 +751,10 @@ class Agent:
     def fortree_gym(self) -> None:
         from .puzzles import fortree_gym
         fortree_gym(self)
+
+    def ice_gym(self, map_id: str, leader_pattern: str, badge_count: int) -> None:
+        from .puzzles import ice_gym
+        ice_gym(self, map_id, leader_pattern, badge_count)
 
     def rotating_tile_gym(self, map_id: str, leader_pattern: str, badge_count: int) -> None:
         from .puzzles import rotating_tile_gym

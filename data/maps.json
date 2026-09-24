@@ -5825,6 +5825,26 @@
 "group": 26,
 "layout": "LAYOUT_MART",
 "mapsec": "MAPSEC_BATTLE_FRONTIER",
+"marts": [
+{
+"items": [
+"ITEM_ULTRA_BALL",
+"ITEM_HYPER_POTION",
+"ITEM_MAX_POTION",
+"ITEM_FULL_RESTORE",
+"ITEM_FULL_HEAL",
+"ITEM_REVIVE",
+"ITEM_MAX_REPEL",
+"ITEM_PROTEIN",
+"ITEM_CALCIUM",
+"ITEM_IRON",
+"ITEM_ZINC",
+"ITEM_CARBOS",
+"ITEM_HP_UP"
+],
+"script": "BattleFrontier_Mart_EventScript_Clerk"
+}
+],
 "name": "BattleFrontier_Mart",
 "num": 55,
 "objects": [
@@ -11523,6 +11543,20 @@
 "group": 16,
 "layout": "LAYOUT_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F",
 "mapsec": "MAPSEC_EVER_GRANDE_CITY",
+"marts": [
+{
+"items": [
+"ITEM_ULTRA_BALL",
+"ITEM_HYPER_POTION",
+"ITEM_MAX_POTION",
+"ITEM_FULL_RESTORE",
+"ITEM_FULL_HEAL",
+"ITEM_REVIVE",
+"ITEM_MAX_REPEL"
+],
+"script": "EverGrandeCity_PokemonLeague_1F_EventScript_Clerk"
+}
+],
 "name": "EverGrandeCity_PokemonLeague_1F",
 "num": 10,
 "objects": [
@@ -12213,6 +12247,25 @@
 "group": 5,
 "layout": "LAYOUT_MART",
 "mapsec": "MAPSEC_FALLARBOR_TOWN",
+"marts": [
+{
+"items": [
+"ITEM_GREAT_BALL",
+"ITEM_SUPER_POTION",
+"ITEM_ANTIDOTE",
+"ITEM_PARALYZE_HEAL",
+"ITEM_ESCAPE_ROPE",
+"ITEM_SUPER_REPEL",
+"ITEM_X_SPECIAL",
+"ITEM_X_SPEED",
+"ITEM_X_ATTACK",
+"ITEM_X_DEFEND",
+"ITEM_DIRE_HIT",
+"ITEM_GUARD_SPEC"
+],
+"script": "FallarborTown_Mart_EventScript_Clerk"
+}
+],
 "name": "FallarborTown_Mart",
 "num": 0,
 "objects": [
@@ -13629,6 +13682,23 @@
 "group": 12,
 "layout": "LAYOUT_MART",
 "mapsec": "MAPSEC_FORTREE_CITY",
+"marts": [
+{
+"items": [
+"ITEM_GREAT_BALL",
+"ITEM_ULTRA_BALL",
+"ITEM_SUPER_POTION",
+"ITEM_HYPER_POTION",
+"ITEM_ANTIDOTE",
+"ITEM_PARALYZE_HEAL",
+"ITEM_AWAKENING",
+"ITEM_REVIVE",
+"ITEM_SUPER_REPEL",
+"ITEM_WOOD_MAIL"
+],
+"script": "FortreeCity_Mart_EventScript_Clerk"
+}
+],
 "name": "FortreeCity_Mart",
 "num": 4,
 "objects": [
@@ -13965,6 +14035,7 @@
 "connections": [],
 "coords": [],
 "group": 24,
+"hole_warp": "MAP_GRANITE_CAVE_B2F",
 "layout": "LAYOUT_GRANITE_CAVE_B1F",
 "mapsec": "MAPSEC_GRANITE_CAVE",
 "name": "GraniteCave_B1F",
@@ -15583,6 +15654,17 @@
 "group": 4,
 "layout": "LAYOUT_LAVARIDGE_TOWN_HERB_SHOP",
 "mapsec": "MAPSEC_LAVARIDGE_TOWN",
+"marts": [
+{
+"items": [
+"ITEM_ENERGY_POWDER",
+"ITEM_ENERGY_ROOT",
+"ITEM_HEAL_POWDER",
+"ITEM_REVIVAL_HERB"
+],
+"script": "LavaridgeTown_HerbShop_EventScript_Clerk"
+}
+],
 "name": "LavaridgeTown_HerbShop",
 "num": 0,
 "objects": [
@@ -15725,6 +15807,22 @@
 "group": 4,
 "layout": "LAYOUT_MART",
 "mapsec": "MAPSEC_LAVARIDGE_TOWN",
+"marts": [
+{
+"items": [
+"ITEM_GREAT_BALL",
+"ITEM_SUPER_POTION",
+"ITEM_ANTIDOTE",
+"ITEM_PARALYZE_HEAL",
+"ITEM_AWAKENING",
+"ITEM_BURN_HEAL",
+"ITEM_REVIVE",
+"ITEM_SUPER_REPEL",
+"ITEM_X_SPEED"
+],
+"script": "LavaridgeTown_Mart_EventScript_Clerk"
+}
+],
 "name": "LavaridgeTown_Mart",
 "num": 4,
 "objects": [
@@ -17857,6 +17955,39 @@
 "group": 13,
 "layout": "LAYOUT_LILYCOVE_CITY_DEPARTMENT_STORE_2F",
 "mapsec": "MAPSEC_LILYCOVE_CITY",
+"marts": [
+{
+"items": [
+"ITEM_POKE_BALL",
+"ITEM_GREAT_BALL",
+"ITEM_ULTRA_BALL",
+"ITEM_ESCAPE_ROPE",
+"ITEM_FULL_HEAL",
+"ITEM_ANTIDOTE",
+"ITEM_PARALYZE_HEAL",
+"ITEM_BURN_HEAL",
+"ITEM_ICE_HEAL",
+"ITEM_AWAKENING",
+"ITEM_FLUFFY_TAIL"
+],
+"script": "LilycoveCity_DepartmentStore_2F_EventScript_ClerkLeft"
+},
+{
+"items": [
+"ITEM_POTION",
+"ITEM_SUPER_POTION",
+"ITEM_HYPER_POTION",
+"ITEM_MAX_POTION",
+"ITEM_REVIVE",
+"ITEM_REPEL",
+"ITEM_SUPER_REPEL",
+"ITEM_MAX_REPEL",
+"ITEM_WAVE_MAIL",
+"ITEM_MECH_MAIL"
+],
+"script": "LilycoveCity_DepartmentStore_2F_EventScript_ClerkRight"
+}
+],
 "name": "LilycoveCity_DepartmentStore_2F",
 "num": 17,
 "objects": [
@@ -17961,6 +18092,31 @@
 "group": 13,
 "layout": "LAYOUT_LILYCOVE_CITY_DEPARTMENT_STORE_3F",
 "mapsec": "MAPSEC_LILYCOVE_CITY",
+"marts": [
+{
+"items": [
+"ITEM_PROTEIN",
+"ITEM_CALCIUM",
+"ITEM_IRON",
+"ITEM_ZINC",
+"ITEM_CARBOS",
+"ITEM_HP_UP"
+],
+"script": "LilycoveCity_DepartmentStore_3F_EventScript_ClerkLeft"
+},
+{
+"items": [
+"ITEM_X_SPEED",
+"ITEM_X_SPECIAL",
+"ITEM_X_ATTACK",
+"ITEM_X_DEFEND",
+"ITEM_DIRE_HIT",
+"ITEM_GUARD_SPEC",
+"ITEM_X_ACCURACY"
+],
+"script": "LilycoveCity_DepartmentStore_3F_EventScript_ClerkRight"
+}
+],
 "name": "LilycoveCity_DepartmentStore_3F",
 "num": 18,
 "objects": [
@@ -18065,6 +18221,26 @@
 "group": 13,
 "layout": "LAYOUT_LILYCOVE_CITY_DEPARTMENT_STORE_4F",
 "mapsec": "MAPSEC_LILYCOVE_CITY",
+"marts": [
+{
+"items": [
+"ITEM_TM_FIRE_BLAST",
+"ITEM_TM_THUNDER",
+"ITEM_TM_BLIZZARD",
+"ITEM_TM_HYPER_BEAM"
+],
+"script": "LilycoveCity_DepartmentStore_4F_EventScript_ClerkLeft"
+},
+{
+"items": [
+"ITEM_TM_PROTECT",
+"ITEM_TM_SAFEGUARD",
+"ITEM_TM_REFLECT",
+"ITEM_TM_LIGHT_SCREEN"
+],
+"script": "LilycoveCity_DepartmentStore_4F_EventScript_ClerkRight"
+}
+],
 "name": "LilycoveCity_DepartmentStore_4F",
 "num": 19,
 "objects": [
@@ -23002,6 +23178,25 @@
 "group": 10,
 "layout": "LAYOUT_MART",
 "mapsec": "MAPSEC_MAUVILLE_CITY",
+"marts": [
+{
+"items": [
+"ITEM_POKE_BALL",
+"ITEM_GREAT_BALL",
+"ITEM_SUPER_POTION",
+"ITEM_ANTIDOTE",
+"ITEM_PARALYZE_HEAL",
+"ITEM_AWAKENING",
+"ITEM_X_SPEED",
+"ITEM_X_ATTACK",
+"ITEM_X_DEFEND",
+"ITEM_GUARD_SPEC",
+"ITEM_DIRE_HIT",
+"ITEM_X_ACCURACY"
+],
+"script": "MauvilleCity_Mart_EventScript_Clerk"
+}
+],
 "name": "MauvilleCity_Mart",
 "num": 7,
 "objects": [
@@ -23752,6 +23947,7 @@
 "connections": [],
 "coords": [],
 "group": 24,
+"hole_warp": "MAP_MIRAGE_TOWER_1F",
 "layout": "LAYOUT_MIRAGE_TOWER_2F",
 "mapsec": "MAPSEC_MIRAGE_TOWER",
 "name": "MirageTower_2F",
@@ -23783,6 +23979,7 @@
 "connections": [],
 "coords": [],
 "group": 24,
+"hole_warp": "MAP_MIRAGE_TOWER_2F",
 "layout": "LAYOUT_MIRAGE_TOWER_3F",
 "mapsec": "MAPSEC_MIRAGE_TOWER",
 "name": "MirageTower_3F",
@@ -25470,6 +25667,22 @@
 "group": 14,
 "layout": "LAYOUT_MART",
 "mapsec": "MAPSEC_MOSSDEEP_CITY",
+"marts": [
+{
+"items": [
+"ITEM_ULTRA_BALL",
+"ITEM_NET_BALL",
+"ITEM_DIVE_BALL",
+"ITEM_HYPER_POTION",
+"ITEM_FULL_HEAL",
+"ITEM_REVIVE",
+"ITEM_MAX_REPEL",
+"ITEM_X_ATTACK",
+"ITEM_X_DEFEND"
+],
+"script": "MossdeepCity_Mart_EventScript_Clerk"
+}
+],
 "name": "MossdeepCity_Mart",
 "num": 5,
 "objects": [
@@ -26784,6 +26997,7 @@
 "connections": [],
 "coords": [],
 "group": 24,
+"hole_warp": "MAP_MT_PYRE_1F",
 "layout": "LAYOUT_MT_PYRE_2F",
 "mapsec": "MAPSEC_MT_PYRE",
 "name": "MtPyre_2F",
@@ -29033,6 +29247,27 @@
 "group": 2,
 "layout": "LAYOUT_MART",
 "mapsec": "MAPSEC_OLDALE_TOWN",
+"marts": [
+{
+"items": [
+"ITEM_POTION",
+"ITEM_ANTIDOTE",
+"ITEM_PARALYZE_HEAL",
+"ITEM_AWAKENING"
+],
+"script": "OldaleTown_Mart_EventScript_Clerk"
+},
+{
+"items": [
+"ITEM_POKE_BALL",
+"ITEM_POTION",
+"ITEM_ANTIDOTE",
+"ITEM_PARALYZE_HEAL",
+"ITEM_AWAKENING"
+],
+"script": "OldaleTown_Mart_ExpandedItems"
+}
+],
 "name": "OldaleTown_Mart",
 "num": 4,
 "objects": [
@@ -31049,6 +31284,42 @@
 "group": 8,
 "layout": "LAYOUT_MART",
 "mapsec": "MAPSEC_PETALBURG_CITY",
+"marts": [
+{
+"items": [
+"ITEM_POKE_BALL",
+"ITEM_POTION",
+"ITEM_ANTIDOTE",
+"ITEM_PARALYZE_HEAL",
+"ITEM_AWAKENING",
+"ITEM_ESCAPE_ROPE",
+"ITEM_REPEL",
+"ITEM_X_SPEED",
+"ITEM_X_ATTACK",
+"ITEM_X_DEFEND",
+"ITEM_ORANGE_MAIL"
+],
+"script": "PetalburgCity_Mart_EventScript_Clerk"
+},
+{
+"items": [
+"ITEM_POKE_BALL",
+"ITEM_GREAT_BALL",
+"ITEM_POTION",
+"ITEM_SUPER_POTION",
+"ITEM_ANTIDOTE",
+"ITEM_PARALYZE_HEAL",
+"ITEM_AWAKENING",
+"ITEM_ESCAPE_ROPE",
+"ITEM_REPEL",
+"ITEM_X_SPEED",
+"ITEM_X_ATTACK",
+"ITEM_X_DEFEND",
+"ITEM_ORANGE_MAIL"
+],
+"script": "PetalburgCity_Mart_EventScript_ExpandedItems"
+}
+],
 "name": "PetalburgCity_Mart",
 "num": 6,
 "objects": [
@@ -49583,6 +49854,40 @@
 "group": 11,
 "layout": "LAYOUT_MART",
 "mapsec": "MAPSEC_RUSTBORO_CITY",
+"marts": [
+{
+"items": [
+"ITEM_POKE_BALL",
+"ITEM_POTION",
+"ITEM_SUPER_POTION",
+"ITEM_ANTIDOTE",
+"ITEM_PARALYZE_HEAL",
+"ITEM_ESCAPE_ROPE",
+"ITEM_REPEL",
+"ITEM_X_SPEED",
+"ITEM_X_ATTACK",
+"ITEM_X_DEFEND"
+],
+"script": "RustboroCity_Mart_EventScript_PokemartBasic"
+},
+{
+"items": [
+"ITEM_POKE_BALL",
+"ITEM_TIMER_BALL",
+"ITEM_REPEAT_BALL",
+"ITEM_POTION",
+"ITEM_SUPER_POTION",
+"ITEM_ANTIDOTE",
+"ITEM_PARALYZE_HEAL",
+"ITEM_ESCAPE_ROPE",
+"ITEM_REPEL",
+"ITEM_X_SPEED",
+"ITEM_X_ATTACK",
+"ITEM_X_DEFEND"
+],
+"script": "RustboroCity_Mart_EventScript_PokemartExpanded"
+}
+],
 "name": "RustboroCity_Mart",
 "num": 7,
 "objects": [
@@ -58177,6 +58482,14 @@
 "coords": [],
 "group": 24,
 "layout": "LAYOUT_SKY_PILLAR_1F",
+"layout_overrides": [
+{
+"layout": 433,
+"op": "lt",
+"value": 2,
+"var": "VAR_SKY_PILLAR_STATE"
+}
+],
 "mapsec": "MAPSEC_SKY_PILLAR",
 "name": "SkyPillar_1F",
 "num": 79,
@@ -58214,7 +58527,16 @@
 "connections": [],
 "coords": [],
 "group": 24,
+"hole_warp": "MAP_SKY_PILLAR_1F",
 "layout": "LAYOUT_SKY_PILLAR_2F",
+"layout_overrides": [
+{
+"layout": 434,
+"op": "lt",
+"value": 2,
+"var": "VAR_SKY_PILLAR_STATE"
+}
+],
 "mapsec": "MAPSEC_SKY_PILLAR",
 "name": "SkyPillar_2F",
 "num": 80,
@@ -58246,6 +58568,14 @@
 "coords": [],
 "group": 24,
 "layout": "LAYOUT_SKY_PILLAR_3F",
+"layout_overrides": [
+{
+"layout": 435,
+"op": "lt",
+"value": 2,
+"var": "VAR_SKY_PILLAR_STATE"
+}
+],
 "mapsec": "MAPSEC_SKY_PILLAR",
 "name": "SkyPillar_3F",
 "num": 81,
@@ -58283,7 +58613,16 @@
 "connections": [],
 "coords": [],
 "group": 24,
+"hole_warp": "MAP_SKY_PILLAR_3F",
 "layout": "LAYOUT_SKY_PILLAR_4F",
+"layout_overrides": [
+{
+"layout": 436,
+"op": "lt",
+"value": 2,
+"var": "VAR_SKY_PILLAR_STATE"
+}
+],
 "mapsec": "MAPSEC_SKY_PILLAR",
 "name": "SkyPillar_4F",
 "num": 82,
@@ -58322,6 +58661,14 @@
 "coords": [],
 "group": 24,
 "layout": "LAYOUT_SKY_PILLAR_5F",
+"layout_overrides": [
+{
+"layout": 437,
+"op": "lt",
+"value": 2,
+"var": "VAR_SKY_PILLAR_STATE"
+}
+],
 "mapsec": "MAPSEC_SKY_PILLAR",
 "name": "SkyPillar_5F",
 "num": 84,
@@ -58439,6 +58786,14 @@
 ],
 "group": 24,
 "layout": "LAYOUT_SKY_PILLAR_TOP",
+"layout_overrides": [
+{
+"layout": 438,
+"op": "lt",
+"value": 2,
+"var": "VAR_SKY_PILLAR_STATE"
+}
+],
 "mapsec": "MAPSEC_SKY_PILLAR",
 "name": "SkyPillar_Top",
 "num": 85,
@@ -58648,6 +59003,26 @@
 "group": 0,
 "layout": "LAYOUT_SLATEPORT_CITY",
 "mapsec": "MAPSEC_SLATEPORT_CITY",
+"marts": [
+{
+"items": [
+"ITEM_PROTEIN",
+"ITEM_IRON",
+"ITEM_CARBOS",
+"ITEM_ZINC",
+"ITEM_CALCIUM",
+"ITEM_HP_UP"
+],
+"script": "SlateportCity_EventScript_EnergyGuru"
+},
+{
+"items": [
+"ITEM_TM_HIDDEN_POWER",
+"ITEM_TM_SECRET_POWER"
+],
+"script": "SlateportCity_EventScript_PowerTMClerk"
+}
+],
 "name": "SlateportCity",
 "num": 1,
 "objects": [
@@ -59637,6 +60012,22 @@
 "group": 9,
 "layout": "LAYOUT_MART",
 "mapsec": "MAPSEC_SLATEPORT_CITY",
+"marts": [
+{
+"items": [
+"ITEM_POKE_BALL",
+"ITEM_GREAT_BALL",
+"ITEM_POTION",
+"ITEM_SUPER_POTION",
+"ITEM_ANTIDOTE",
+"ITEM_PARALYZE_HEAL",
+"ITEM_ESCAPE_ROPE",
+"ITEM_REPEL",
+"ITEM_HARBOR_MAIL"
+],
+"script": "SlateportCity_Mart_EventScript_Clerk"
+}
+],
 "name": "SlateportCity_Mart",
 "num": 13,
 "objects": [
@@ -62041,6 +62432,22 @@
 "group": 15,
 "layout": "LAYOUT_MART",
 "mapsec": "MAPSEC_SOOTOPOLIS_CITY",
+"marts": [
+{
+"items": [
+"ITEM_ULTRA_BALL",
+"ITEM_HYPER_POTION",
+"ITEM_MAX_POTION",
+"ITEM_FULL_HEAL",
+"ITEM_REVIVE",
+"ITEM_MAX_REPEL",
+"ITEM_X_ATTACK",
+"ITEM_X_DEFEND",
+"ITEM_SHADOW_MAIL"
+],
+"script": "SootopolisCity_Mart_EventScript_Clerk"
+}
+],
 "name": "SootopolisCity_Mart",
 "num": 4,
 "objects": [
@@ -62111,6 +62518,14 @@
 "coords": [],
 "group": 15,
 "layout": "LAYOUT_SOOTOPOLIS_CITY_MYSTERY_EVENTS_HOUSE_1F",
+"layout_overrides": [
+{
+"layout": 441,
+"op": "eq",
+"value": 0,
+"var": "VAR_RESULT"
+}
+],
 "mapsec": "MAPSEC_SOOTOPOLIS_CITY",
 "name": "SootopolisCity_MysteryEventsHouse_1F",
 "num": 13,
@@ -63411,6 +63826,41 @@
 "group": 26,
 "layout": "LAYOUT_TRAINER_HILL_ENTRANCE",
 "mapsec": "MAPSEC_TRAINER_HILL",
+"marts": [
+{
+"items": [
+"ITEM_SUPER_POTION",
+"ITEM_ANTIDOTE",
+"ITEM_PARALYZE_HEAL",
+"ITEM_AWAKENING",
+"ITEM_X_SPEED",
+"ITEM_X_SPECIAL",
+"ITEM_X_ATTACK",
+"ITEM_X_DEFEND",
+"ITEM_DIRE_HIT",
+"ITEM_GUARD_SPEC",
+"ITEM_X_ACCURACY"
+],
+"script": "TrainerHill_Entrance_EventScript_Clerk"
+},
+{
+"items": [
+"ITEM_HYPER_POTION",
+"ITEM_MAX_POTION",
+"ITEM_FULL_RESTORE",
+"ITEM_FULL_HEAL",
+"ITEM_REVIVE",
+"ITEM_X_SPEED",
+"ITEM_X_SPECIAL",
+"ITEM_X_ATTACK",
+"ITEM_X_DEFEND",
+"ITEM_DIRE_HIT",
+"ITEM_GUARD_SPEC",
+"ITEM_X_ACCURACY"
+],
+"script": "TrainerHill_Entrance_EventScript_ExpandedPokemart"
+}
+],
 "name": "TrainerHill_Entrance",
 "num": 60,
 "objects": [
@@ -64998,6 +65448,24 @@
 "group": 6,
 "layout": "LAYOUT_MART",
 "mapsec": "MAPSEC_VERDANTURF_TOWN",
+"marts": [
+{
+"items": [
+"ITEM_GREAT_BALL",
+"ITEM_NEST_BALL",
+"ITEM_SUPER_POTION",
+"ITEM_ANTIDOTE",
+"ITEM_PARALYZE_HEAL",
+"ITEM_AWAKENING",
+"ITEM_BURN_HEAL",
+"ITEM_ICE_HEAL",
+"ITEM_REPEL",
+"ITEM_X_SPECIAL",
+"ITEM_FLUFFY_TAIL"
+],
+"script": "VerdanturfTown_Mart_EventScript_Clerk"
+}
+],
 "name": "VerdanturfTown_Mart",
 "num": 3,
 "objects": [

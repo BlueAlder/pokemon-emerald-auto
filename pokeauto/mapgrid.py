@@ -249,6 +249,15 @@ class MapGrid:
 _STATIC: dict[str, MapGrid] = {}
 
 
+def layout_grid(emu, layout_id: int, map_id: str) -> MapGrid:
+    """A map drawn with another layout (setmaplayoutindex): gMapLayouts[id - 1]."""
+    key = f"{map_id}#layout{layout_id}"
+    if key not in _STATIC:
+        _STATIC[key] = _grid_from_layout(emu, emu.u32(S["gMapLayouts"] + (layout_id - 1) * 4),
+                                         map_id)
+    return _STATIC[key]
+
+
 def _static_grid(emu, map_id: str) -> MapGrid:
     if map_id in _STATIC:
         return _STATIC[map_id]
@@ -256,7 +265,12 @@ def _static_grid(emu, map_id: str) -> MapGrid:
     g, n = info["group"], info["num"]
     group_ptr = emu.u32(S["gMapGroups"] + g * 4)
     header = emu.u32(group_ptr + n * 4)
-    layout = emu.u32(header)
+    grid = _grid_from_layout(emu, emu.u32(header), map_id)
+    _STATIC[map_id] = grid
+    return grid
+
+
+def _grid_from_layout(emu, layout: int, map_id: str) -> MapGrid:
     w, h, _border, data = struct.unpack("<iiII", emu.read(layout, 16))
     tiles = list(struct.unpack(f"<{w * h}H", emu.read(data, w * h * 2)))
     prim, sec = MapGrid._attrs(emu.read, layout)
@@ -265,6 +279,4 @@ def _static_grid(emu, map_id: str) -> MapGrid:
         mid = t & 0x3FF
         beh.append(prim[mid] if mid < NUM_PRIMARY_METATILES
                    else sec[mid - NUM_PRIMARY_METATILES] if mid - NUM_PRIMARY_METATILES < len(sec) else 0)
-    grid = MapGrid(w, h, tiles, beh, map_id)
-    _STATIC[map_id] = grid
-    return grid
+    return MapGrid(w, h, tiles, beh, map_id)

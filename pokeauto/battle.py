@@ -57,6 +57,8 @@ class Battle:
         self._pending: dict[int, Choice] = {}
         self._submitted: dict[int, int] = {}     # battler -> move slot just confirmed
         self._refused: dict[int, set] = {}       # battler -> slots the game bounced back
+        self._bad_switch: set = set()            # party slots the game would not send out
+        self._shift_tries: dict[int, int] = {}
         self.turns = 0
         self.log: list[str] = []
 
@@ -87,6 +89,8 @@ class Battle:
         self._pending.clear()
         self._submitted.clear()
         self._refused.clear()
+        self._bad_switch = set()
+        self._shift_tries = {}
         self._items_disabled = False
         self._item_count_before = None
         idle = 0
@@ -217,11 +221,16 @@ class Battle:
 
     def _choose_move(self, battler: int) -> None:
         if battler in self._submitted:
-            # The move menu came back after we confirmed a move: it was refused.
+            # The move menu came back after we confirmed a move. If the game
+            # said why (Disable, Taunt, no PP...), that move is out this turn;
+            # otherwise the press was just dropped and we confirm again.
             slot = self._submitted.pop(battler)
-            self._refused.setdefault(battler, set()).add(slot)
-            log.info("BATTLE move slot %d refused; choosing again", slot)
-            self._pending.pop(battler, None)
+            text = self.game.battle_text().replace("\n", " ")
+            if re.search(r"disabled|can't|cannot|no PP|no moves|taunt|torment|won't",
+                         text, re.I):
+                self._refused.setdefault(battler, set()).add(slot)
+                log.info("BATTLE move slot %d refused (%r); choosing again", slot, text[-50:])
+                self._pending.pop(battler, None)
         choice = self._pending.get(battler)
         if choice is None or choice.kind != "move":
             # We landed in the move menu without meaning to; decide now.
@@ -326,6 +335,16 @@ class Battle:
         target = self._switch_target()
         addr = S["gPartyMenu"] + 9
         if any("Task_HandleSelectionMenuInput" in t for t in tasks):
+            # Confirming the same Pokemon again and again means the game keeps
+            # refusing it ("already in battle", fainted...): try another.
+            self._shift_tries[target] = self._shift_tries.get(target, 0) + 1
+            if self._shift_tries[target] > 3:
+                log.info("BATTLE party slot %d refused; picking another", target)
+                self._bad_switch.add(target)
+                self._pending.pop(0, None)
+                self._pending.pop(2, None)
+                self.ctl.press("B", release=10)
+                return
             self.ctl.press("A", release=10)          # SHIFT / SEND OUT is first
             return
         for _ in range(8):
@@ -336,7 +355,7 @@ class Battle:
 
     def _switch_target(self) -> int:
         choice = self._pending.get(0)
-        if choice and choice.kind == "switch":
+        if choice and choice.kind == "switch" and choice.slot not in self._bad_switch:
             return choice.slot
         if choice and choice.kind == "item":
             return choice.target
@@ -411,6 +430,15 @@ class Battle:
             if potion and threat < me_bm.hp + potion[1]:
                 return Choice("item", potion[0], target=self.game.battler_party_index(battler),
                               why=f"heal: hp {me_bm.hp}, threat {threat:.0f}")
+        # Asleep or frozen in a fight that matters: wake up rather than lose turns.
+        if (not wild or self.policy.important) and not self._items_disabled:
+            st = me_bm.status1
+            kind = "sleep" if st & 7 > 1 else "freeze" if st & 0x20 else None
+            if kind:
+                cure = next((n for n in self.STATUS_CURES[kind] if self.game.has_item(n)), None)
+                if cure:
+                    return Choice("item", C(cure), target=self.game.battler_party_index(battler),
+                                  why=f"cure {kind}")
         if threat >= me_bm.hp and not (we_ko and we_first):
             sw = self.best_switch(exclude_active=True, against=foe)
             if sw is not None and self._switch_value(sw, foe) > 0.35 and not self._trapped():
@@ -462,7 +490,11 @@ class Battle:
             out.append(Choice("move", slot, best_target, best_score, why))
         return out
 
-    POTIONS = [("ITEM_HYPER_POTION", 200), ("ITEM_SUPER_POTION", 50), ("ITEM_POTION", 20)]
+    POTIONS = [("ITEM_MAX_POTION", 999), ("ITEM_FULL_RESTORE", 999), ("ITEM_HYPER_POTION", 200),
+               ("ITEM_SUPER_POTION", 50), ("ITEM_POTION", 20)]
+    # status1: sleep turns in bits 0-2, then poison, burn, freeze, paralysis, toxic
+    STATUS_CURES = {"sleep": ["ITEM_AWAKENING", "ITEM_FULL_HEAL", "ITEM_FULL_RESTORE"],
+                    "freeze": ["ITEM_ICE_HEAL", "ITEM_FULL_HEAL", "ITEM_FULL_RESTORE"]}
     BALLS = ["ITEM_ULTRA_BALL", "ITEM_GREAT_BALL", "ITEM_POKE_BALL"]
 
     def best_potion(self, me_bm):
@@ -508,12 +540,15 @@ class Battle:
     def best_switch(self, exclude_active: bool = False, against=None) -> int:
         party = self.game.party()
         active = self.game.battler_party_index(0)
+        on_field = {self.game.battler_party_index(b)
+                    for b in ((0, 2) if self.is_double() else (0,))}
         if against is None:
             foes = self._foes()
             against = combatant_from_battle(self.data, foes[0][1]) if foes else None
         best, best_v = None, -1e9
         for m in party:
-            if m.fainted or m.is_egg or (m.slot == active):
+            if m.fainted or m.is_egg or m.slot == active or m.slot in on_field \
+                    or m.slot in self._bad_switch:
                 continue
             v = self._switch_value(m.slot, against) if against else m.hp_frac
             if v > best_v:

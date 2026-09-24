@@ -155,6 +155,7 @@ class Controller:
                 if self.battle is None:
                     self.press("A")
                 else:
+                    self.stats["battles"] += 1
                     self.battle.run()
                 continue
             if m.kind == "script":
@@ -457,10 +458,18 @@ class Controller:
                     j += 1
                 if j > i:
                     before = self.state()
+                    fights = self.stats["battles"]
                     if not self._hold_segment(steps[i:j + 1]):
                         if not self.free():
                             self.pump()
-                        self._learn_pushback(before, steps[j])
+                        # Stopped just short of a trigger tile on the way?
+                        now = self.state()
+                        prev = before
+                        for st in steps[i:j + 1]:
+                            if (prev.x, prev.y) == (now.x, now.y):
+                                self._learn_pushback(prev, st, fights)
+                                break
+                            prev = st.expect
                         return False
                     if not self.free():
                         self.pump()
@@ -469,23 +478,27 @@ class Controller:
                     continue
             i += 1
             before = self.state()
+            fights = self.stats["battles"]
             if not self._execute(step):
                 log.debug("STEP %s %s expected %s got %s (mode %s)", step.action, step.direction,
                           step.expect, self.state(), self.game.mode().kind)
-                self._learn_pushback(before, step)
+                self._learn_pushback(before, step, fights)
                 return False
             if not self.free():
                 # a script started (trainer, trigger...): let it finish,
                 # then check it did not turn us back
                 self.pump()
-                self._learn_pushback(before, step)
+                self._learn_pushback(before, step, fights)
                 return False
         return True
 
-    def _learn_pushback(self, before: State, step: Step) -> None:
+    def _learn_pushback(self, before: State, step: Step, fights: int | None = None) -> None:
         """A step onto a trigger tile that ran a script and did not leave us
         where planned means the trigger turned us back: never plan across that
-        trigger (or its siblings with the same script) again this milestone."""
+        trigger (or its siblings with the same script) again this milestone.
+        Not if a battle happened meanwhile: a trainer stopped us, not the tile."""
+        if fights is not None and self.stats["battles"] != fights:
+            return
         e = step.expect
         if e.map != before.map:
             return

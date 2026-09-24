@@ -332,6 +332,11 @@ def rotating_tile_gym(agent, map_id: str, leader_pattern: str, badge_count: int)
         agent.pump()
         if agent.game.badges() >= badge_count:
             return
+        if agent.game.map_id() != map_id:
+            agent.goto(map_id)            # e.g. after a whiteout
+            continue
+        # Pushback "lessons" about switch tiles are wrong here: the model knows.
+        ctl.planner.learned_blocks = {b for b in ctl.planner.learned_blocks if b[0] != map_id}
         g = agent.game
         spots = {o.local_id: (o.x, o.y) for o in g.objects() if not o.is_player}
         saved = g.object_templates()
@@ -360,3 +365,176 @@ def rotating_tile_gym(agent, map_id: str, leader_pattern: str, badge_count: int)
         ctl.goto(at(map_id, *t), caps=caps, desc=f"{ROT_COLOURS[model.switches[t]]} switch")
         agent.pump()
     raise RuntimeError("rotating tiles: gave up")
+
+
+# -- Thin ice (field_tasks.c SootopolisGymIcePerStepCallback; Sootopolis Gym) -----
+#
+# Stepping on thin ice cracks it and counts toward VAR_ICE_STEP_COUNT; stepping
+# on cracked ice breaks it and drops you a floor. Each room's stairs (slide
+# tiles until then) open once every thin tile in the room has been cracked, so
+# a room is a Hamiltonian path over its ice that ends beside the closed stairs.
+
+def ice_path(start: tuple[int, int] | None, tiles: set, ends: set,
+             first: set | None = None, limit: int = 2_000_000):
+    """Visit every tile in `tiles` exactly once, 4-connected, finishing in `ends`.
+
+    From `start` (a tile already stood on, not in `tiles`) or, if None, from
+    any tile of `first`. Returns the tile sequence or None.
+    """
+    nb = {t: [(t[0] + dx, t[1] + dy) for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))
+              if (t[0] + dx, t[1] + dy) in tiles] for t in tiles}
+    budget = [limit]
+
+    def connected(rem: set) -> bool:
+        if not rem:
+            return True
+        seed = next(iter(rem))
+        seen, stack = {seed}, [seed]
+        while stack:
+            for n in nb[stack.pop()]:
+                if n in rem and n not in seen:
+                    seen.add(n)
+                    stack.append(n)
+        return len(seen) == len(rem)
+
+    def dfs(cur, rem: set, path: list):
+        budget[0] -= 1
+        if budget[0] < 0:
+            return None
+        if not rem:
+            return path if cur in ends else None
+        if not connected(rem):
+            return None
+        # Tiles with one way in must be the end of the path: at most one.
+        dead = [t for t in rem if sum(1 for n in nb[t] if n in rem or n == cur) <= 1]
+        if len(dead) > 1 or (dead and dead[0] not in ends):
+            return None
+        options = [n for n in nb.get(cur, ()) if n in rem] if cur in nb else \
+            [(cur[0] + dx, cur[1] + dy) for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))
+             if (cur[0] + dx, cur[1] + dy) in rem]
+        options.sort(key=lambda n: sum(1 for m in nb[n] if m in rem))   # Warnsdorff
+        for n in options:
+            r = dfs(n, rem - {n}, path + [n])
+            if r:
+                return r
+        return None
+
+    if start is not None:
+        return dfs(start, set(tiles), [])
+    for f in sorted(first or tiles):
+        r = dfs(f, set(tiles) - {f}, [f])
+        if r:
+            return r
+    return None
+
+
+def ice_gym(agent, map_id: str, leader_pattern: str, badge_count: int) -> None:
+    """Crack every thin-ice tile room by room, then challenge the leader."""
+    from .mapgrid import MB as _MB
+    from .nav import at
+    from .symbols import const
+    THIN, CRACKED = const("MB_THIN_ICE"), const("MB_CRACKED_ICE")
+    SLIDE = const("MB_SLIDE_SOUTH")
+    info = maps()[map_id]
+    leader = next(o for o in info["objects"] if leader_pattern in o["script"])
+    ctl = agent.ctl
+    for attempt in range(30):
+        agent.pump()
+        if agent.game.badges() >= badge_count:
+            return
+        if agent.game.map_id() != map_id:
+            agent.goto(map_id)
+            continue
+        g = MapGrid.from_ram(agent.game)
+        ice = {(x, y) for y in range(g.h) for x in range(g.w)
+               if g.behavior(x, y) in (THIN, CRACKED)}
+        thin = {t for t in ice if g.behavior(*t) == THIN}
+        saved = set(ctl.planner.learned_blocks)
+        try:
+            # Ice is never crossed by the ordinary planner.
+            ctl.planner.learned_blocks |= {(map_id, x, y) for x, y in ice}
+            lx, ly = leader["x"], leader["y"]
+            s = ctl.state()
+            if (s.x, s.y) not in ice:
+                goal = lambda st: st.map == map_id and abs(st.x - lx) + abs(st.y - ly) == 1
+                if ctl.planner.plan(s, goal, ctl.nav_caps(), live=g,
+                                    live_objects=agent.game.objects()) is not None:
+                    agent.talk(map_id, leader["local_id"])
+                    continue
+            # Rooms: components of uncracked ice.
+            rooms, left = [], set(thin)
+            while left:
+                seed = left.pop()
+                comp, stack = {seed}, [seed]
+                while stack:
+                    cx, cy = stack.pop()
+                    for n in ((cx + 1, cy), (cx - 1, cy), (cx, cy + 1), (cx, cy - 1)):
+                        if n in left:
+                            left.discard(n)
+                            comp.add(n)
+                            stack.append(n)
+                rooms.append(comp)
+            plan_room = None
+            for comp in rooms:
+                ends = {t for t in comp if any(g.inside(t[0] + dx, t[1] + dy)
+                                               and g.behavior(t[0] + dx, t[1] + dy) == SLIDE
+                                               for dx, dy in ((0, -1), (0, 1), (1, 0), (-1, 0)))}
+                if not ends:
+                    continue
+                if (s.x, s.y) in ice:
+                    if not any(abs(s.x - x) + abs(s.y - y) == 1 for x, y in comp):
+                        continue
+                    path = ice_path((s.x, s.y), comp, ends)
+                    if path:
+                        plan_room = ([], path)
+                        break
+                    continue
+                # Entry: an ice tile next to floor we can walk to.
+                firsts = []
+                for (x, y) in comp:
+                    for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)):
+                        f = (x + dx, y + dy)
+                        if not g.inside(*f) or f in ice or g.collision(*f) \
+                                or g.behavior(*f) == SLIDE:
+                            continue
+                        p = ctl.planner.plan(s, at(map_id, *f), ctl.nav_caps(), live=g,
+                                             live_objects=agent.game.objects())
+                        if p is not None:
+                            firsts.append(((x, y), f, len(p)))
+                if not firsts:
+                    continue
+                for (t, f, _) in sorted(firsts, key=lambda z: z[2]):
+                    path = ice_path(None, comp, ends, first={t})
+                    if path:
+                        plan_room = ([f], path)
+                        break
+                if plan_room:
+                    break
+        finally:
+            ctl.planner.learned_blocks.clear()
+            ctl.planner.learned_blocks |= saved
+        if plan_room is None:
+            raise RuntimeError(f"ice gym: no way forward from {ctl.state()}")
+        approach, path = plan_room
+        log.info("ICE room: %d tiles from %s", len(path), approach or "here")
+        if approach:
+            saved = set(ctl.planner.learned_blocks)
+            try:
+                ctl.planner.learned_blocks |= {(map_id, x, y) for x, y in ice}
+                ctl.goto(at(map_id, *approach[0]), desc="ice room entrance")
+            finally:
+                ctl.planner.learned_blocks.clear()
+                ctl.planner.learned_blocks |= saved
+        for (x, y) in path:
+            cx, cy = agent.game.pos()
+            d = {(1, 0): "right", (-1, 0): "left", (0, 1): "down", (0, -1): "up"}.get((x - cx, y - cy))
+            if d is None:
+                break                          # displaced (battle, fall): re-read and re-solve
+            ctl._hold_until_moved(d)
+            if agent.game.mode().kind != "overworld" or not ctl.free():
+                agent.pump()
+                break
+            if agent.game.pos() != (x, y):
+                break
+        ctl.idle(60)                           # let the stairs open
+    raise RuntimeError("ice gym: gave up")

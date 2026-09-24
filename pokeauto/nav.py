@@ -105,6 +105,9 @@ class Obstacles:
     soft: set = field(default_factory=set)        # NPCs placed by map data only
 
 
+FALL_TILES = {MB["MB_CRACKED_FLOOR"], MB["MB_CRACKED_FLOOR_HOLE"]}
+
+
 class Planner:
     def __init__(self, game):
         self.game = game
@@ -117,6 +120,15 @@ class Planner:
     def grid(self, map_id: str, live: MapGrid | None = None) -> MapGrid:
         if live is not None and live.map_id == map_id:
             return live
+        # Layouts a map script swaps in on entry (Sky Pillar's clean floors).
+        for o in maps()[map_id].get("layout_overrides", ()):
+            if o["var"] == "VAR_RESULT":
+                continue
+            v = self.game.var(o["var"])
+            if {"lt": v < o["value"], "le": v <= o["value"], "eq": v == o["value"],
+                    "ne": v != o["value"], "ge": v >= o["value"], "gt": v > o["value"]}[o["op"]]:
+                from .mapgrid import layout_grid
+                return layout_grid(self.emu, o["layout"], map_id)
         return MapGrid.from_rom(self.emu, map_id)
 
     def obstacles(self, map_id: str, live_objects=None, ignore_story: bool = False) -> Obstacles:
@@ -423,6 +435,19 @@ class Planner:
                     blocked = blocked | ob.triggers
                 if goal_tiles:
                     blocked = blocked - {(gx, gy) for (gm, gx, gy) in goal_tiles if gm == s.map}
+                hole = maps()[s.map].get("hole_warp")
+                if (hole and hole in maps() and not s.surfing and g.inside(tx, ty)
+                        and g.behavior(tx, ty) in FALL_TILES and not g.collision(tx, ty)
+                        and (tx, ty) not in blocked):
+                    # Cracked floor / hole (walking pace): we drop to the same
+                    # spot a floor down (setholewarp). Sky Pillar needs this.
+                    dg = self.grid(hole)
+                    de = dg.elevation(tx, ty) if dg.inside(tx, ty) else 3
+                    nxt.append((State(hole, tx, ty, de if de not in (0, 15) else 3),
+                                "warp", 4.0))
+                    for item in nxt:
+                        self._relax(item, s, d, dist, prev, heap, tie, cost)
+                    continue
                 r = g.step(s.pos, d, gcaps, blocked)
                 if r == "edge":
                     e = self.edge(s, d)

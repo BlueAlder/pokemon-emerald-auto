@@ -166,6 +166,9 @@ def main() -> int:
                     for b in (j.get("bg_events") or [])],
         }
 
+    layouts = json.loads((decomp / "data/layouts/layouts.json").read_text())["layouts"]
+    layout_ids = {l["id"]: i + 1 for i, l in enumerate(layouts) if l}   # gMapLayouts[id - 1]
+
     # Scripted warps: bg events (signs, doors) whose script ends in a warp,
     # e.g. the Petalburg Gym room doors ("Enter the SPEED room?" -> warpdoor).
     for mname, (g, n) in map_names.items():
@@ -205,6 +208,40 @@ def main() -> int:
                 if line in ("end", "return"):
                     return None
             return None
+
+        # Hole warps (setholewarp: cracked floors / holes drop you a floor) and
+        # conditional layout swaps (Sky Pillar is "clean" until Rayquaza wakes).
+        for body in labels.values():
+            for line in body:
+                m = re.match(r"setholewarp (MAP_\w+)", line)
+                if m:
+                    maps[mid]["hole_warp"] = m.group(1)
+        overrides = []
+        for body in labels.values():
+            for line in body:
+                m = re.match(r"call_if_(lt|le|eq|ne|ge|gt) (VAR_\w+), (\w+), (\w+)$", line)
+                if not m or m.group(4) not in labels:
+                    continue
+                for tl in labels[m.group(4)]:
+                    lm = re.match(r"setmaplayoutindex (LAYOUT_\w+)", tl)
+                    if lm and lm.group(1) in layout_ids:
+                        overrides.append({"op": m.group(1), "var": m.group(2),
+                                          "value": int(m.group(3), 0),
+                                          "layout": layout_ids[lm.group(1)]})
+        if overrides:
+            maps[mid]["layout_overrides"] = overrides
+
+        # Marts: which clerk script sells which items (pokemart <list label>).
+        marts = []
+        for label, body in labels.items():
+            for line in body:
+                m = re.match(r"pokemart (\w+)", line)
+                if m and m.group(1) in labels:
+                    items = [re.match(r"\.2byte (ITEM_\w+)", l).group(1)
+                             for l in labels[m.group(1)] if re.match(r"\.2byte ITEM_\w+", l)]
+                    marts.append({"script": label, "items": items})
+        if marts:
+            maps[mid]["marts"] = marts
 
         script_warps = []
         for b in maps[mid]["bgs"]:
