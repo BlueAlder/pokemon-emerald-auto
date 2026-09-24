@@ -441,7 +441,19 @@ class Battle:
         threat = self.threat(foe, me)
         we_first = self._speed(me, me_bm) > self._speed(foe, fbm)
         we_ko = best.score >= 1.0
-        if (not wild or self.policy.important) and me_bm.hp < me_bm.max_hp * 0.35 \
+        # Helpless: nothing we have hurts it (immunities, no PP). Bring in
+        # someone who can -- healing a Pokemon that cannot deal damage only
+        # burns potions.
+        if best.score < 0.05 and not self.is_double() and not self._trapped():
+            active = self.game.battler_party_index(0)
+            able = [m.slot for m in self.game.party()
+                    if m.slot != active and m.slot not in self._bad_switch
+                    and self._can_hurt(m.slot, foe)]
+            if able:
+                sw = max(able, key=lambda sl: self._switch_value(sl, foe))
+                return Choice("switch", sw, why=f"no damaging move vs {fbm.species_name}")
+        if best.score >= 0.05 and (not wild or self.policy.important) \
+                and me_bm.hp < me_bm.max_hp * 0.35 \
                 and not (we_ko and we_first):
             potion = self.best_potion(me_bm)
             if potion and threat < me_bm.hp + potion[1]:
@@ -499,6 +511,10 @@ class Battle:
                     score *= 0.8
                 if info.priority > 0 and kill:
                     score += 0.2
+                if kill:
+                    # Several moves finish it: spend the one we have most of
+                    # (the Elite Four is five fights with no Pokemon Center).
+                    score += 0.08 * min(mv.pp, 20) / 20
                 if score > best_score:
                     best_score, best_target = score, fid
                     why = f"{info.name} ~{dmg:.0f}dmg{' KO' if kill else ''}"
@@ -577,6 +593,14 @@ class Battle:
             if v > best_v:
                 best, best_v = m.slot, v
         return best if best is not None else (0 if not exclude_active else None)
+
+    def _can_hurt(self, slot: int, foe) -> bool:
+        mon = next((m for m in self.game.party() if m.slot == slot), None)
+        if mon is None or mon.fainted:
+            return False
+        me = combatant_from_party(self.data, mon)
+        return any(estimate_damage(self.data, me, foe, self.data.move(mv.id)) > 1
+                   for mv in mon.moves if mv.pp)
 
     def _switch_value(self, slot: int, foe) -> float:
         mon = next(m for m in self.game.party() if m.slot == slot)

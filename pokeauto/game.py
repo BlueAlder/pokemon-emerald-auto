@@ -381,7 +381,14 @@ class Game:
             return Mode("battle", name, tasks)
         if cb2 == self.cb_overworld:
             if self.script_running() or self.fields_locked() or self.msgbox_open():
-                return Mode("script", name, tasks, self.script_native())
+                native = self.script_native()
+                raw_native = S.name_at(self.emu.u32(S["sGlobalScriptContext"] + 4))
+                # An unlocked script parked on a movement that never ends
+                # (seen after Rock Smash on Victory Road) does not stop the
+                # player: the field accepts input, so treat it as free.
+                if not (raw_native == "WaitForMovementFinish" and not self.fields_locked()
+                        and not self.msgbox_open() and not self.text_printing()):
+                    return Mode("script", name, tasks, native)
             return Mode("overworld", name, tasks)
         if "NamingScreen" in name:
             return Mode("naming", name, tasks)

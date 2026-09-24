@@ -318,10 +318,19 @@ ROUTE: list[Milestone] = [
               [goto("MAP_VICTORY_ROAD_1F"),
                trigger("MAP_VICTORY_ROAD_1F", "WallyBattleTrigger1")],
               min_level=60, important=True, hint="beat Wally at the entrance of Victory Road"),
+    # More PP for five fights in a row: Water Pulse (20 PP) over Take Down,
+    # Facade (Huge Power) over Hydro Pump's 5 PP.
+    Milestone("e4_moves", all_of(
+        lambda a: not a.game.has_item("ITEM_TM03")
+        or any(p.knows("MOVE_WATER_PULSE") for p in a.game.party()),
+        lambda a: not a.game.has_item("ITEM_TM42")
+        or any(p.knows("MOVE_FACADE") for p in a.game.party())),
+              [call("teach", "ITEM_TM03", ["SWAMPERT"], "MOVE_TAKE_DOWN"),
+               call("teach", "ITEM_TM42", ["AZUMARILL"], "MOVE_HYDRO_PUMP")]),
     Milestone("enter_league", flag("FLAG_ENTERED_ELITE_FOUR"),
               [goto(LEAGUE), call("league_supplies"),
                talk_s(LEAGUE, "PokemonLeague_1F_EventScript_DoorGuard")],
-              min_level=64, team_level=58, important=True,
+              min_level=70, team_level=64, important=True,
               hint="cross Victory Road and show the guards all eight badges"),
     Milestone("sidney", flag("FLAG_DEFEATED_ELITE_4_SIDNEY"),
               [call("heal_with_items"), goto("MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM"),
