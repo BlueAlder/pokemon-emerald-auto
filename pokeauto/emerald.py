@@ -347,7 +347,7 @@ ROUTE: list[Milestone] = [
               hint="catch a Hariyama and a Golbat in Victory Road for the Elite Four"),
     # More PP for five fights in a row: Water Pulse (20 PP) over Take Down,
     # Facade (Huge Power) over Hydro Pump's 5 PP.
-    Milestone("e4_moves", lambda a: all(
+    Milestone("e4_moves", lambda a: a.game.flag("FLAG_DEFEATED_WALLY_VICTORY_ROAD") and all(
         not a.game.has_item(tm) or any(p.knows(mv) for p in a.game.party())
         for tm, mv in (("ITEM_TM03", "MOVE_WATER_PULSE"), ("ITEM_TM42", "MOVE_FACADE"),
                        ("ITEM_TM39", "MOVE_ROCK_TOMB"), ("ITEM_TM40", "MOVE_AERIAL_ACE"))),

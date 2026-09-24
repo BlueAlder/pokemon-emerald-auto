@@ -128,4 +128,26 @@ cp .env.example .env            # optional: add your TypeSafe key
 
 ## Status
 
-See the bottom of this file for the latest verified run.
+**The player has beaten the game.** With `--no-jev` (zero TypeSafe calls), it
+went from the opening truck through all eight badges, Rayquaza, Victory Road
+and the Elite Four to the Hall of Fame at about 21:30 in-game time. That run
+was built up in segments, resuming from checkpoints while bugs were fixed. The
+final team was Swampert L73, Azumarill L61, Hariyama L60, Crobat L60 and
+Castform.
+
+What the Elite Four needed, beyond the gyms:
+
+* **PP, not HP, runs out first.** There's no Pokémon Center between the five
+  fights, and no shop sells Ethers. So the route recruits two extra Pokémon on
+  Victory Road, teaches TMs with more PP, trains four team members, and prefers
+  low-cost moves when several of them finish a foe off.
+* **Losing resets the challenge.** Whiting out clears all four E4 flags. The
+  runner notices that earlier milestones became undone and starts again from
+  Sidney with a healed team.
+
+Known rough edges:
+
+* A lost Elite Four attempt costs half your money, so later attempts may not
+  be able to restock supplies.
+* The battle AI is a greedy one-turn evaluator. It wins through levels and
+  items, not deep strategy.
