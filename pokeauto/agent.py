@@ -225,6 +225,17 @@ class Agent:
         return (self.party_hp() < threshold or lead.hp_frac < 0.35 or lead.fainted
                 or low_pp)
 
+    def low_attack_pp(self, frac: float = 0.5) -> bool:
+        """The lead has under half its attacking PP left (a boss fight ahead
+        should not start with Surf at 0 -- that cost a whiteout once)."""
+        lead = self.lead()
+        if lead is None:
+            return False
+        moves = [(mv, self.data.move(mv.id)) for mv in lead.moves if mv.id]
+        have = sum(mv.pp for mv, info in moves if info.power)
+        full = sum(info.pp for mv, info in moves if info.power)
+        return full > 0 and have < full * frac
+
     # Rooms that lock behind you: no way back to a Pokemon Center.
     NO_CENTER_MAPS = ("MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM", "MAP_EVER_GRANDE_CITY_PHOEBES_ROOM",
                       "MAP_EVER_GRANDE_CITY_GLACIAS_ROOM", "MAP_EVER_GRANDE_CITY_DRAKES_ROOM",
@@ -553,7 +564,8 @@ class Agent:
     def before_milestone(self, m) -> None:
         self.battle.policy.important = m.important
         self.pump()
-        if self.game.party() and m.heal_first and self.needs_heal():
+        if self.game.party() and m.heal_first and (
+                self.needs_heal() or (m.important and self.low_attack_pp())):
             self.heal()
         if self.game.badges() >= 2 and self.game.money() > 3000 \
                 and not self.game.map_id().startswith(self.NO_CENTER_MAPS):

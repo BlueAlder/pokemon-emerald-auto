@@ -44,7 +44,7 @@ models the game instead:
   * the Mauville/Mossdeep switch gyms (a simulation of `rotating_tile_puzzle.c`)
   * the Sootopolis ice floors (Hamiltonian path per room)
   * the Sky Pillar's intentional drop through a cracked floor
-* **The route is data.** `pokeauto/emerald.py` is 76 milestones, each a
+* **The route is data.** `pokeauto/emerald.py` is 78 milestones, each a
   done-predicate over monotonic game facts (flags, vars, badges) plus a few
   actions (`goto`, `talk`, `trigger`, `call`). The runner resumes after the
   latest finished milestone and checkpoints a savestate after each one.
@@ -55,6 +55,18 @@ models the game instead:
   Before double battles and the Elite Four the team is trained
   (`team_level`): the trainee is moved to the front and grinds on the nearest
   map whose wild levels suit it, read from the ROM's encounter tables.
+* **Speed is measured in frames.** The emulator tops out at about 2,500
+  frames a second, so the work is spent where frames go:
+  * After the Feather Badge the route catches a Wingull and teaches it Fly.
+    The planner then treats every visited town as one ~45-tile hop (from
+    wherever you stand outdoors, or right after stepping out of a building),
+    including heal trips. The destinations come from the ROM's heal-location
+    and region-map tables (`pokeauto/fly.py`).
+  * Planner expansions are cached per map across searches, keyed by
+    everything that can change them (obstacles, abilities, layout vars).
+    Repeated trips such as grinding heal detours reuse them.
+  * Battles hold B while text prints, which skips the per-letter delay.
+    Fake Out is only chosen on a Pokémon's first turn out.
 
 ## You need to supply
 
@@ -98,6 +110,7 @@ python3.12 -m venv .venv && ./.venv/bin/pip install -r requirements.txt
 | `pokeauto/game.py` | Typed RAM reads: mode, map, objects, party, bag, battle |
 | `pokeauto/mapgrid.py` | Tile grids and the movement rules |
 | `pokeauto/nav.py` | World planner (A*), obstacles, triggers |
+| `pokeauto/fly.py` | Fly destinations (from the ROM) and the fly menus |
 | `pokeauto/controller.py` | Walking, talking, prompts/menus, `goto` with its fallback chain |
 | `pokeauto/battle.py`, `data.py` | Battle policy and UI driver; Gen 3 data and damage |
 | `pokeauto/menus.py` | Bag, shop and summary screen navigation |

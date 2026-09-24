@@ -90,6 +90,7 @@ class Controller:
         self.health_check = None              # callable() -> True if it detoured to heal
         self.fly_hook = None                  # callable(dest_map) -> True once there
         self.fly_banned: set[str] = set()     # landing maps Fly failed to reach
+        self._last_map, self._map_visit = "", 0
         self._in_health_check = False
         self.stats = {"frames": 0, "steps": 0, "battles": 0, "prompts": 0}
         self._last_prompt = None
@@ -372,8 +373,12 @@ class Controller:
 
     def state(self) -> State:
         x, y = self.game.pos()
-        return State(self.game.map_id(), x, y, self.game.player_elevation(),
-                     self.game.surfing())
+        m = self.game.map_id()
+        if m != self._last_map:
+            # Entering a map reloads it: smashed rocks and pushed boulders reset.
+            self._last_map = m
+            self._map_visit += 1
+        return State(m, x, y, self.game.player_elevation(), self.game.surfing())
 
     # -- walking ----------------------------------------------------------------
     def _hold_until_moved(self, direction: str, max_frames: int = 40) -> bool:
@@ -775,12 +780,13 @@ class Controller:
         if caps.smash and obs.rocks:
             done = self.__dict__.setdefault("_smashed", set())
             for rx, ry in sorted(obs.rocks, key=lambda r: abs(r[0] - s.x) + abs(r[1] - s.y)):
-                if (s.map, rx, ry) in done:
+                key = (s.map, self._map_visit, rx, ry)   # rocks respawn on re-entry
+                if key in done:
                     continue
                 near = self.planner.plan(s, adjacent(s.map, rx, ry), caps, live=live,
                                          live_objects=objs)
                 if near is None:
-                    done.add((s.map, rx, ry))  # out of reach for now
+                    done.add(key)              # out of reach for now
                     continue
                 log.info("BOULDERS smashing rock at (%d,%d) on %s first", rx, ry, s.map)
                 if near and not self._run_steps(near, s):
@@ -791,7 +797,7 @@ class Controller:
                     self._execute(Step("smash", d, State(s.map, rx, ry, here.elev)))
                 if not any((o.x, o.y) == (rx, ry) for o in self.game.objects()
                            if not o.is_player):
-                    done.add((s.map, rx, ry))  # really gone
+                    done.add(key)              # really gone
                 return True                    # replan with the rock gone
         loose = NavCaps(**{**caps.__dict__, "ignore_boulders": True,
                            "active_triggers_block": False, "ignore_story_objects": True})
