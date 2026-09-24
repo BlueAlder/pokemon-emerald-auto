@@ -662,6 +662,7 @@ class Agent:
         planner = self.ctl.planner
         battles = 0
         spot = None            # (map, x, y, direction, back)
+        fallback = False       # spot is "any grass" because the ideal maps are out of reach
         dry = 0                # consecutive spots without an encounter
         spots: set[str] = set()
         while self.lead().level < level and battles < max_battles:
@@ -669,7 +670,7 @@ class Agent:
                 self.heal()
                 spot = None
             want = self.grind_maps(self.lead().level)
-            if spot is not None and want and spot[0] not in want:
+            if spot is not None and want and spot[0] not in want and not fallback:
                 spot = None    # outgrew this area
             if spot is not None and (self.game.map_id(), *self.game.pos()) != spot[:3]:
                 try:
@@ -690,10 +691,19 @@ class Agent:
                     return g.inside(s.x, s.y) and has_encounters(g.behavior(s.x, s.y)) \
                         and not s.surfing
                 in_grass.maps = spots or None
+                fallback = False
                 try:
+                    # One bounded search first: a failing goto runs the whole
+                    # fallback chain, which is far too slow to learn "no".
+                    if spots and self.ctl.planner.plan(
+                            self.ctl.state(), in_grass, self.ctl.nav_caps(avoid_grass=0.0),
+                            live=MapGrid.from_ram(self.game),
+                            live_objects=self.game.objects()) is None:
+                        raise Stuck("no grinding spot in range")
                     self.ctl.goto(in_grass, caps=self.ctl.nav_caps(avoid_grass=0.0),
                                   desc=f"grass (L{self.lead().level} spots)")
                 except Stuck:
+                    fallback = True
                     if not spots:
                         raise
                     # Unreachable with today's HMs: never search for them again.

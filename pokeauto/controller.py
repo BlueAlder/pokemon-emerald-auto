@@ -640,8 +640,14 @@ class Controller:
                                              live_objects=self.game.objects())
                     if plan is not None:
                         break
-            if plan is None and self._try_boulders(s, goal, use):
-                continue
+            if plan is None:
+                before = (s, sorted((o.x, o.y) for o in self.game.objects()))
+                if self._try_boulders(s, goal, use):
+                    if (self.state(), sorted((o.x, o.y) for o in self.game.objects())) == before:
+                        failures += 1          # the push sequence went nowhere
+                        if failures > max_replans:
+                            raise Stuck(f"boulders on {s.map} would not move")
+                    continue
             if plan is None and use.strength:
                 # Boulders on a later map: head there; the push puzzle is
                 # solved on arrival (_try_boulders, current map only).
@@ -760,17 +766,21 @@ class Controller:
             for rx, ry in sorted(obs.rocks, key=lambda r: abs(r[0] - s.x) + abs(r[1] - s.y)):
                 if (s.map, rx, ry) in done:
                     continue
-                done.add((s.map, rx, ry))
                 near = self.planner.plan(s, adjacent(s.map, rx, ry), caps, live=live,
                                          live_objects=objs)
                 if near is None:
+                    done.add((s.map, rx, ry))  # out of reach for now
                     continue
                 log.info("BOULDERS smashing rock at (%d,%d) on %s first", rx, ry, s.map)
                 if near and not self._run_steps(near, s):
-                    return True
+                    return True                # interrupted: try again next time
                 here = self.state()
-                d = facing_dir(here.x, here.y, rx, ry)
-                self._execute(Step("smash", d, State(s.map, rx, ry, here.elev)))
+                if abs(here.x - rx) + abs(here.y - ry) == 1:
+                    d = facing_dir(here.x, here.y, rx, ry)
+                    self._execute(Step("smash", d, State(s.map, rx, ry, here.elev)))
+                if not any((o.x, o.y) == (rx, ry) for o in self.game.objects()
+                           if not o.is_player):
+                    done.add((s.map, rx, ry))  # really gone
                 return True                    # replan with the rock gone
         loose = NavCaps(**{**caps.__dict__, "ignore_boulders": True,
                            "active_triggers_block": False, "ignore_story_objects": True})
