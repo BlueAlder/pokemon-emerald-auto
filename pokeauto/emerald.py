@@ -89,6 +89,7 @@ def petalburg_gym(a):
 
 SOOTOPOLIS = "MAP_SOOTOPOLIS_CITY"
 LEAGUE = "MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F"
+VICTORY_ROAD = ["MAP_VICTORY_ROAD_1F", "MAP_VICTORY_ROAD_B1F"]
 
 ROUTE: list[Milestone] = [
     Milestone("leave_truck", var_ge("VAR_LITTLEROOT_INTRO_STATE", 3), [
@@ -318,19 +319,27 @@ ROUTE: list[Milestone] = [
               [goto("MAP_VICTORY_ROAD_1F"),
                trigger("MAP_VICTORY_ROAD_1F", "WallyBattleTrigger1")],
               min_level=60, important=True, hint="beat Wally at the entrance of Victory Road"),
+    # Five fights with no Pokemon Center: two Pokemon run out of PP. Recruit
+    # two more from Victory Road (Hariyama catches easily) and train them.
+    Milestone("e4_team", party_size(5),
+              [call("shop", {"ITEM_ULTRA_BALL": 15}),
+               call("catch", "SPECIES_HARIYAMA", VICTORY_ROAD),
+               call("catch", "SPECIES_GOLBAT", VICTORY_ROAD)],
+              hint="catch a Hariyama and a Golbat in Victory Road for the Elite Four"),
     # More PP for five fights in a row: Water Pulse (20 PP) over Take Down,
     # Facade (Huge Power) over Hydro Pump's 5 PP.
-    Milestone("e4_moves", all_of(
-        lambda a: not a.game.has_item("ITEM_TM03")
-        or any(p.knows("MOVE_WATER_PULSE") for p in a.game.party()),
-        lambda a: not a.game.has_item("ITEM_TM42")
-        or any(p.knows("MOVE_FACADE") for p in a.game.party())),
+    Milestone("e4_moves", lambda a: all(
+        not a.game.has_item(tm) or any(p.knows(mv) for p in a.game.party())
+        for tm, mv in (("ITEM_TM03", "MOVE_WATER_PULSE"), ("ITEM_TM42", "MOVE_FACADE"),
+                       ("ITEM_TM39", "MOVE_ROCK_TOMB"), ("ITEM_TM40", "MOVE_AERIAL_ACE"))),
               [call("teach", "ITEM_TM03", ["SWAMPERT"], "MOVE_TAKE_DOWN"),
-               call("teach", "ITEM_TM42", ["AZUMARILL"], "MOVE_HYDRO_PUMP")]),
+               call("teach", "ITEM_TM42", ["AZUMARILL"], "MOVE_HYDRO_PUMP"),
+               call("teach", "ITEM_TM39", ["HARIYAMA"], "MOVE_WHIRLWIND"),
+               call("teach", "ITEM_TM40", ["GOLBAT"])]),
     Milestone("enter_league", flag("FLAG_ENTERED_ELITE_FOUR"),
               [goto(LEAGUE), call("league_supplies"),
                talk_s(LEAGUE, "PokemonLeague_1F_EventScript_DoorGuard")],
-              min_level=70, team_level=64, important=True,
+              min_level=70, team_level=60, team_size=4, important=True,
               hint="cross Victory Road and show the guards all eight badges"),
     Milestone("sidney", flag("FLAG_DEFEATED_ELITE_4_SIDNEY"),
               [call("heal_with_items"), goto("MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM"),

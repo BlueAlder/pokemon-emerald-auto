@@ -514,8 +514,8 @@ class Agent:
         forget = None
         if len(mon.moves) >= 4:
             if replace:
-                forget = next(i for i, mv in enumerate(mon.moves) if mv.const == replace)
-            else:
+                forget = next((i for i, mv in enumerate(mon.moves) if mv.const == replace), None)
+            if forget is None:
                 forget = min((i for i in range(4) if mon.moves[i].id not in self.hm_moves()),
                              key=lambda i: self.move_value(mon, mon.moves[i].id))
         log.info("TEACH %s (%s) to %s, replacing slot %s", item, move_name, mon.species_name, forget)
@@ -545,7 +545,7 @@ class Agent:
         if m.min_level:
             self.grind_to(m.min_level)
         if m.team_level:
-            self.train(m.team_level)
+            self.train(m.team_level, members=m.team_size)
 
     def recover(self, m, exc) -> None:
         """Get back to a sane state after a Stuck/crash."""

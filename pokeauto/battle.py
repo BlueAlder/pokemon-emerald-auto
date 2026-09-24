@@ -236,8 +236,12 @@ class Battle:
             # otherwise the press was just dropped and we confirm again.
             slot = self._submitted.pop(battler)
             text = self.game.battle_text().replace("\n", " ")
-            if re.search(r"disabled|can't|cannot|no PP|no moves|taunt|torment|won't",
-                         text, re.I):
+            bounces = self.__dict__.setdefault("_bounces", {})
+            key = (battler, slot, self.turns)
+            bounces[key] = bounces.get(key, 0) + 1
+            # The text buffer can be stale, so a second bounce counts too.
+            if bounces[key] >= 2 or re.search(
+                    r"disabled|can't|cannot|no PP|no moves|taunt|torment|won't", text, re.I):
                 self._refused.setdefault(battler, set()).add(slot)
                 log.info("BATTLE move slot %d refused (%r); choosing again", slot, text[-50:])
                 self._pending.pop(battler, None)
@@ -430,6 +434,17 @@ class Battle:
         banned = self.unusable_slots(battler)
         options = [o for o in options if o.kind != "move" or o.slot not in banned]
         if not options:
+            # Out of PP: hand over to someone who can still fight, else Struggle.
+            fbm0 = foes[0][1]
+            foe0 = combatant_from_battle(self.data, fbm0)
+            if not self.is_double() and not self._trapped():
+                active = self.game.battler_party_index(0)
+                able = [m.slot for m in self.game.party()
+                        if m.slot != active and m.slot not in self._bad_switch
+                        and self._can_hurt(m.slot, foe0)]
+                if able:
+                    sw = max(able, key=lambda sl: self._switch_value(sl, foe0))
+                    return Choice("switch", sw, why="out of PP")
             free = [i for i, mv in enumerate(me_bm.moves) if mv.id and mv.pp and i not in banned]
             return Choice("move", free[0] if free else 0, why="struggle")
         options.sort(key=lambda c: -c.score)
@@ -444,7 +459,7 @@ class Battle:
         # Helpless: nothing we have hurts it (immunities, no PP). Bring in
         # someone who can -- healing a Pokemon that cannot deal damage only
         # burns potions.
-        if best.score < 0.05 and not self.is_double() and not self._trapped():
+        if best.score < 0.005 and not self.is_double() and not self._trapped():
             active = self.game.battler_party_index(0)
             able = [m.slot for m in self.game.party()
                     if m.slot != active and m.slot not in self._bad_switch

@@ -28,7 +28,8 @@ class Milestone:
     done: Callable
     actions: list[Callable] = field(default_factory=list)
     min_level: int = 0            # grind the lead to this level first
-    team_level: int = 0           # ...and the two strongest (double battles, E4)
+    team_level: int = 0           # ...and the strongest team_size members (doubles, E4)
+    team_size: int = 2
     heal_first: bool = True
     important: bool = False       # boss fight inside: let the advisor weigh in
     attempts: int = 4
