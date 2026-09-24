@@ -131,12 +131,20 @@ cp .env.example .env            # optional: add your TypeSafe key
 
 ## Status
 
-**The player has beaten the game.** With `--no-jev` (zero TypeSafe calls), it
-went from the opening truck through all eight badges, Rayquaza, Victory Road
-and the Elite Four to the Hall of Fame at about 21:30 in-game time. That run
-was built up in segments, resuming from checkpoints while bugs were fixed. The
-final team was Swampert L73, Azumarill L61, Hariyama L60, Crobat L60 and
-Castform.
+**The player has beaten the game twice**, both times with `--no-jev` (zero
+TypeSafe calls):
+
+1. The development run reached the Hall of Fame at about 21:30 in-game time.
+2. A second playthrough started from a brand-new game and reached the Hall of
+   Fame at 28:17 in-game time (`FLAG_SYS_GAME_CLEAR` set). The final team was
+   Swampert L77, Azumarill L68, Crobat L66, Hariyama L61 and Castform. This run
+   was one game, but it was restarted four times from its own checkpoints
+   after fixes (goods_stolen, reach_mossdeep, teach_dive, enter_league). It
+   took about 45 minutes of wall time at full speed, most of it grinding.
+
+The runner handles setbacks by itself. It retries failed attempts, re-takes
+Mr. Briney's boat after whiting out on an island, re-trains between Elite
+Four attempts, and restarts the Elite Four from Sidney after a loss.
 
 What the Elite Four needed, beyond the gyms:
 
