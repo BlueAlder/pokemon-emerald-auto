@@ -193,7 +193,9 @@ ROUTE: list[Milestone] = [
     Milestone("reach_mauville", flag("FLAG_VISITED_MAUVILLE_CITY"),
               [unless(reachable("MAP_SLATEPORT_CITY"), prefer("SLATEPORT"), goto("MAP_DEWFORD_TOWN"),
                       talk_s("MAP_DEWFORD_TOWN", "EventScript_Briney")),
-               goto("MAP_MAUVILLE_CITY")]),
+               goto("MAP_SLATEPORT_CITY_POKEMON_CENTER_1F"),   # respawn on the mainland
+               goto("MAP_MAUVILLE_CITY")],
+              min_level=27, important=True, hint="walk Route 110 to Mauville (the rival waits there)"),
     Milestone("rock_smash", flag("FLAG_RECEIVED_HM_ROCK_SMASH"),
               [goto("MAP_MAUVILLE_CITY_HOUSE1"),
                talk_s("MAP_MAUVILLE_CITY_HOUSE1", "EventScript_RockSmashDude")]),
