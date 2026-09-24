@@ -78,7 +78,8 @@ class Battle:
     def _no_item_fallback(self, battler: int) -> Choice:
         mons = self.game.battle_mons()
         me_bm = mons[battler]
-        opts = self.move_options(me_bm, combatant_from_battle(self.data, me_bm), self._foes())
+        opts = self.move_options(me_bm, combatant_from_battle(self.data, me_bm), self._foes(),
+                                 battler)
         return max(opts, key=lambda c: c.score) if opts else Choice("move", 0, why="struggle")
 
     def run(self) -> None:
@@ -439,7 +440,7 @@ class Battle:
                 if not self._run_blocked():
                     return Choice("run", why="not worth fighting")
 
-        options = self.move_options(me_bm, me, foes)
+        options = self.move_options(me_bm, me, foes, battler)
         banned = self.unusable_slots(battler)
         options = [o for o in options if o.kind != "move" or o.slot not in banned]
         if not options:
@@ -498,8 +499,13 @@ class Battle:
                 return Choice("switch", sw, why=f"threat {threat:.0f} >= hp {me_bm.hp}")
         return best
 
-    def move_options(self, me_bm, me, foes) -> list[Choice]:
+    def first_turn(self, battler: int) -> bool:
+        """gDisableStructs[battler].isFirstTurn: Fake Out only works now."""
+        return self.emu.read(S["gDisableStructs"] + battler * 0x1C + 0x16, 1)[0] != 0
+
+    def move_options(self, me_bm, me, foes, battler: int | None = None) -> list[Choice]:
         out = []
+        first = battler is None or self.first_turn(battler)
         for slot, mv in enumerate(me_bm.moves):
             if mv.pp == 0:
                 continue
@@ -524,6 +530,8 @@ class Battle:
                     score = 0
                 if eff in ("EFFECT_SNORE", "EFFECT_SLEEP_TALK") and not me_bm.status1 & 7:
                     score = 0
+                if eff == "EFFECT_FAKE_OUT" and not first:
+                    score = 0          # fails after the user's first turn out
                 if eff == "EFFECT_FALSE_SWIPE":
                     score *= 0.8
                 if info.priority > 0 and kill:

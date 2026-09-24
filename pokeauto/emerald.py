@@ -260,6 +260,15 @@ ROUTE: list[Milestone] = [
     Milestone("badge_feather", badges(6),
               [goto("MAP_FORTREE_CITY_GYM"), call("fortree_gym")],
               min_level=44, important=True, hint="beat Winona at the Fortree Gym"),
+    # Fly (the Feather Badge lets it be used): Wingull live on Route 121, on
+    # the way to Lilycove. From here on the planner flies between towns.
+    Milestone("catch_flyer", lambda a: any(p.species_name in ("WINGULL", "PELIPPER")
+                                           or p.knows("MOVE_FLY") for p in a.game.party()),
+              [call("catch", "SPECIES_WINGULL", ["MAP_ROUTE121", "MAP_ROUTE118", "MAP_ROUTE123",
+                                                 "MAP_MT_PYRE_EXTERIOR"])],
+              hint="catch a Wingull to carry HM02 Fly"),
+    Milestone("teach_fly", lambda a: any(p.knows("MOVE_FLY") for p in a.game.party()),
+              [call("teach", "ITEM_HM02", ["WINGULL", "PELIPPER"])]),
 
     # -- Lilycove, Mt. Pyre, the Magma Hideout, the harbor, the Aqua Hideout -------------
     Milestone("reach_lilycove", flag("FLAG_VISITED_LILYCOVE_CITY"), [goto("MAP_LILYCOVE_CITY")]),

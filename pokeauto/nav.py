@@ -27,6 +27,7 @@ from dataclasses import dataclass, field
 
 from .mapgrid import (ARROW_WARPS, DELTA, JUMP, STEP_WARPS, Caps, MapGrid, Pos,
                       has_encounters, surfable, MB)
+from .fly import FLY_COST, flyable_map
 from .symbols import const, constants, maps
 
 _CONSTS = constants()
@@ -91,6 +92,7 @@ class NavCaps:
     active_triggers_block: bool = True  # triggers that would fire now are walls
     trigger_exempt_map: str = ""        # ...except on this map
     ignore_story_objects: bool = False  # plan through NPCs that a script may move away
+    fly: tuple = ()             # State we land on for every town Fly can reach
 
     def grid_caps(self) -> Caps:
         return Caps(surf=self.surf, waterfall=self.waterfall)
@@ -367,202 +369,235 @@ class Planner:
                 return r
         return None
 
+    # Expansions are cached across plans, per map and per everything that can
+    # change them (obstacles, caps, layout variables, the dynamic warp): heal
+    # trips and repeated gotos then search over precomputed adjacency.
+    _EDGE_CACHE_LIMIT = 1_500_000
+
+    def _world_key(self) -> tuple:
+        vars_ = self.__dict__.get("_override_vars")
+        if vars_ is None:
+            vars_ = self._override_vars = sorted({
+                o["var"] for info in maps().values() for o in info.get("layout_overrides", ())
+                if o["op"] != "always" and o["var"] != "VAR_RESULT"})
+        return (tuple(self.game.var(v) for v in vars_),
+                bytes(self.emu.read(self.game.sb1() + 0x14, 8)))
+
     def _plan(self, start: State, goal, caps: NavCaps, live, live_objects, max_nodes,
               slack) -> list[Step] | None:
-        grids: dict[str, MapGrid] = {}
-        obst: dict[str, Obstacles] = {}
         deadline = _time.process_time() + 20.0   # 20 CPU-seconds of search: a dead end
-
-        def G(m):
-            if m not in grids:
-                grids[m] = self.grid(m, live)
-            return grids[m]
-
-        def O(m):
-            if m not in obst:
-                obst[m] = self.obstacles(m, live_objects if (live and m == live.map_id) else None,
-                                         ignore_story=caps.ignore_story_objects)
-            return obst[m]
-
-        gcaps = caps.grid_caps()
         goal_tiles = getattr(goal, "tiles", set())
         goal_maps = getattr(goal, "maps", None)
+        world = self._world_key()
+        cache = self.__dict__.setdefault("_edge_cache", {})
+        if sum(len(v) for v in cache.values()) > self._EDGE_CACHE_LIMIT:
+            cache.clear()
+        capkey = (caps.surf, caps.cut, caps.smash, caps.waterfall, caps.dive,
+                  caps.ignore_boulders, caps.avoid_grass, caps.avoid_triggers,
+                  caps.triggers_block, caps.active_triggers_block, caps.trigger_exempt_map,
+                  caps.ignore_story_objects)
+        ctxs: dict[str, tuple] = {}
+
+        def ctx(m):
+            """(edge memo, grid, obstacles, blocked) for map m in this plan."""
+            c = ctxs.get(m)
+            if c is not None:
+                return c
+            g = self.grid(m, live)
+            ob = self.obstacles(m, live_objects if (live and m == live.map_id) else None,
+                                ignore_story=caps.ignore_story_objects)
+            blocked = ob.walls | ob.trees | ob.rocks
+            if not caps.ignore_boulders:
+                blocked = blocked | ob.boulders
+            if caps.triggers_block:
+                blocked = blocked | ob.triggers | self._all_triggers(m)
+            elif caps.active_triggers_block and m != caps.trigger_exempt_map:
+                blocked = blocked | ob.triggers
+            if goal_tiles:
+                blocked = blocked - {(gx, gy) for (gm, gx, gy) in goal_tiles if gm == m}
+            if live is not None and m == live.map_id:
+                memo: dict = {}                  # live RAM grid: this plan only
+            else:
+                key = (m, world, capkey, frozenset(blocked), frozenset(ob.triggers),
+                       frozenset(ob.soft))
+                memo = cache.setdefault(key, {})
+            c = ctxs[m] = (memo, g, ob, frozenset(blocked))
+            return c
+
         # Goal-directed: map hops to the goal give an admissible heuristic
         # (each hop costs at least one step) and let us skip maps that lead
         # away from it -- without this, Surf opens the whole sea to the search.
         hops = self.map_distances(goal_maps) if goal_maps else None
         limit = (hops.get(start.map, 99) + slack) if (hops and slack is not None) else None
+        hget = hops.get if hops else None
 
-        def h(st: State) -> float:
-            return float(hops.get(st.map, 50)) if hops else 0.0
-
-        self._h = h
         tie = itertools.count()
         dist = {start: 0.0}
-        prev: dict[State, tuple[State, Step]] = {}
-        heap = [(h(start), next(tie), start)]
+        prev: dict[State, tuple[State, tuple[str, str]]] = {}
+        heap = [(float(hget(start.map, 50)) if hget else 0.0, next(tie), start)]
+        push, pop = heapq.heappush, heapq.heappop
         expanded = 0
         while heap:
-            _f, _, s = heapq.heappop(heap)
+            _f, _, s = pop(heap)
             cost = dist.get(s, 1e18)
-            if limit is not None and hops.get(s.map, 99) > limit:
+            if _f - (hget(s.map, 50) if hget else 0.0) > cost + 1e-9:
+                continue                         # stale heap entry
+            if limit is not None and hget(s.map, 99) > limit:
                 continue
             if goal(s):
                 return self._unwind(prev, start, s)
             expanded += 1
             if expanded > max_nodes or (expanded % 4096 == 0 and _time.process_time() > deadline):
                 return None
-            g, ob = G(s.map), O(s.map)
-            here_b = g.behavior(s.x, s.y) if g.inside(s.x, s.y) else 0
-            # Dive / emerge: press A on the current tile (TrySetDiveWarp).
-            if caps.dive and s.surfing:
-                # Maps whose dive/emerge is a script (setdivewarp), not a connection.
-                dw = maps()[s.map].get("dive_warp")
-                if dw and here_b in DIVEABLE and dw["dest"] in maps() \
-                        and maps()[s.map].get("type") != "MAP_TYPE_UNDERWATER" and not any(
-                        c["direction"] == "dive" for c in maps()[s.map]["connections"]):
-                    dg = G(dw["dest"])
-                    self._relax((State(dw["dest"], dw["x"], dw["y"],
-                                       dg.elevation(dw["x"], dw["y"]), True),
-                                 "dive", 10.0), s, "up", dist, prev, heap, tie, cost)
-                underwater = maps()[s.map].get("type") == "MAP_TYPE_UNDERWATER"
-                land = self.emerge_target(s.map) if underwater else None
-                if land and here_b not in NO_EMERGE and not any(
-                        c["direction"] == "emerge" for c in maps()[s.map]["connections"]):
-                    self._relax((land, "dive", 10.0), s, "up", dist, prev, heap, tie, cost)
-                for c in maps()[s.map]["connections"]:
-                    if c["direction"] == "dive" and here_b in DIVEABLE and c["map"] in maps():
-                        dg = G(c["map"])
-                        if dg.inside(s.x, s.y) and not dg.collision(s.x, s.y):
-                            self._relax((State(c["map"], s.x, s.y, dg.elevation(s.x, s.y), True),
-                                         "dive", 10.0), s, "up", dist, prev, heap, tie, cost)
-                    if c["direction"] == "emerge" and here_b not in NO_EMERGE and c["map"] in maps():
-                        eg = G(c["map"])
-                        if eg.inside(s.x, s.y) and not eg.collision(s.x, s.y):
-                            ee = eg.elevation(s.x, s.y)
-                            self._relax((State(c["map"], s.x, s.y, 3 if ee == 15 else ee, True),
-                                         "dive", 10.0), s, "up", dist, prev, heap, tie, cost)
-            # Waterfall: face it while surfing, A, and ride to the top.
-            if caps.waterfall and s.surfing and g.inside(s.x, s.y - 1) \
-                    and g.behavior(s.x, s.y - 1) == MB["MB_WATERFALL"]:
-                ty = s.y - 1
-                while g.inside(s.x, ty) and g.behavior(s.x, ty) == MB["MB_WATERFALL"]:
-                    ty -= 1
-                if g.inside(s.x, ty) and not g.collision(s.x, ty):
-                    self._relax((State(s.map, s.x, ty, s.elev, True), "waterfall",
-                                 4.0 + (s.y - ty)), s, "up", dist, prev, heap, tie, cost)
-            for d in DELTA:
-                nxt: list[tuple[State, str, float]] = []
-                # Arrow warps fire when pressing their direction on them.
-                if here_b in ARROW_WARPS[d]:
-                    w = self.warp_at(s.map, s.x, s.y)
-                    if w and (a := self.arrive(w, d)):
-                        nxt.append((a, "arrow", 2.0))
-                        for item in nxt:
-                            self._relax(item, s, d, dist, prev, heap, tie, cost)
-                        continue
-                dx, dy = DELTA[d]
-                tx, ty = s.x + dx, s.y + dy
-                # Scripted transports (cable car): talk to the attendant.
-                for tr in TRANSPORTS:
-                    if tr["map"] != s.map:
-                        continue
-                    npc = next(o for o in maps()[s.map]["objects"] if o["local_id"] == tr["npc"])
-                    if (npc["x"], npc["y"]) == (tx, ty) or (
-                            (npc["x"], npc["y"]) == (tx + dx, ty + dy) and g.inside(tx, ty)
-                            and g.behavior(tx, ty) == MB["MB_COUNTER"]):
-                        dm, dxx, dyy = tr["dest"]
-                        nxt.append((State(dm, dxx, dyy, 3), "transport", tr["cost"]))
-                # Scripted doors (signs whose script warps): face, press A, confirm.
-                for sw in maps()[s.map].get("script_warps", ()):
-                    if (sw["sx"], sw["sy"]) == (tx, ty) and sw["dest"] in maps():
-                        dg = self.grid(sw["dest"])
-                        de = dg.elevation(sw["x"], sw["y"]) if dg.inside(sw["x"], sw["y"]) else 3
-                        nxt.append((State(sw["dest"], sw["x"], sw["y"],
-                                          de if de not in (0, 15) else 3), "bgwarp", 8.0))
-                # Doors: press north into them from the tile below.
-                if d == "up" and g.inside(tx, ty) and g.behavior(tx, ty) == DOOR:
-                    w = self.warp_at(s.map, tx, ty)
-                    if w and (a := self.arrive(w, "up")):
-                        nxt.append((a, "door", 2.0))
-                blocked = ob.walls | ob.trees | ob.rocks
-                if not caps.ignore_boulders:
-                    blocked = blocked | ob.boulders
-                if caps.triggers_block:
-                    blocked = blocked | ob.triggers | self._all_triggers(s.map)
-                elif caps.active_triggers_block and s.map != caps.trigger_exempt_map:
-                    blocked = blocked | ob.triggers
-                if goal_tiles:
-                    blocked = blocked - {(gx, gy) for (gm, gx, gy) in goal_tiles if gm == s.map}
-                hole = maps()[s.map].get("hole_warp")
-                if (hole and hole in maps() and not s.surfing and g.inside(tx, ty)
-                        and g.behavior(tx, ty) in FALL_TILES and not g.collision(tx, ty)
-                        and (tx, ty) not in blocked):
-                    # Cracked floor / hole (walking pace): we drop to the same
-                    # spot a floor down (setholewarp). Sky Pillar needs this.
-                    dg = self.grid(hole)
-                    de = dg.elevation(tx, ty) if dg.inside(tx, ty) else 3
-                    nxt.append((State(hole, tx, ty, de if de not in (0, 15) else 3),
-                                "warp", 4.0))
-                    for item in nxt:
-                        self._relax(item, s, d, dist, prev, heap, tie, cost)
-                    continue
-                r = g.step(s.pos, d, gcaps, blocked)
-                if r == "edge":
-                    e = self.edge(s, d)
-                    if e:
-                        nxt.append((e, "edge", 1.0))
-                elif r is not None:
-                    ns = State(s.map, r.x, r.y, r.elev, r.surfing)
-                    far = abs(r.x - s.x) + abs(r.y - s.y) > 1
-                    action = ("jump" if far and g.behavior(tx, ty) in JUMP[d] else
-                              "slide" if far else
-                              "surf" if r.surfing and not s.surfing else "walk")
-                    step_cost = 1.0
-                    if caps.avoid_grass and has_encounters(g.behavior(r.x, r.y)):
-                        step_cost += caps.avoid_grass
-                    if caps.avoid_triggers and (r.x, r.y) in ob.triggers:
-                        step_cost += 40
-                    if (r.x, r.y) in ob.soft:
-                        step_cost += 25
-                    if action == "surf":
-                        step_cost += 6
-                    tb = g.behavior(r.x, r.y)
-                    w = self.warp_at(s.map, r.x, r.y) if tb in STEP_WARPS else None
-                    if w:
-                        a = self.arrive(w, d)
-                        if a:
-                            nxt.append((a, "warp", step_cost + 2))
-                        # stepping on a warp tile always warps; no plain state
-                    else:
-                        nxt.append((ns, action, step_cost))
-                elif g.inside(tx, ty):
-                    # Something clearable in the way?
-                    if (tx, ty) in ob.trees and caps.cut and not s.surfing:
-                        nxt.append((State(s.map, tx, ty, s.elev), "cut", 12.0))
-                    elif (tx, ty) in ob.rocks and caps.smash and not s.surfing:
-                        nxt.append((State(s.map, tx, ty, s.elev), "smash", 12.0))
-                for item in nxt:
-                    self._relax(item, s, d, dist, prev, heap, tie, cost)
+            memo, g, ob, blocked = ctx(s.map)
+            edges = memo.get(s)
+            if edges is None:
+                edges = memo[s] = self._expand(s, caps, g, ob, blocked, ctx)
+            if caps.fly and (s is start or prev[s][1][0] in ("warp", "door", "arrow", "bgwarp")) \
+                    and flyable_map(s.map):
+                # Fly from where we stand, or right after stepping outdoors.
+                edges = edges + [(ls, "fly", "down", FLY_COST) for ls in caps.fly
+                                 if ls.map != s.map]
+            for ns, action, d, c in edges:
+                nc = cost + c
+                if nc < dist.get(ns, 1e18):
+                    dist[ns] = nc
+                    prev[ns] = (s, (action, d))
+                    push(heap, (nc + (hget(ns.map, 50) if hget else 0.0), next(tie), ns))
         return None
 
-    def _relax(self, item, s, d, dist, prev, heap, tie, cost):
-        ns, action, c = item
-        nc = cost + c
-        if nc < dist.get(ns, 1e18):
-            dist[ns] = nc
-            prev[ns] = (s, Step(action, d, ns))
-            heapq.heappush(heap, (nc + self._h(ns), next(tie), ns))
+    def _expand(self, s: State, caps: NavCaps, g: MapGrid, ob: Obstacles, blocked,
+                ctx) -> list[tuple[State, str, str, float]]:
+        """Every (next state, action, direction, cost) one button press away."""
+        out: list[tuple[State, str, str, float]] = []
+        gcaps = caps.grid_caps()
+        info = maps()[s.map]
+        here_b = g.behavior(s.x, s.y) if g.inside(s.x, s.y) else 0
 
-    _h = staticmethod(lambda st: 0.0)
+        def G(m):
+            return ctx(m)[1]
+        # Dive / emerge: press A on the current tile (TrySetDiveWarp).
+        if caps.dive and s.surfing:
+            # Maps whose dive/emerge is a script (setdivewarp), not a connection.
+            dw = info.get("dive_warp")
+            if dw and here_b in DIVEABLE and dw["dest"] in maps() \
+                    and info.get("type") != "MAP_TYPE_UNDERWATER" and not any(
+                    c["direction"] == "dive" for c in info["connections"]):
+                dg = G(dw["dest"])
+                out.append((State(dw["dest"], dw["x"], dw["y"],
+                                  dg.elevation(dw["x"], dw["y"]), True), "dive", "up", 10.0))
+            underwater = info.get("type") == "MAP_TYPE_UNDERWATER"
+            land = self.emerge_target(s.map) if underwater else None
+            if land and here_b not in NO_EMERGE and not any(
+                    c["direction"] == "emerge" for c in info["connections"]):
+                out.append((land, "dive", "up", 10.0))
+            for c in info["connections"]:
+                if c["direction"] == "dive" and here_b in DIVEABLE and c["map"] in maps():
+                    dg = G(c["map"])
+                    if dg.inside(s.x, s.y) and not dg.collision(s.x, s.y):
+                        out.append((State(c["map"], s.x, s.y, dg.elevation(s.x, s.y), True),
+                                    "dive", "up", 10.0))
+                if c["direction"] == "emerge" and here_b not in NO_EMERGE and c["map"] in maps():
+                    eg = G(c["map"])
+                    if eg.inside(s.x, s.y) and not eg.collision(s.x, s.y):
+                        ee = eg.elevation(s.x, s.y)
+                        out.append((State(c["map"], s.x, s.y, 3 if ee == 15 else ee, True),
+                                    "dive", "up", 10.0))
+        # Waterfall: face it while surfing, A, and ride to the top.
+        if caps.waterfall and s.surfing and g.inside(s.x, s.y - 1) \
+                and g.behavior(s.x, s.y - 1) == MB["MB_WATERFALL"]:
+            ty = s.y - 1
+            while g.inside(s.x, ty) and g.behavior(s.x, ty) == MB["MB_WATERFALL"]:
+                ty -= 1
+            if g.inside(s.x, ty) and not g.collision(s.x, ty):
+                out.append((State(s.map, s.x, ty, s.elev, True), "waterfall", "up",
+                            4.0 + (s.y - ty)))
+        transports = [tr for tr in TRANSPORTS if tr["map"] == s.map]
+        script_warps = info.get("script_warps", ())
+        hole = info.get("hole_warp")
+        pos = s.pos
+        for d in DELTA:
+            # Arrow warps fire when pressing their direction on them.
+            if here_b in ARROW_WARPS[d]:
+                w = self.warp_at(s.map, s.x, s.y)
+                if w and (a := self.arrive(w, d)):
+                    out.append((a, "arrow", d, 2.0))
+                continue
+            dx, dy = DELTA[d]
+            tx, ty = s.x + dx, s.y + dy
+            # Scripted transports (cable car): talk to the attendant.
+            for tr in transports:
+                npc = next(o for o in info["objects"] if o["local_id"] == tr["npc"])
+                if (npc["x"], npc["y"]) == (tx, ty) or (
+                        (npc["x"], npc["y"]) == (tx + dx, ty + dy) and g.inside(tx, ty)
+                        and g.behavior(tx, ty) == MB["MB_COUNTER"]):
+                    dm, dxx, dyy = tr["dest"]
+                    out.append((State(dm, dxx, dyy, 3), "transport", d, tr["cost"]))
+            # Scripted doors (signs whose script warps): face, press A, confirm.
+            for sw in script_warps:
+                if (sw["sx"], sw["sy"]) == (tx, ty) and sw["dest"] in maps():
+                    dg = self.grid(sw["dest"])
+                    de = dg.elevation(sw["x"], sw["y"]) if dg.inside(sw["x"], sw["y"]) else 3
+                    out.append((State(sw["dest"], sw["x"], sw["y"],
+                                      de if de not in (0, 15) else 3), "bgwarp", d, 8.0))
+            # Doors: press north into them from the tile below.
+            if d == "up" and g.inside(tx, ty) and g.behavior(tx, ty) == DOOR:
+                w = self.warp_at(s.map, tx, ty)
+                if w and (a := self.arrive(w, "up")):
+                    out.append((a, "door", d, 2.0))
+            if (hole and hole in maps() and not s.surfing and g.inside(tx, ty)
+                    and g.behavior(tx, ty) in FALL_TILES and not g.collision(tx, ty)
+                    and (tx, ty) not in blocked):
+                # Cracked floor / hole (walking pace): we drop to the same
+                # spot a floor down (setholewarp). Sky Pillar needs this.
+                dg = self.grid(hole)
+                de = dg.elevation(tx, ty) if dg.inside(tx, ty) else 3
+                out.append((State(hole, tx, ty, de if de not in (0, 15) else 3), "warp", d, 4.0))
+                continue
+            r = g.step(pos, d, gcaps, blocked)
+            if r == "edge":
+                e = self.edge(s, d)
+                if e:
+                    out.append((e, "edge", d, 1.0))
+            elif r is not None:
+                ns = State(s.map, r.x, r.y, r.elev, r.surfing)
+                far = abs(r.x - s.x) + abs(r.y - s.y) > 1
+                action = ("jump" if far and g.behavior(tx, ty) in JUMP[d] else
+                          "slide" if far else
+                          "surf" if r.surfing and not s.surfing else "walk")
+                step_cost = 1.0
+                if caps.avoid_grass and has_encounters(g.behavior(r.x, r.y)):
+                    step_cost += caps.avoid_grass
+                if caps.avoid_triggers and (r.x, r.y) in ob.triggers:
+                    step_cost += 40
+                if (r.x, r.y) in ob.soft:
+                    step_cost += 25
+                if action == "surf":
+                    step_cost += 6
+                tb = g.behavior(r.x, r.y)
+                w = self.warp_at(s.map, r.x, r.y) if tb in STEP_WARPS else None
+                if w:
+                    a = self.arrive(w, d)
+                    if a:
+                        out.append((a, "warp", d, step_cost + 2))
+                    # stepping on a warp tile always warps; no plain state
+                else:
+                    out.append((ns, action, d, step_cost))
+            elif g.inside(tx, ty):
+                # Something clearable in the way?
+                if (tx, ty) in ob.trees and caps.cut and not s.surfing:
+                    out.append((State(s.map, tx, ty, s.elev), "cut", d, 12.0))
+                elif (tx, ty) in ob.rocks and caps.smash and not s.surfing:
+                    out.append((State(s.map, tx, ty, s.elev), "smash", d, 12.0))
+        return out
 
     @staticmethod
     def _unwind(prev, start, end) -> list[Step]:
         out = []
         s = end
         while s != start:
-            p, step = prev[s]
-            out.append(step)
+            p, (action, d) = prev[s]
+            out.append(Step(action, d, s))
             s = p
         return out[::-1]
 

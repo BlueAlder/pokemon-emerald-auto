@@ -88,6 +88,8 @@ class Controller:
         self.multichoice_prefs: list[str] = []  # regexes, first matching label wins
         self.ui_handlers: dict[str, object] = {}
         self.health_check = None              # callable() -> True if it detoured to heal
+        self.fly_hook = None                  # callable(dest_map) -> True once there
+        self.fly_banned: set[str] = set()     # landing maps Fly failed to reach
         self._in_health_check = False
         self.stats = {"frames": 0, "steps": 0, "battles": 0, "prompts": 0}
         self._last_prompt = None
@@ -351,7 +353,22 @@ class Controller:
             smash=knows("MOVE_ROCK_SMASH") and f("FLAG_BADGE03_GET"),
             waterfall=knows("MOVE_WATERFALL") and f("FLAG_BADGE08_GET"),
             avoid_grass=avoid_grass,
+            fly=self.fly_destinations(),
         )
+
+    def fly_destinations(self) -> tuple:
+        """Landing States of every visited town, if someone can Fly now."""
+        from .fly import destinations
+        if self.fly_hook is None or not self.game.flag("FLAG_BADGE06_GET") or not any(
+                p.knows("MOVE_FLY") and not p.fainted for p in self.game.party()):
+            return ()
+        out = []
+        for d in destinations(self.emu):
+            if self.game.flag(d["flag"]) and d["map"] not in self.fly_banned:
+                g = self.planner.grid(d["map"])
+                e = g.elevation(d["x"], d["y"]) if g.inside(d["x"], d["y"]) else 3
+                out.append(State(d["map"], d["x"], d["y"], 3 if e in (0, 15) else e))
+        return tuple(out)
 
     def state(self) -> State:
         x, y = self.game.pos()
@@ -405,6 +422,10 @@ class Controller:
             self.press("B" if underwater else "A", release=10)
             self.pump()
             return self.state().map == step.expect.map
+        if step.action == "fly":
+            ok = bool(self.fly_hook and self.fly_hook(step.expect.map))
+            s = self.state()
+            return ok and s.map == step.expect.map and (s.x, s.y) == (step.expect.x, step.expect.y)
         if step.action == "transport":
             self.face(d)
             self.press("A", release=10)

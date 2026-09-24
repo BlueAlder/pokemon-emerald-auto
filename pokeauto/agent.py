@@ -38,6 +38,7 @@ class Agent:
         self.ctl.battle = self.battle
         self.battle.move_learner = self.choose_move_to_forget
         self.ctl.health_check = self._health_check
+        self.ctl.fly_hook = self._fly
         self.started = time.time()
 
     # -- conveniences --------------------------------------------------------------
@@ -83,6 +84,21 @@ class Agent:
         raise Stuck("could not get through the title screen")
 
     # -- start menu ---------------------------------------------------------------------
+    def _fly(self, dest_map: str) -> bool:
+        """Planner step 'fly'. A town the game refuses is never planned again."""
+        from .fly import fly_to
+        try:
+            ok = fly_to(self, dest_map)
+        except Stuck as e:
+            log.info("FLY failed: %s", e)
+            for _ in range(4):
+                self.ctl.press("B", release=12)
+            self.pump()
+            ok = False
+        if not ok and self.game.map_id() != dest_map:
+            self.ctl.fly_banned.add(dest_map)
+        return ok
+
     def open_start_menu(self, action: str) -> None:
         self.pump()
         for _ in range(3):
@@ -216,6 +232,8 @@ class Agent:
 
     def _health_check(self) -> bool:
         """Called between steps of every walk: detour to heal before it is too late."""
+        if self.__dict__.get("_healing"):
+            return False               # already walking to a Pokemon Center
         if self.game.party() and self.needs_heal(0.4):
             if self.game.map_id().startswith(self.NO_CENTER_MAPS):
                 self.heal_with_items()
@@ -261,11 +279,15 @@ class Agent:
         def at_center(s):
             return s.map in goal_maps
 
-        self.ctl.goto(at_center, desc="nearest Pokemon Center")
-        center = self.game.map_id()
-        nurse = next(o for o in maps()[center]["objects"] if "NURSE" in o["gfx"])
-        # The nurse stands behind the counter: talk from two tiles below.
-        self.goto(center, nurse["x"], nurse["y"] + 2)
+        self._healing = True
+        try:
+            self.ctl.goto(at_center, desc="nearest Pokemon Center")
+            center = self.game.map_id()
+            nurse = next(o for o in maps()[center]["objects"] if "NURSE" in o["gfx"])
+            # The nurse stands behind the counter: talk from two tiles below.
+            self.goto(center, nurse["x"], nurse["y"] + 2)
+        finally:
+            self._healing = False
         self.ctl.face("up")
         self.ctl.press("A", release=10)
         self.pump()
@@ -442,6 +464,7 @@ class Agent:
     def _drive_item_flow(self, target_slot: int, forget_slot: int | None, teach_ok: bool,
                          max_iters: int = 300) -> None:
         """Answer everything between 'USE' and being back in the field."""
+        last_prompt = None
         for _ in range(max_iters):
             m = self.game.mode()
             cb = m.callback2
@@ -458,7 +481,9 @@ class Agent:
                     ans = True
                 elif re.search(r"Teach", text, re.I):
                     ans = teach_ok
-                log.info("ITEM PROMPT %r -> %s", text[-60:], "YES" if ans else "NO")
+                if text != last_prompt:
+                    log.info("ITEM PROMPT %r -> %s", text[-60:], "YES" if ans else "NO")
+                    last_prompt = text
                 if ans:
                     self.ctl._menu_select(0)
                 else:
