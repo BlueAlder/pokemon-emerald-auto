@@ -25,7 +25,7 @@ import itertools
 from dataclasses import dataclass, field
 
 from .mapgrid import (ARROW_WARPS, DELTA, STEP_WARPS, Caps, MapGrid, Pos,
-                      has_encounters, MB)
+                      has_encounters, surfable, MB)
 from .symbols import const, constants, maps
 
 _CONSTS = constants()
@@ -238,7 +238,9 @@ class Planner:
         elev = g.elevation(x, y) if g.inside(x, y) else 3
         # Arriving on an elevation-0 (transition) tile leaves the player at 0,
         # free to step onto any level; 15 (multi-level) keeps the default.
-        return State(dest, x, y, 3 if elev == 15 else elev, False)
+        # Through a water door you arrive still surfing.
+        wet = g.inside(x, y) and (surfable(g.behavior(x, y)) or elev == 1)
+        return State(dest, x, y, 3 if elev == 15 else elev, wet)
 
     def edge(self, s: State, d: str) -> State | None:
         info = maps()[s.map]

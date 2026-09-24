@@ -68,7 +68,7 @@ STEP_WARPS = _mb("MB_ANIMATED_DOOR", "MB_LADDER", "MB_NON_ANIMATED_DOOR", "MB_WA
                  "MB_LAVARIDGE_GYM_B1F_WARP", "MB_LAVARIDGE_GYM_1F_WARP",
                  "MB_AQUA_HIDEOUT_WARP", "MB_MT_PYRE_HOLE", "MB_MOSSDEEP_GYM_WARP")
 ARROW_WARPS = {"up": _mb("MB_NORTH_ARROW_WARP", "MB_STAIRS_OUTSIDE_ABANDONED_SHIP"),
-               "down": _mb("MB_SOUTH_ARROW_WARP"),
+               "down": _mb("MB_SOUTH_ARROW_WARP", "MB_WATER_SOUTH_ARROW_WARP"),
                "left": _mb("MB_WEST_ARROW_WARP"),
                "right": _mb("MB_EAST_ARROW_WARP")}
 
@@ -192,7 +192,10 @@ class MapGrid:
                 return None
             if self.collision(lx, ly):
                 return None
-            return Pos(lx, ly, p.elev, False)
+            # ObjectEventUpdateElevation runs on landing: adopt the landing
+            # tile's level unless it is a transition/multi-level tile.
+            le = self.elevation(lx, ly)
+            return Pos(lx, ly, p.elev if le in (ELEV_TRANSITION, ELEV_MULTI) else le, False)
         if self.collision(tx, ty) or tb in ENTER_BLOCKED[d] or cur_b in LEAVE_BLOCKED[d]:
             return None
         if (tx, ty) in blocked:
@@ -206,7 +209,7 @@ class MapGrid:
         if mismatch:
             if p.surfing and te == ELEV_DEFAULT:
                 return Pos(tx, ty, te, False)                    # hop off Surf
-            if not p.surfing and caps.surf and surfable(tb):
+            if not p.surfing and caps.surf and surfable(tb) and p.elev == ELEV_DEFAULT:
                 return Pos(tx, ty, te, True)                     # start surfing
             return None
         cur_e = self.elevation(p.x, p.y) if self.inside(p.x, p.y) else te

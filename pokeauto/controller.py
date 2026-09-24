@@ -402,9 +402,72 @@ class Controller:
         s = self.state()
         return s.map == step.expect.map and (s.x, s.y) == (step.expect.x, step.expect.y)
 
+    def _hold_segment(self, seg: list[Step]) -> bool:
+        """Walk a straight run of steps holding the direction continuously.
+
+        Releasing between tiles makes every step a stop-start; holding keeps
+        running/biking speed (the Mach Bike needs momentum on cracked floors).
+        Released the moment the last tile is entered, so it never overshoots.
+        """
+        d = seg[0].direction
+        goal = seg[-1].expect
+        run = self.game.flag(self.RUN_FLAG) and not self.game.surfing() \
+            and not self.game.on_bike()
+        mask = keymask(d.upper(), *(["B"] if run else []))
+        expected = {(st.expect.x, st.expect.y) for st in seg}
+        start = self.game.pos()
+        last, still = start, 0
+        for _ in range(len(seg) * 24 + 30):
+            self.emu.run(mask, 1)
+            pos = self.game.pos()
+            if pos == (goal.x, goal.y) and self.game.map_id() == goal.map:
+                break
+            if self.game.mode().kind != "overworld":
+                self.emu.run(0, 1)
+                return False
+            if pos != last:
+                if pos not in expected:
+                    self.emu.run(0, 1)
+                    return False
+                last, still = pos, 0
+            else:
+                still += 1
+                if still > 40:            # blocked (NPC stepped in, etc.)
+                    self.emu.run(0, 1)
+                    return False
+        self.emu.run(0, 1)
+        for _ in range(24):              # finish the last step
+            if self.game.avatar()["tile_transition"] == 0:
+                break
+            self.emu.run(0, 1)
+        self.stats["steps"] += len(seg)
+        return self.state() == goal
+
     def _run_steps(self, steps: list[Step], start: State) -> bool:
         """Execute steps; False at the first surprise (the caller decides)."""
-        for step in steps:
+        i = 0
+        while i < len(steps):
+            step = steps[i]
+            # Straight runs of plain walking: one continuous hold.
+            if step.action == "walk":
+                j = i
+                while (j + 1 < len(steps) and steps[j + 1].action == "walk"
+                       and steps[j + 1].direction == step.direction
+                       and steps[j + 1].expect.map == step.expect.map):
+                    j += 1
+                if j > i:
+                    before = self.state()
+                    if not self._hold_segment(steps[i:j + 1]):
+                        if not self.free():
+                            self.pump()
+                        self._learn_pushback(before, steps[j])
+                        return False
+                    if not self.free():
+                        self.pump()
+                        return False
+                    i = j + 1
+                    continue
+            i += 1
             before = self.state()
             if not self._execute(step):
                 log.debug("STEP %s %s expected %s got %s (mode %s)", step.action, step.direction,
