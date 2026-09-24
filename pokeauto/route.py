@@ -28,6 +28,7 @@ class Milestone:
     done: Callable
     actions: list[Callable] = field(default_factory=list)
     min_level: int = 0            # grind the lead to this level first
+    team_level: int = 0           # ...and the two strongest (double battles, E4)
     heal_first: bool = True
     important: bool = False       # boss fight inside: let the advisor weigh in
     attempts: int = 4
@@ -89,7 +90,10 @@ def trigger(map_id: str, script: str):
     def act(a):
         from .nav import at_any
         from .symbols import maps
-        tiles = [(c["x"], c["y"]) for c in maps()[map_id]["coords"] if c.get("script") == script]
+        tiles = [(c["x"], c["y"]) for c in maps()[map_id]["coords"]
+                 if (c.get("script") or "").endswith(script)]
+        if not tiles:
+            raise ValueError(f"no coord event {script!r} on {map_id}")
         a.ctl.goto(at_any(map_id, tiles), desc=f"trigger {script}")
     act.__name__ = f"trigger {map_id} {script}"
     return act

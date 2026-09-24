@@ -87,6 +87,26 @@ class GameData:
                 priority=struct.unpack("b", raw[7:8])[0], flags=raw[8])
         return self._moves[mid]
 
+    def wild_land(self) -> dict[str, list[tuple[int, int, int]]]:
+        """map id -> [(min_level, max_level, species)] for grass/cave encounters."""
+        if getattr(self, "_wild", None) is None:
+            from .symbols import maps
+            by_num = {(v["group"], v["num"]): k for k, v in maps().items()}
+            out: dict[str, list[tuple[int, int, int]]] = {}
+            base = S["gWildMonHeaders"]
+            for i in range(S.size("gWildMonHeaders") // 20):
+                grp, num, land = struct.unpack("<BBxxI", self.emu.read(base + i * 20, 8))
+                if grp == 0xFF:
+                    break
+                mid = by_num.get((grp, num))
+                if not land or mid is None:
+                    continue
+                mons = self.emu.u32(land + 4)
+                raw = self.emu.read(mons, 12 * 4)
+                out[mid] = [struct.unpack_from("<BBH", raw, j * 4) for j in range(12)]
+            self._wild = out
+        return self._wild
+
     def type_chart(self) -> dict[tuple[int, int], float]:
         """(attacking type, defending type) -> multiplier, from gTypeEffectiveness."""
         if self._chart is None:

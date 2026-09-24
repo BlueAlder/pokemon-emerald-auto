@@ -212,3 +212,151 @@ def fortree_gym(agent) -> None:
                 break
             if agent.game.pos() == before:
                 break                        # model disagreed; re-read and re-solve
+
+
+# -- Rotating tile puzzle (rotating_tile_puzzle.c; Mossdeep Gym) -----------------
+#
+# Coloured arrow metatiles form 2x2 turntables. Stepping on a floor switch moves
+# every object standing on an arrow of that colour one tile along its arrow, so
+# the statues on each turntable cycle round it. The model reads the objects'
+# saved positions (the puzzle rewrites the save block's templates), simulates
+# presses, and flood-fills the walkable area -- same-map warp pads included --
+# to find the shortest press sequence that opens a path to the goal.
+
+ROT_TILE_START = 0x250          # METATILE_MossdeepGym_YellowArrow_Right
+ROT_COLOURS = ("Yellow", "Blue", "Green", "Purple", "Red")
+ROT_DIRS = ((1, 0), (0, 1), (-1, 0), (0, -1))     # right, down, left, up
+
+
+class RotatingTiles:
+    def __init__(self, grid: MapGrid, map_id: str):
+        self.grid, self.map_id = grid, map_id
+        info = maps()[map_id]
+        self.arrows = {}
+        for y in range(grid.h):
+            for x in range(grid.w):
+                k = (grid.raw(x, y) & 0x3FF) - ROT_TILE_START
+                if 0 <= k < 8 * len(ROT_COLOURS) and k % 8 < 4:
+                    self.arrows[(x, y)] = (k // 8, ROT_DIRS[k % 8])
+        self.switches, self.avoid = {}, set()
+        for c in info["coords"]:
+            if c.get("type") != "trigger":
+                continue
+            col = next((i for i, n in enumerate(ROT_COLOURS)
+                        if f"{n}FloorSwitch" in (c.get("script") or "")), None)
+            if col is None:
+                self.avoid.add((c["x"], c["y"]))     # e.g. the warp back to the entrance
+            else:
+                self.switches[(c["x"], c["y"])] = col
+        warps = info["warps"]
+        self.pads = {}
+        for w in warps:
+            if w["dest"] == map_id:
+                d = warps[int(w["dest_warp"])]
+                self.pads[(w["x"], w["y"])] = (d["x"], d["y"])
+
+    def press(self, objs: tuple, colour: int) -> tuple:
+        out = []
+        for (x, y) in objs:
+            a = self.arrows.get((x, y))
+            if a and a[0] == colour:
+                x, y = x + a[1][0], y + a[1][1]
+            out.append((x, y))
+        return tuple(out)
+
+    def flood(self, start: Pos, objs: tuple):
+        """Tiles reachable without pressing anything, and the switches bordering them."""
+        from .mapgrid import Caps
+        blocked = set(objs)
+        seen = {(start.x, start.y)}
+        q = deque([start])
+        hits = set()
+        while q:
+            p = q.popleft()
+            for d in DELTA:
+                r = self.grid.step(p, d, Caps(), blocked)
+                if r is None or r == "edge":
+                    continue
+                t = (r.x, r.y)
+                if t in self.avoid:
+                    continue
+                if t in self.switches:
+                    hits.add(t)
+                    continue
+                if t in self.pads:
+                    dx, dy = self.pads[t]
+                    e = self.grid.elevation(dx, dy)
+                    r = Pos(dx, dy, r.elev if e in (0, 15) else e)
+                    t = (dx, dy)
+                if t in seen:
+                    continue
+                seen.add(t)
+                q.append(r)
+        return seen, hits
+
+    def solve(self, start: Pos, objs: tuple, goal, limit: int = 20000):
+        """Shortest list of switch tiles to press so that goal(x, y) becomes reachable."""
+        prev = {(objs, (start.x, start.y)): None}
+        q = deque([(objs, start)])
+        while q and len(prev) < limit:
+            objs, pos = q.popleft()
+            seen, hits = self.flood(pos, objs)
+            if any(goal(x, y) for (x, y) in seen):
+                path, k = [], (objs, (pos.x, pos.y))
+                while prev[k] is not None:
+                    k, sw = prev[k]
+                    path.append(sw)
+                return path[::-1]
+            if (pos.x, pos.y) in self.switches:
+                hits.add((pos.x, pos.y))           # step off and back on
+            for sw in sorted(hits):
+                nobjs = self.press(objs, self.switches[sw])
+                k = (nobjs, sw)
+                if k in prev:
+                    continue
+                prev[k] = ((objs, (pos.x, pos.y)), sw)
+                q.append((nobjs, Pos(sw[0], sw[1], self.grid.elevation(*sw) or start.elev)))
+        return None
+
+
+def rotating_tile_gym(agent, map_id: str, leader_pattern: str, badge_count: int) -> None:
+    """Solve a rotating-tile gym (Mossdeep) and challenge its leader."""
+    from .nav import NavCaps, adjacent, at
+    info = maps()[map_id]
+    leaders = [o for o in info["objects"] if leader_pattern in o["script"]]
+    ids = [o["local_id"] for o in leaders]
+    agent.goto(map_id)
+    ctl = agent.ctl
+    caps = NavCaps(**{**ctl.nav_caps().__dict__, "avoid_triggers": True})
+    for attempt in range(40):
+        agent.pump()
+        if agent.game.badges() >= badge_count:
+            return
+        g = agent.game
+        spots = {o.local_id: (o.x, o.y) for o in g.objects() if not o.is_player}
+        saved = g.object_templates()
+        objs = tuple(spots.get(t["local_id"], saved.get(t["local_id"], (t["x"], t["y"])))
+                     for t in info["objects"])
+        leader_xy = [spots.get(i, saved.get(i)) for i in ids]
+        s = ctl.state()
+        model = RotatingTiles(MapGrid.from_ram(g), map_id)
+
+        def near(x, y):
+            return any(abs(x - lx) + abs(y - ly) == 1 for lx, ly in leader_xy)
+
+        if near(s.x, s.y):
+            agent.talk(map_id, ids[0])
+            continue
+        plan = model.solve(Pos(s.x, s.y, s.elev), objs, near)
+        if plan is None:
+            raise RuntimeError(f"rotating tiles: no solution from {s}")
+        log.info("ROTATING TILES: press %s", plan)
+        if not plan:
+            agent.talk(map_id, ids[0])
+            continue
+        t = plan[0]
+        if (s.x, s.y) == t:
+            ctl.goto(adjacent(map_id, *t), caps=caps, desc="step off switch")
+        ctl.goto(at(map_id, *t), caps=caps, desc=f"{ROT_COLOURS[model.switches[t]]} switch")
+        agent.pump()
+    raise RuntimeError("rotating tiles: gave up")

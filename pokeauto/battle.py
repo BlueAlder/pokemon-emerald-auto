@@ -55,6 +55,8 @@ class Battle:
         self.advisor = advisor               # callable(desc, options) -> index | None
         self.move_learner = None             # callable(mon, new_move_id) -> slot to forget | None
         self._pending: dict[int, Choice] = {}
+        self._submitted: dict[int, int] = {}     # battler -> move slot just confirmed
+        self._refused: dict[int, set] = {}       # battler -> slots the game bounced back
         self.turns = 0
         self.log: list[str] = []
 
@@ -83,6 +85,8 @@ class Battle:
     def run(self) -> None:
         """Drive the battle until control returns to the field."""
         self._pending.clear()
+        self._submitted.clear()
+        self._refused.clear()
         self._items_disabled = False
         self._item_count_before = None
         idle = 0
@@ -175,6 +179,8 @@ class Battle:
                 log.info("BATTLE item %s had no effect; no more items this battle", last.slot)
                 self._items_disabled = True
         self._item_count_before = None
+        self._submitted.pop(battler, None)
+        self._refused.pop(battler, None)
         choice = self.decide(battler)
         if choice.kind == "item" and self._items_disabled:
             choice = self._no_item_fallback(battler)
@@ -199,7 +205,23 @@ class Battle:
         elif choice.kind == "item":
             self._cursor_grid(cursor, ACT_BAG)
 
+    def unusable_slots(self, battler: int) -> set:
+        """Move slots the game will refuse: Disable'd, or bounced back already
+        this turn (Taunt, Torment, Encore, Imprison... -- whatever the reason)."""
+        out = set(self._refused.get(battler, ()))
+        disabled = self.emu.u16(S["gDisableStructs"] + battler * 0x1C + 4)
+        if disabled:
+            mons = self.game.battle_mons()
+            out |= {i for i, mv in enumerate(mons[battler].moves) if mv.id == disabled}
+        return out
+
     def _choose_move(self, battler: int) -> None:
+        if battler in self._submitted:
+            # The move menu came back after we confirmed a move: it was refused.
+            slot = self._submitted.pop(battler)
+            self._refused.setdefault(battler, set()).add(slot)
+            log.info("BATTLE move slot %d refused; choosing again", slot)
+            self._pending.pop(battler, None)
         choice = self._pending.get(battler)
         if choice is None or choice.kind != "move":
             # We landed in the move menu without meaning to; decide now.
@@ -209,6 +231,7 @@ class Battle:
                 return
             self._pending[battler] = choice
         self._cursor_grid(S["gMoveSelectionCursor"] + battler, choice.slot)
+        self._submitted[battler] = choice.slot
 
     def _choose_target(self, battler: int) -> None:
         choice = self._pending.get(battler)
@@ -368,8 +391,11 @@ class Battle:
                     return Choice("run", why="not worth fighting")
 
         options = self.move_options(me_bm, me, foes)
+        banned = self.unusable_slots(battler)
+        options = [o for o in options if o.kind != "move" or o.slot not in banned]
         if not options:
-            return Choice("move", 0, why="struggle")
+            free = [i for i, mv in enumerate(me_bm.moves) if mv.id and mv.pp and i not in banned]
+            return Choice("move", free[0] if free else 0, why="struggle")
         options.sort(key=lambda c: -c.score)
         best = options[0]
 

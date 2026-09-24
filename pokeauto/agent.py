@@ -107,6 +107,63 @@ class Agent:
             self.ctl.press("DOWN" if cur < target else "UP", release=4)
         self.ctl.press("A", release=30)
 
+    def party_swap(self, a: int, b: int) -> None:
+        """Swap party slots a and b with the field party menu's SWITCH."""
+        if a == b:
+            return
+        want = [m.personality for m in self.game.party()]
+        want[a], want[b] = want[b], want[a]
+        self.open_start_menu("POKEMON")
+        slot_addr = S["gPartyMenu"] + 9
+
+        def wait(task: str, frames: int = 240) -> None:
+            for _ in range(frames // 4):
+                if any(task in t for t in self.game.active_tasks()) and not self.game.fading():
+                    self.ctl.idle(4)
+                    return
+                self.ctl.idle(4)
+            raise Stuck(f"party menu: never reached {task}")
+
+        def press_until(button: str, task: str) -> None:
+            for _ in range(4):
+                self.ctl.press(button, release=16)
+                try:
+                    wait(task, 60)
+                    return
+                except Stuck:
+                    pass
+            raise Stuck(f"party menu: never reached {task}")
+
+        def cursor_to(slot: int, addr: int = slot_addr) -> None:
+            for _ in range(10):
+                cur = struct.unpack("b", self.emu.read(addr, 1))[0]
+                if cur == slot:
+                    return
+                self.ctl.press("DOWN" if cur < slot or cur > 5 and slot == 0 else "UP", release=5)
+            raise Stuck(f"party menu: cursor never reached slot {slot}")
+
+        wait("Task_HandleChooseMonInput")
+        cursor_to(a)
+        press_until("A", "Task_HandleSelectionMenuInput")
+        internal = self.emu.u32(S["sPartyMenuInternal"])
+        n = self.emu.u8(internal + 23)
+        actions = list(self.emu.read(internal + 15, n))
+        MENU_SWITCH = 1
+        self.ctl._menu_select(actions.index(MENU_SWITCH))
+        wait("Task_HandleChooseMonInput")
+        cursor_to(b, slot_addr + 1)           # slotId2: the switch-target cursor
+        self.ctl.press("A", release=16)
+        wait("Task_HandleChooseMonInput", 600)      # after the slide animation
+        for _ in range(6):
+            if self.game.mode().kind == "overworld" and self.ctl.free():
+                break
+            self.ctl.press("B", release=20)
+        got = [m.personality for m in self.game.party()]
+        if got != want:
+            raise Stuck(f"party swap {a}<->{b} did not take")
+        log.info("PARTY swapped slots %d and %d: %s", a, b,
+                 [m.species_name for m in self.game.party()])
+
     def set_options(self) -> None:
         """Text speed FAST, battle animations OFF, battle style SET."""
         opts = self.game.options()
@@ -419,6 +476,8 @@ class Agent:
                 log.info("RESTOCK skipped: %s", exc)
         if m.min_level:
             self.grind_to(m.min_level)
+        if m.team_level:
+            self.train(m.team_level)
 
     def recover(self, m, exc) -> None:
         """Get back to a sane state after a Stuck/crash."""
@@ -481,48 +540,153 @@ class Agent:
         party = [p for p in self.game.party() if not p.is_egg]
         return party[0] if party else None
 
+    # Places a grinding session should never pick: no battles (Safari Zone),
+    # tide/one-way layouts, or story-locked towers.
+    GRIND_EXCLUDE = ("SAFARI_ZONE", "SHOAL_CAVE", "SKY_PILLAR", "MIRAGE", "ARTISAN_CAVE",
+                     "DESERT_UNDERPASS", "ALTERING_CAVE", "TERRA_CAVE", "MARINE_CAVE",
+                     "SOUTHERN_ISLAND", "NAVEL_ROCK", "BIRTH_ISLAND", "FARAWAY_ISLAND",
+                     "SEAFLOOR_CAVERN", "CAVE_OF_ORIGIN", "MAGMA_HIDEOUT",
+                     "SCORCHED_SLAB", "ABANDONED_SHIP", "NEW_MAUVILLE", "METEOR_FALLS_B1F_2R",
+                     "METEOR_FALLS_STEVENS_CAVE")
+
+    def grind_maps(self, level: int) -> set[str]:
+        """Maps whose wild levels suit a L`level` trainee: tough enough to pay,
+        weak enough to win against. Falls back to the strongest easy ones."""
+        caps = self.ctl.nav_caps()
+        key = (caps.surf, caps.waterfall, caps.dive, caps.strength)
+        blocked = getattr(self, "_grind_blocked", {}).get(key, set())
+        table = {m: v for m, v in self.data.wild_land().items()
+                 if not any(x in m for x in self.GRIND_EXCLUDE) and m not in blocked}
+        good = {m for m, mons in table.items()
+                if max(hi for _, hi, _ in mons) <= level + 2
+                and max(hi for _, hi, _ in mons) >= level - 10}
+        if good:
+            return good
+        easy = {m: max(hi for _, hi, _ in mons) for m, mons in table.items()
+                if max(hi for _, hi, _ in mons) <= level + 2}
+        if not easy:
+            return set()
+        top = max(easy.values())
+        return {m for m, v in easy.items() if v >= top - 3}
+
     def grind_to(self, level: int, max_battles: int = 400) -> None:
-        """Fight wild Pokemon in the nearest grass until the lead reaches `level`."""
+        """Fight wild Pokemon until the lead reaches `level`.
+
+        Picks the nearest encounter tiles whose wild levels suit the lead
+        (grind_maps), then paces there battle after battle. It only searches
+        again after a heal, when the lead outgrows the area, or when pacing
+        stops producing encounters.
+        """
         from .mapgrid import MapGrid, has_encounters
         lead = self.lead()
         if lead is None or lead.level >= level:
             return
         log.info("GRIND %s L%d -> L%d", lead.species_name, lead.level, level)
         self.battle.policy.fight_wild = True
+        planner = self.ctl.planner
         battles = 0
+        spot = None            # (map, x, y, direction, back)
+        spots: set[str] = set()
         while self.lead().level < level and battles < max_battles:
             if self.needs_heal(0.55):
                 self.heal()
-            # nearest encounter tile (grass/cave floor) reachable by walking
-            planner = self.ctl.planner
+                spot = None
+            want = self.grind_maps(self.lead().level)
+            if spot is not None and want and spot[0] not in want:
+                spot = None    # outgrew this area
+            if spot is not None and (self.game.map_id(), *self.game.pos()) != spot[:3]:
+                try:
+                    self.ctl.goto(at(*spot[:3]), desc="back to grinding spot")
+                except Stuck:
+                    spot = None
+            if spot is None:
+                spots = set(want)
 
-            def in_grass(s):
-                g = planner.grid(s.map)
-                return g.inside(s.x, s.y) and has_encounters(g.behavior(s.x, s.y)) \
-                    and not s.surfing
-            self.ctl.goto(in_grass, caps=self.ctl.nav_caps(avoid_grass=0.0), desc="grass")
+                def in_grass(s):
+                    if spots and s.map not in spots:
+                        return False
+                    g = planner.grid(s.map)
+                    return g.inside(s.x, s.y) and has_encounters(g.behavior(s.x, s.y)) \
+                        and not s.surfing
+                in_grass.maps = spots or None
+                try:
+                    self.ctl.goto(in_grass, caps=self.ctl.nav_caps(avoid_grass=0.0),
+                                  desc=f"grass (L{self.lead().level} spots)")
+                except Stuck:
+                    if not spots:
+                        raise
+                    # Unreachable with today's HMs: never search for them again.
+                    caps = self.ctl.nav_caps()
+                    key = (caps.surf, caps.waterfall, caps.dive, caps.strength)
+                    if not hasattr(self, "_grind_blocked"):
+                        self._grind_blocked = {}
+                    self._grind_blocked.setdefault(key, set()).update(spots)
+                    log.info("GRIND spots unreachable for now: %s", sorted(spots))
+                    spots.clear()      # take any encounter tile
+                    in_grass.maps = None
+                    self.ctl.goto(in_grass, caps=self.ctl.nav_caps(avoid_grass=0.0),
+                                  desc="grass")
+                grid = MapGrid.from_ram(self.game)
+                x, y = self.game.pos()
+                dirs = [d for d, (dx, dy) in (("left", (-1, 0)), ("right", (1, 0)),
+                                               ("up", (0, -1)), ("down", (0, 1)))
+                        if grid.inside(x + dx, y + dy)
+                        and has_encounters(grid.behavior(x + dx, y + dy))
+                        and not grid.collision(x + dx, y + dy)]
+                d = dirs[0] if dirs else "left"
+                back = {"left": "right", "right": "left", "up": "down", "down": "up"}[d]
+                spot = (self.game.map_id(), x, y, d, back)
+                log.info("GRIND spot %s (%d,%d) pacing %s/%s", spot[0], x, y, d, back)
             # pace back and forth until a battle starts
-            grid = MapGrid.from_ram(self.game)
-            x, y = self.game.pos()
-            dirs = [d for d, (dx, dy) in (("left", (-1, 0)), ("right", (1, 0)),
-                                           ("up", (0, -1)), ("down", (0, 1)))
-                    if grid.inside(x + dx, y + dy) and has_encounters(grid.behavior(x + dx, y + dy))
-                    and not grid.collision(x + dx, y + dy)]
-            if not dirs:
-                dirs = ["left", "right"]
-            d = dirs[0]
-            back = {"left": "right", "right": "left", "up": "down", "down": "up"}[d]
-            for i in range(200):
-                self.ctl._hold_until_moved(d if i % 2 == 0 else back)
+            fought, moved = False, 0
+            for i in range(240):
+                before = self.game.pos()
+                self.ctl._hold_until_moved(spot[3] if i % 2 == 0 else spot[4])
                 if self.game.mode().kind != "overworld":
                     battles += 1
                     self.pump()
+                    fought = True
                     break
-        log.info("GRIND done: %s", self.lead())
+                if self.game.pos() != before:
+                    moved += 1
+                elif i - moved > 6:
+                    break               # we are not actually moving: pick a new spot
+            if not fought:
+                log.info("GRIND no encounter at %s after %d moves; moving on", spot[:3], moved)
+                spot = None
+        log.info("GRIND done: %s after %d battles", self.lead(), battles)
+
+    def train(self, level: int, members: int = 2) -> None:
+        """Bring the `members` strongest Pokemon up to `level`, one at a time.
+
+        Double battles (Tate & Liza) and the Elite Four punish a one-Pokemon
+        team. Each trainee is moved to the front so it earns the whole share
+        of experience, then the original order is restored.
+        """
+        party = [m for m in self.game.party() if not m.is_egg]
+        ranked = sorted(party, key=lambda m: -m.level)[:members]
+        order = [m.personality for m in party]
+        for mon in ranked:
+            cur = next((m for m in self.game.party() if m.personality == mon.personality), None)
+            if cur is None or cur.level >= level:
+                continue
+            slot = [m.personality for m in self.game.party()].index(mon.personality)
+            self.party_swap(0, slot)
+            try:
+                self.grind_to(level)
+            finally:
+                self.pump()
+                now = [m.personality for m in self.game.party()]
+                if now != order:
+                    self.party_swap(0, slot)
 
     def fortree_gym(self) -> None:
         from .puzzles import fortree_gym
         fortree_gym(self)
+
+    def rotating_tile_gym(self, map_id: str, leader_pattern: str, badge_count: int) -> None:
+        from .puzzles import rotating_tile_gym
+        rotating_tile_gym(self, map_id, leader_pattern, badge_count)
 
     # -- catching -------------------------------------------------------------------------
     def catch(self, species: str, maps_to_search: list[str], max_battles: int = 150) -> bool:

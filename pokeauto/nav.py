@@ -144,9 +144,12 @@ class Planner:
                           obs.rocks if o.graphics_id == GFX_ROCK else
                           obs.boulders if o.graphics_id == GFX_BOULDER else obs.walls)
                 target.add((o.x, o.y))
+        moved = self.game.object_templates() if live_objects is not None else {}
         for t in info["objects"]:
             if t["local_id"] in spawned:
                 continue
+            if t["local_id"] in moved:
+                t = {**t, "x": moved[t["local_id"]][0], "y": moved[t["local_id"]][1]}
             flag = t["flag"]
             if flag and flag != "0" and (self._flag(flag)
                                          or (ignore_story and t["local_id"] in story)):

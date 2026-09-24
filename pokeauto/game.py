@@ -273,6 +273,23 @@ class Game:
     def sb2(self) -> int:
         return self.emu.u32(self.a_sb2p)
 
+    def object_templates(self) -> dict[int, tuple[int, int]]:
+        """local_id -> (x, y) from the save block's copy of this map's templates.
+
+        Scripts and puzzles (setobjectxyperm, Mossdeep's rotating statues)
+        move objects by rewriting these, so they beat the ROM positions for
+        anything not currently spawned.
+        """
+        raw = self.emu.read(self.sb1() + 0xC70, 64 * 0x18)
+        out = {}
+        for i in range(64):
+            lid = raw[i * 0x18]
+            if lid == 0 and i:
+                continue
+            x, y = struct.unpack_from("<hh", raw, i * 0x18 + 4)
+            out[lid] = (x, y)
+        return out
+
     def flag(self, flag: str | int) -> bool:
         fid = const(flag) if isinstance(flag, str) else flag
         byte = self.emu.u8(self.sb1() + SB1_FLAGS + fid // 8)

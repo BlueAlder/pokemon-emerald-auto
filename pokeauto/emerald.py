@@ -250,13 +250,14 @@ ROUTE: list[Milestone] = [
               [goto("MAP_AQUA_HIDEOUT_B2F"), goto("MAP_AQUA_HIDEOUT_B2F", 28, 17),
                talk_s("MAP_AQUA_HIDEOUT_B2F", "EventScript_Matt")],
               min_level=48, important=True, hint="clear the Team Aqua Hideout in Lilycove"),
-    Milestone("reach_mossdeep", flag("FLAG_VISITED_MOSSDEEP_CITY"), [goto("MAP_MOSSDEEP_CITY")]),
+    Milestone("reach_mossdeep", flag("FLAG_VISITED_MOSSDEEP_CITY"),
+              [goto("MAP_MOSSDEEP_CITY"), trigger("MAP_MOSSDEEP_CITY", "VisitedMossdeep")]),
 
     # -- Mossdeep, the Space Center, Dive, Seafloor Cavern ---------------------------------
     Milestone("badge_mind", badges(7),
-              [goto("MAP_MOSSDEEP_CITY_GYM"), call("goto_puzzle", "MAP_MOSSDEEP_CITY_GYM", 23, 7),
-               talk_s("MAP_MOSSDEEP_CITY_GYM", "EventScript_TateAndLiza")],
-              min_level=54, important=True, hint="beat Tate and Liza at the Mossdeep Gym"),
+              [call("rotating_tile_gym", "MAP_MOSSDEEP_CITY_GYM", "EventScript_TateAndLiza", 7)],
+              min_level=54, team_level=42, important=True,
+              hint="beat Tate and Liza at the Mossdeep Gym"),
     Milestone("space_center", flag("FLAG_DEFEATED_MAGMA_SPACE_CENTER"),
               [goto("MAP_MOSSDEEP_CITY_SPACE_CENTER_2F"),
                talk_s("MAP_MOSSDEEP_CITY_SPACE_CENTER_2F", "SpaceCenter_2F_EventScript_Steven")],

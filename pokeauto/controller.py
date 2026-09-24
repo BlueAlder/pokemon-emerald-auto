@@ -666,7 +666,7 @@ class Controller:
                 return True        # replan from wherever we are
         return True
 
-    def goto_puzzle(self, goal, desc: str = "", max_depth: int = 5) -> None:
+    def goto_puzzle(self, goal, desc: str = "", max_depth: int = 10) -> None:
         """goto, but if the goal is walled off, search the map's switch tiles.
 
         Gym puzzles (Mauville's barriers, etc.) are coord-event switches that
@@ -692,6 +692,7 @@ class Controller:
                     continue
                 t = (c["x"], c["y"])
                 if t == (s.x, s.y):
+                    out.append((2, t))     # step off and back on: press again
                     continue
                 p = self.planner.plan(s, at(s.map, *t), block_to(t), live=live,
                                       live_objects=self.game.objects())
@@ -703,28 +704,51 @@ class Controller:
             # walls on every switch except the one we are heading for
             return NavCaps(**{**block.__dict__, "triggers_block": False, "avoid_triggers": True})
 
-        def search(depth: int, used: tuple) -> bool:
-            self.pump()
-            if reachable():
-                return True
-            if depth == 0:
-                return False
-            for t in switches():
-                if t in used[-1:]:
-                    continue
-                snap = self.emu.save_state()
-                log.info("PUZZLE try switch %s (depth %d) for %s", t, max_depth - depth + 1, desc)
-                try:
-                    self.goto(at(self.state().map, *t), caps=block_to(t), desc="switch")
-                    if search(depth - 1, used + (t,)):
-                        return True
-                except Stuck:
-                    pass
-                self.emu.load_state(snap)
-            return False
+        def key() -> tuple:
+            # Puzzle state: where the objects stand, the live grid, and us.
+            st = self.state()
+            objs = tuple(sorted((o.local_id, o.x, o.y) for o in self.game.objects()
+                                if not o.is_player))
+            return (st.map, st.x, st.y, objs, tuple(sorted(self.game.object_templates().items())),
+                    hash(tuple(MapGrid.from_ram(self.game).tiles)))
 
-        if not search(max_depth, ()):
-            raise Stuck(f"puzzle: could not open a way to {desc}")
+        # Breadth-first over switch presses, deduplicated by puzzle state, so
+        # the shortest sequence wins and revisited layouts cost nothing.
+        self.pump()
+        if not reachable():
+            frontier = [self.emu.save_state()]
+            seen = {key()}
+            solved = False
+            for depth in range(1, max_depth + 1):
+                nxt = []
+                for snap in frontier:
+                    self.emu.load_state(snap)
+                    for t in switches():
+                        self.emu.load_state(snap)
+                        log.info("PUZZLE try switch %s (depth %d) for %s", t, depth, desc)
+                        try:
+                            here = self.state()
+                            if (here.x, here.y) == t:
+                                self.goto(adjacent(here.map, *t), caps=block_to(t), desc="step off")
+                            self.goto(at(self.state().map, *t), caps=block_to(t), desc="switch")
+                            self.pump()
+                        except Stuck:
+                            continue
+                        k = key()
+                        if k in seen:
+                            continue
+                        seen.add(k)
+                        if reachable():
+                            solved = True
+                            break
+                        nxt.append(self.emu.save_state())
+                    if solved:
+                        break
+                if solved or not nxt:
+                    break
+                frontier = nxt
+            if not solved:
+                raise Stuck(f"puzzle: could not open a way to {desc}")
         self.goto(goal, caps=block, desc=desc)
 
     # -- interacting --------------------------------------------------------------
@@ -768,9 +792,17 @@ class Controller:
             s = self.state()
             if s.map != map_id or abs(o.x - s.x) + abs(o.y - s.y) > 3:
                 # far away: walk the whole way, then chase once close
+                # far away: walk the whole way to a talking spot, then chase.
+                # (Merely "close" can be a dead end on the wrong side of a wall.)
                 ox, oy = o.x, o.y
-                self.goto(lambda st: st.map == map_id and abs(st.x - ox) + abs(st.y - oy) <= 2,
-                          desc=f"near object {local_id}")
+                try:
+                    self.goto(lambda st: st.map == map_id
+                              and self._talk_offset(map_id, st.x, st.y, ox, oy),
+                              desc=f"to talk to object {local_id}")
+                except Stuck:
+                    self.goto(lambda st: st.map == map_id
+                              and abs(st.x - ox) + abs(st.y - oy) <= 2,
+                              desc=f"near object {local_id}")
                 continue
             if s.map == map_id and self._talk_offset(map_id, s.x, s.y, o.x, o.y):
                 self.face(facing_dir(s.x, s.y, o.x, o.y))
