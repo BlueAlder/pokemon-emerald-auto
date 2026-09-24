@@ -188,6 +188,7 @@ class BattleMon:
     nickname: str
     status1: int
     status2: int
+    personality: int = 0
 
     @property
     def species_name(self) -> str:
@@ -211,7 +212,8 @@ def decode_battle_mon(raw: bytes) -> BattleMon:
                      stat_stages=list(raw[0x18:0x20]), ability=raw[0x20],
                      types=(raw[0x21], raw[0x22]), hp=hp, level=raw[0x2A],
                      max_hp=max_hp, item=item, nickname=decode_text(raw[0x30:0x3B]),
-                     status1=status1, status2=status2)
+                     status1=status1, status2=status2,
+                     personality=struct.unpack_from("<I", raw, 0x48)[0])
 
 
 @dataclass

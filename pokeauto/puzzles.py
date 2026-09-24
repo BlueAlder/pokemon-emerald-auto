@@ -137,13 +137,13 @@ def solve_boulders(grid: MapGrid, start: tuple[int, int], boulders: frozenset, g
     from .mapgrid import Caps, MB
     caps = Caps()
     door = {MB.get("MB_NON_ANIMATED_DOOR"), MB.get("MB_WATER_DOOR"), MB.get("MB_DEEP_SOUTH_WARP")}
-    root = (start, boulders)
+    root = ((start[0], start[1], elev), boulders)
     seen = {root: None}
     q = deque([root])
     n = 0
     while q:
         node = q.popleft()
-        (x, y), bs = node
+        (x, y, e), bs = node
         if goal(x, y, bs):
             path = []
             while seen[node] is not None:
@@ -161,14 +161,14 @@ def solve_boulders(grid: MapGrid, start: tuple[int, int], boulders: frozenset, g
                         or (bx, by) in walls or grid.behavior(bx, by) in door:
                     continue
                 be = grid.elevation(bx, by)
-                if be not in (0, 15) and be != elev:
+                if be not in (0, 15) and be != e:
                     continue
-                nxt = ((x, y), (bs - {(tx, ty)}) | {(bx, by)})
+                nxt = ((x, y, e), (bs - {(tx, ty)}) | {(bx, by)})
             else:
-                r = grid.step(Pos(x, y, elev), d, caps, walls | bs)
+                r = grid.step(Pos(x, y, e), d, caps, walls | bs)
                 if r is None or r == "edge":
                     continue
-                nxt = ((r.x, r.y), bs)
+                nxt = ((r.x, r.y, r.elev), bs)
             if nxt not in seen:
                 seen[nxt] = (node, d)
                 q.append(nxt)

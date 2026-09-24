@@ -368,7 +368,11 @@ class Battle:
         if choice and choice.kind == "switch" and choice.slot not in self._bad_switch:
             return choice.slot
         if choice and choice.kind == "item":
-            return choice.target
+            # The battle party menu shows the party reordered (active first):
+            # find our Pokemon by identity, not by its original index.
+            who = self.game.battle_mons()[0].personality
+            row = next((m.slot for m in self.game.party() if m.personality == who), None)
+            return row if row is not None else choice.target
         return self.best_switch()
 
     def _bag_screen(self, tasks) -> None:

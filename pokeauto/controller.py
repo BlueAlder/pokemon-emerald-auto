@@ -758,6 +758,13 @@ class Controller:
         walls = obs.walls | obs.trees | obs.rocks
         path = solve_boulders(live, (s.x, s.y), frozenset(obs.boulders),
                               lambda x, y, bs: (x, y) == target, walls, s.elev)
+        rocks = set()
+        if not path and caps.smash and obs.rocks:
+            # Rocks we cannot reach yet: plan as if smashable on the way.
+            rocks = set(obs.rocks)
+            path = solve_boulders(live, (s.x, s.y), frozenset(obs.boulders),
+                                  lambda x, y, bs: (x, y) == target,
+                                  obs.walls | obs.trees, s.elev)
         if not path:
             log.info("BOULDERS no push sequence to %s on %s", target, s.map)
             return False
@@ -780,6 +787,12 @@ class Controller:
                 self.emu.run(0, 20)
                 boulders.discard((x + dx, y + dy))
                 boulders.add((x + 2 * dx, y + 2 * dy))
+            elif (x + dx, y + dy) in rocks:
+                self._execute(Step("smash", d, State(s.map, x + dx, y + dy, s.elev)))
+                rocks.discard((x + dx, y + dy))
+                self.pump()
+                if not self._hold_until_moved(d):
+                    return True
             elif not self._hold_until_moved(d):
                 self.pump()
                 return True        # replan from wherever we are
