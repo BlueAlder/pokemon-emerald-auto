@@ -226,6 +226,8 @@ class RouteRunner:
             m = self.current()
             if m is None:
                 log.info("ROUTE complete")
+                if self.checkpoint:
+                    self.checkpoint("hall_of_fame")
                 return True
             if max_seconds and time.time() - t0 > max_seconds:
                 log.info("ROUTE time budget exhausted at %s", m.name)
@@ -247,6 +249,14 @@ class RouteRunner:
                 except Exception:
                     log.error("milestone %s crashed:\n%s", m.name, traceback.format_exc())
                     a.recover(m, None)
+                # A loss can undo earlier milestones (whiting out resets the
+                # Elite Four): go back to whatever is now first.
+                if self.current() is not m:
+                    log.info("ROUTE %s now depends on %s again; going back",
+                             m.name, getattr(self.current(), "name", None))
+                    break
+            if not ok and self.current() is not m:
+                continue
             if not ok:
                 log.error("ROUTE failed at %s", m.name)
                 return False

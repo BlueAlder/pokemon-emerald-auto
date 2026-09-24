@@ -377,7 +377,19 @@ class Battle:
             who = self.game.battle_mons()[0].personality
             row = next((m.slot for m in self.game.party() if m.personality == who), None)
             return row if row is not None else choice.target
-        return self.best_switch()
+        # Replacement after a faint (or a switch we lost track of): any healthy
+        # row that is not the Pokemon already out, best matchup first.
+        out = {bm.personality for i, bm in enumerate(self.game.battle_mons()[:4])
+               if i in ((0, 2) if self.is_double() else (0,)) and bm.hp > 0}
+        rows = [m for m in self.game.party() if not m.fainted and not m.is_egg
+                and m.personality not in out and m.slot not in self._bad_switch]
+        if not rows:
+            return self.best_switch()
+        foes = self._foes()
+        if foes:
+            foe = combatant_from_battle(self.data, foes[0][1])
+            return max(rows, key=lambda m: self._switch_value(m.slot, foe)).slot
+        return max(rows, key=lambda m: m.hp_frac).slot
 
     def _bag_screen(self, tasks) -> None:
         """In the battle bag: pick the pending item and USE it."""

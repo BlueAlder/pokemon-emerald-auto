@@ -294,6 +294,10 @@ class Controller:
         if "PartyMenu" in m.callback2 and self.emu.u8(S["gPartyMenu"] + 8) & 0xF == 4:
             self._choose_half_step(tasks)
             return
+        if "HallOfFame" in m.callback2 or "Credits" in m.callback2 \
+                or any(t.startswith(("Task_Hof", "Task_Credits")) for t in tasks):
+            self.press("A", release=20)               # Hall of Fame / credits: press on
+            return
         if "BagMenu" in m.callback2 and "Task_BagMenu_HandleInput" in tasks:
             self.press("B", release=12)               # a bag nobody is using: close it
             return

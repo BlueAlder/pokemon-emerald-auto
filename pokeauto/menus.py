@@ -112,8 +112,8 @@ def buy(ctl, clerk_talk, wants: dict[str, int]) -> None:
             if d[1] < qty:
                 ctl.press("RIGHT" if qty - d[1] >= 10 else "UP", release=5)
                 d2 = game.task_data("Task_BuyHowManyDialogueHandleInput")
-                if d2 and d2[1] == d[1]:          # hit the money / bag cap
-                    todo[0] = (todo[0][0], d[1])
+                if d2 and d2[1] <= d[1]:          # hit the money / bag cap (it wraps to 1)
+                    todo[0] = (todo[0][0], max(1, d[1]))
             elif d[1] > qty:
                 ctl.press("LEFT" if d[1] - qty >= 10 else "DOWN", release=5)
             else:

@@ -87,6 +87,25 @@ def petalburg_gym(a):
     a.talk(gym, object_id(gym, "PetalburgCity_Gym_EventScript_Norman"))
 
 
+E4_ROOMS = ["MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM", "MAP_EVER_GRANDE_CITY_PHOEBES_ROOM",
+            "MAP_EVER_GRANDE_CITY_GLACIAS_ROOM", "MAP_EVER_GRANDE_CITY_DRAKES_ROOM",
+            "MAP_EVER_GRANDE_CITY_CHAMPIONS_ROOM"]
+
+
+def e4_room(target: str):
+    """Walk to an Elite Four room one room at a time. Each cleared room's exit
+    is opened by a script on entry (setmetatile), which only the live map
+    shows, so every hop is planned from inside the previous room."""
+    def act(a):
+        here = a.game.map_id()
+        start = E4_ROOMS.index(here) + 1 if here in E4_ROOMS else 0
+        for room in E4_ROOMS[start:E4_ROOMS.index(target) + 1]:
+            a.goto(room)
+            a.pump()
+    act.__name__ = f"e4_room {target}"
+    return act
+
+
 SOOTOPOLIS = "MAP_SOOTOPOLIS_CITY"
 LEAGUE = "MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F"
 VICTORY_ROAD = ["MAP_VICTORY_ROAD_1F", "MAP_VICTORY_ROAD_B1F"]
@@ -342,22 +361,22 @@ ROUTE: list[Milestone] = [
               min_level=70, team_level=60, team_size=4, important=True,
               hint="cross Victory Road and show the guards all eight badges"),
     Milestone("sidney", flag("FLAG_DEFEATED_ELITE_4_SIDNEY"),
-              [call("heal_with_items"), goto("MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM"),
+              [call("heal_with_items"), e4_room("MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM"),
                talk_s("MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM", "EventScript_Sidney")],
               heal_first=False, important=True, hint="beat Sidney of the Elite Four"),
     Milestone("phoebe", flag("FLAG_DEFEATED_ELITE_4_PHOEBE"),
-              [call("heal_with_items"), goto("MAP_EVER_GRANDE_CITY_PHOEBES_ROOM"),
+              [call("heal_with_items"), e4_room("MAP_EVER_GRANDE_CITY_PHOEBES_ROOM"),
                talk_s("MAP_EVER_GRANDE_CITY_PHOEBES_ROOM", "EventScript_Phoebe")],
               heal_first=False, important=True, hint="beat Phoebe of the Elite Four"),
     Milestone("glacia", flag("FLAG_DEFEATED_ELITE_4_GLACIA"),
-              [call("heal_with_items"), goto("MAP_EVER_GRANDE_CITY_GLACIAS_ROOM"),
+              [call("heal_with_items"), e4_room("MAP_EVER_GRANDE_CITY_GLACIAS_ROOM"),
                talk_s("MAP_EVER_GRANDE_CITY_GLACIAS_ROOM", "EventScript_Glacia")],
               heal_first=False, important=True, hint="beat Glacia of the Elite Four"),
     Milestone("drake", flag("FLAG_DEFEATED_ELITE_4_DRAKE"),
-              [call("heal_with_items"), goto("MAP_EVER_GRANDE_CITY_DRAKES_ROOM"),
+              [call("heal_with_items"), e4_room("MAP_EVER_GRANDE_CITY_DRAKES_ROOM"),
                talk_s("MAP_EVER_GRANDE_CITY_DRAKES_ROOM", "EventScript_Drake")],
               heal_first=False, important=True, hint="beat Drake of the Elite Four"),
     Milestone("champion", flag("FLAG_SYS_GAME_CLEAR"),
-              [call("heal_with_items"), goto("MAP_EVER_GRANDE_CITY_CHAMPIONS_ROOM")],
+              [call("heal_with_items"), e4_room("MAP_EVER_GRANDE_CITY_CHAMPIONS_ROOM")],
               heal_first=False, important=True, hint="beat Champion Wallace"),
 ]
