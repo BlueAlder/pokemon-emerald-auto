@@ -8,7 +8,7 @@ talk to someone) calls it between moves, so an unexpected trainer, a phone
 call or a story cutscene is handled in one place instead of breaking a plan.
 
 What to answer at a prompt is decided by `Prompts` rules on the prompt text
-(code), with an optional Jev fallback for text no rule recognises.
+(code).
 """
 from __future__ import annotations
 
@@ -40,8 +40,8 @@ class Stuck(RuntimeError):
 class Prompts:
     """Answers for yes/no prompts, chosen by regex on the prompt text.
 
-    First match wins. Anything unmatched is answered YES (the story almost
-    always wants yes) unless an `unknown` callback (Jev) is installed.
+    First match wins. Anything unmatched is answered YES: the story almost
+    always wants yes.
     """
     rules: list[tuple[str, bool]] = field(default_factory=lambda: [
         (r"nickname", False),
@@ -57,16 +57,11 @@ class Prompts:
         (r"How about a little battle|want to battle\?", False),   # optional rival fights
     ])
     overrides: list[tuple[str, bool]] = field(default_factory=list)
-    unknown: object = None       # callable(text) -> bool | None
 
     def answer(self, text: str) -> bool:
         for pattern, ans in self.overrides + self.rules:
             if re.search(pattern, text, re.I):
                 return ans
-        if self.unknown:
-            verdict = self.unknown(text)
-            if verdict is not None:
-                return verdict
         return True
 
 
@@ -90,7 +85,6 @@ class Controller:
         self.battle = battle                  # set by the runner
         self.prompts = prompts or Prompts()
         self.on_unknown_screen = on_unknown_screen
-        self.multichoice_handler = None       # callable(text, labels) -> index (Jev)
         self.multichoice_prefs: list[str] = []  # regexes, first matching label wins
         self.ui_handlers: dict[str, object] = {}
         self.health_check = None              # callable() -> True if it detoured to heal
@@ -264,10 +258,6 @@ class Controller:
             named = [i for i, l in enumerate(labels) if l.strip() and l.strip() in text]
             if named:
                 idx = named[0]
-            elif self.multichoice_handler:
-                chosen = self.multichoice_handler(text, labels)
-                if chosen is not None:
-                    idx = chosen
         log.info("MULTICHOICE %r %s -> %s", text[-60:], labels,
                  labels[idx] if idx < len(labels) else idx)
         self._menu_select(idx)

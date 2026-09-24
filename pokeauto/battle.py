@@ -3,8 +3,6 @@
 Decisions are made in code from exact numbers -- both sides' stats, stat
 stages, types, abilities and (in Gen 3 RAM) the opponent's full moveset -- so
 the move that maximises expected progress is a calculation, not a guess.
-An optional `advisor` (Jev) is consulted only for close calls in battles that
-matter (gyms, rivals, Elite Four), where the top options score within a margin.
 
 The UI driver keys off gBattlerControllerFuncs, i.e. exactly which input
 handler the battle engine is waiting in (action menu, move menu, target
@@ -42,17 +40,16 @@ class BattlePolicy:
     fight_wild: bool = True          # False -> run from wild battles
     catch_species: set = field(default_factory=set)   # species ids to catch
     min_hp_to_fight_wild: float = 0.35
-    important: bool = False          # gym/rival/E4: allow advisor on close calls
+    important: bool = False          # gym/rival/E4: spend items, cure status
 
 
 class Battle:
-    def __init__(self, ctl, data: GameData, advisor=None):
+    def __init__(self, ctl, data: GameData):
         self.ctl = ctl
         self.game = ctl.game
         self.emu = ctl.emu
         self.data = data
         self.policy = BattlePolicy()
-        self.advisor = advisor               # callable(desc, options) -> index | None
         self.move_learner = None             # callable(mon, new_move_id) -> slot to forget | None
         self._pending: dict[int, Choice] = {}
         self._submitted: dict[int, int] = {}     # battler -> move slot just confirmed
@@ -499,13 +496,6 @@ class Battle:
             sw = self.best_switch(exclude_active=True, against=foe)
             if sw is not None and self._switch_value(sw, foe) > 0.35 and not self._trapped():
                 return Choice("switch", sw, why=f"threat {threat:.0f} >= hp {me_bm.hp}")
-        # Close call in an important battle: ask the advisor.
-        if (self.advisor and self.policy.important and len(options) > 1
-                and options[1].score > 0.85 * best.score and best.score < 1.0):
-            idx = self.advisor(self.describe(me_bm, fbm), options[:4])
-            if idx is not None and 0 <= idx < len(options):
-                best = options[idx]
-                best.why += " (advisor)"
         return best
 
     def move_options(self, me_bm, me, foes) -> list[Choice]:

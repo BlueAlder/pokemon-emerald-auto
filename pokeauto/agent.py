@@ -2,8 +2,7 @@
 battle system and the out-of-battle routines the route needs (menus, healing,
 shopping, teaching moves, grinding).
 
-Everything here is deterministic code. Jev is plugged in only through the
-narrow hooks in `brain.py` (unknown prompts, stuck recovery, close battle calls).
+Everything here is deterministic code.
 """
 from __future__ import annotations
 
@@ -29,19 +28,16 @@ MENU_ACTION = {"POKEDEX": 0, "POKEMON": 1, "BAG": 2, "POKENAV": 3, "PLAYER": 4,
 
 
 class Agent:
-    def __init__(self, emu: Emu, brain=None):
+    def __init__(self, emu: Emu):
         self.emu = emu
         self.game = Game(emu)
         self.data = GameData(emu)
-        self.brain = brain
-        prompts = Prompts(unknown=brain.yes_no if brain else None)
+        prompts = Prompts()
         self.ctl = Controller(emu, self.game, prompts=prompts)
-        self.battle = Battle(self.ctl, self.data, advisor=brain.battle_advice if brain else None)
+        self.battle = Battle(self.ctl, self.data)
         self.ctl.battle = self.battle
         self.battle.move_learner = self.choose_move_to_forget
         self.ctl.health_check = self._health_check
-        if brain:
-            self.ctl.multichoice_handler = brain.multichoice
         self.started = time.time()
 
     # -- conveniences --------------------------------------------------------------
@@ -531,8 +527,6 @@ class Agent:
     # -- milestone hooks ----------------------------------------------------------------
     def before_milestone(self, m) -> None:
         self.battle.policy.important = m.important
-        if self.brain:
-            self.brain.goal = m.hint or m.name.replace("_", " ")
         self.pump()
         if self.game.party() and m.heal_first and self.needs_heal():
             self.heal()
@@ -555,53 +549,6 @@ class Agent:
             self.pump()
         except Stuck:
             pass
-        if self.brain and exc is not None:
-            self.brain.note_stuck(self, m, exc)
-
-    def jev_recover(self, milestone, exc) -> None:
-        """Ask Jev which concrete action on this map might unblock `milestone`."""
-        if not self.brain:
-            return
-        self.pump()
-        here = self.game.map_id()
-        info = maps()[here]
-        options: dict[str, str] = {}
-        actions: dict[str, object] = {}
-
-        def human(script: str) -> str:
-            name = script.split("EventScript_")[-1]
-            return re.sub(r"(?<!^)(?=[A-Z])", " ", name)
-
-        for i, w in enumerate(info["warps"]):
-            dest = w["dest"][4:].replace("_", " ").title()
-            key = f"exit_{i}"
-            options[key] = f"go through the exit at ({w['x']},{w['y']}) to {dest}"
-            actions[key] = lambda w=w: self.ctl.goto(
-                lambda s, w=w: s.map != here, desc=f"exit {w['dest']}")
-        for o in info["objects"]:
-            if o["script"] in ("0x0", "") or "ItemBall" in o["script"] or "Berry" in o["script"]:
-                continue
-            if o["flag"] not in ("0", "") and self.game.flag(o["flag"]):
-                continue
-            key = f"talk_{o['local_id']}"
-            options[key] = f"talk to {human(o['script'])} ({o['gfx'][14:].lower()})"
-            actions[key] = lambda o=o: self.talk(here, o["local_id"])
-        for i, b in enumerate(info["bgs"]):
-            if b.get("type") == "sign" and b.get("script"):
-                key = f"read_{i}"
-                options[key] = f"read/examine {human(b['script'])}"
-                actions[key] = lambda b=b: self.interact(here, b["x"], b["y"])
-        context = {"my_goal": milestone.hint or milestone.name.replace("_", " "),
-                   "where_i_am": here[4:].replace("_", " ").title(),
-                   "what_went_wrong": str(exc)[:200],
-                   "last_text_on_screen": self.game.string_var4()[-200:]}
-        pick = self.brain.recover(context, options)
-        if pick and pick in actions:
-            try:
-                actions[pick]()
-                self.pump()
-            except Stuck as e:
-                log.info("JEV recovery action failed: %s", e)
 
     # -- grinding -------------------------------------------------------------------------
     def lead(self):

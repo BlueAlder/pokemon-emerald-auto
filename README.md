@@ -3,27 +3,25 @@
 An autonomous player for **Pokémon Emerald**: from power-on, through all eight
 gyms, to the Elite Four and the Hall of Fame. There is no human input.
 
-Most of the game is played by code that reads the game's exact state from RAM
-and the ROM, then plans against models of the game's own rules. The semantic
-leftovers go to [TypeSafe](https://typesafe.ai)'s System One model **Jev**:
-unfamiliar yes/no prompts, unfamiliar menus, close calls in important battles,
-and "I'm stuck, what now?". Every Jev call has a code default, so the player
-also runs with `--no-jev` (that's how it's developed and tested).
+All of it is plain code. The code reads the game's exact state from RAM and
+the ROM, then plans against models of the game's own rules. No model or API
+is called during play.
 
 ```
  ROM + pokeemerald.sym ─┐
                         ▼
  emulator ◀── buttons ── Controller ◀── Agent ◀── RouteRunner(ROUTE milestones)
  (mGBA core,  ── RAM ──▶ Game (typed reads)   │        │
-  headless or           Planner (A* over maps, │        └─ Brain (Jev): yes/no, multichoice,
-  the mGBA app)          warps, HMs, puzzles)  │           battle close calls, recovery
+  headless or           Planner (A* over maps, │
+  the mGBA app)          warps, HMs, puzzles)  │
                         Battle (damage math) ◀─┘
 ```
 
 ## Why it works
 
-The earlier version asked Jev where to walk at every step. A stateless
-per-step judgment can't carry a 20-hour game, so this rewrite inverts it:
+An earlier version asked a language model where to walk at every step. A
+stateless per-step judgment can't carry a 20-hour game, so this rewrite
+models the game instead:
 
 * **Exact state, not screenshots.** The ROM is byte-identical to the
   [pokeemerald](https://github.com/pret/pokeemerald) build, so every address,
@@ -62,8 +60,6 @@ per-step judgment can't carry a 20-hour game, so this rewrite inverts it:
 
 1. **A Pokémon Emerald (USA/Europe) ROM you legally own**, placed at
    `roms/emerald.gba`. It must be the retail image (SHA1 `f3ae088181bf583e55daf962a92bb46f4f1d07b7`).
-2. **Optionally, a TypeSafe API key** (https://console.typesafe.ai/settings/keys)
-   in `.env` as `TYPESAFE_API_KEY=...`. Without one, run with `--no-jev`.
 
 ## Setup
 
@@ -71,14 +67,12 @@ Use Python 3.12: stable-retro has no wheels for newer versions.
 
 ```bash
 python3.12 -m venv .venv && ./.venv/bin/pip install -r requirements.txt
-cp .env.example .env            # optional: add your TypeSafe key
 ```
 
 ## Running
 
 ```bash
-./.venv/bin/python scripts/play.py --no-jev                      # headless, ~45x real time
-./.venv/bin/python scripts/play.py                               # with Jev as the fallback advisor
+./.venv/bin/python scripts/play.py                               # headless, fastest
 ./.venv/bin/python scripts/play.py --resume badge_mind           # from a checkpoint
 ./.venv/bin/python scripts/play.py --stop-after badge_rain       # stop at a milestone
 ./.venv/bin/python scripts/play.py --backend mgba                # drive the mGBA app (watchable)
@@ -94,19 +88,6 @@ cp .env.example .env            # optional: add your TypeSafe key
 * **mGBA app backend:** load the ROM in mGBA, then
   *Tools ▸ Scripting… ▸ Load script* `lua/bridge.lua` (listens on 127.0.0.1:8888),
   and run with `--backend mgba`. It plays at the app's speed.
-* `--max-jev-calls N` caps TypeSafe spend (default 200). Calls are cached, and
-  each one is about 400 input tokens.
-
-## Where Jev is used (and where it isn't)
-
-| Decision | Owner |
-| --- | --- |
-| Reading state, routing, puzzles, menus, damage math | code |
-| Known prompts (nicknames, saving, HM use, healing…) | code rules in `Prompts` |
-| An unfamiliar yes/no prompt | Jev (`Noul`), default: no |
-| An unfamiliar multichoice menu | Jev (`Choice`), default: first option |
-| Close call between moves in a gym/E4 battle | Jev (`Choice`), default: best score |
-| Stuck after the code's fallbacks are exhausted | Jev (`Choice` among concrete actions) |
 
 ## Layout
 
@@ -123,7 +104,6 @@ cp .env.example .env            # optional: add your TypeSafe key
 | `pokeauto/puzzles.py` | Gate, boulder, rotating-tile and ice solvers |
 | `pokeauto/agent.py` | Healing, shopping, teaching, training, item use |
 | `pokeauto/route.py`, `emerald.py` | Milestone runner and the Emerald route |
-| `pokeauto/brain.py` | The four Jev hooks |
 | `scripts/play.py` | CLI |
 | `scripts/gen_data.py` | Regenerates `data/*.json` from a pokeemerald checkout |
 | `lua/bridge.lua` | mGBA-side TCP bridge |
@@ -131,8 +111,7 @@ cp .env.example .env            # optional: add your TypeSafe key
 
 ## Status
 
-**The player has beaten the game twice**, both times with `--no-jev` (zero
-TypeSafe calls):
+**The player has beaten the game twice**, both times with no model calls:
 
 1. The development run reached the Hall of Fame at about 21:30 in-game time.
 2. A second playthrough started from a brand-new game and reached the Hall of

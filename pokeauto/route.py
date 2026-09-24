@@ -31,9 +31,9 @@ class Milestone:
     team_level: int = 0           # ...and the strongest team_size members (doubles, E4)
     team_size: int = 2
     heal_first: bool = True
-    important: bool = False       # boss fight inside: let the advisor weigh in
+    important: bool = False       # boss fight inside: spend items freely
     attempts: int = 4
-    hint: str = ""                # plain-English goal, shown to Jev only if stuck
+    hint: str = ""                # plain-English goal, for logs and readers
 
     def run(self, agent) -> None:
         for act in self.actions:

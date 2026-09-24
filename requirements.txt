@@ -1,5 +1,4 @@
 # Python 3.12 (stable-retro has no wheels for newer versions yet)
 stable-retro>=1.0
-typesafe-sdk>=0.7
 pillow>=10
 numpy>=1.26

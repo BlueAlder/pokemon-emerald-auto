@@ -4,7 +4,6 @@
     python scripts/play.py                         # headless, fastest
     python scripts/play.py --resume set_clock      # from a saved checkpoint
     python scripts/play.py --backend mgba          # drive the mGBA app (watchable)
-    python scripts/play.py --no-jev                # never call TypeSafe
 
 Checkpoints (savestates) are written to runs/checkpoints/<milestone>.state
 after each milestone; the latest frame is mirrored to runs/live.png every few
@@ -22,7 +21,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from pokeauto.env import load_dotenv  # noqa: E402
 
 DEFAULT_ROM_CANDIDATES = [ROOT / "roms" / "emerald.gba",
                           Path.home() / "Downloads" / "Pokemon - Emerald Version (USA, Europe).gba"]
@@ -45,13 +43,10 @@ def main() -> int:
     p.add_argument("--port", type=int, default=8888)
     p.add_argument("--resume", help="checkpoint name to load (headless only)")
     p.add_argument("--stop-after", help="stop after this milestone")
-    p.add_argument("--no-jev", action="store_true", help="never call TypeSafe")
-    p.add_argument("--max-jev-calls", type=int, default=200)
     p.add_argument("--log", default="INFO")
     p.add_argument("--live", type=float, default=5.0, help="seconds between runs/live.png updates")
     args = p.parse_args()
 
-    load_dotenv()
     runs = ROOT / "runs"
     (runs / "checkpoints").mkdir(parents=True, exist_ok=True)
     lock = runs / "play.lock"
@@ -89,12 +84,7 @@ def main() -> int:
     else:
         emu = MgbaEmu(port=args.port, rom_path=rom)
 
-    brain = None
-    if not args.no_jev and os.environ.get("TYPESAFE_API_KEY"):
-        from pokeauto.brain import Brain
-        brain = Brain(max_calls=args.max_jev_calls)
-
-    agent = Agent(emu, brain=brain)
+    agent = Agent(emu)
 
     def checkpoint(name: str) -> None:
         if args.backend == "headless":
@@ -103,8 +93,8 @@ def main() -> int:
     runner = RouteRunner(agent, ROUTE, checkpoint=checkpoint)
     t0 = time.time()
     ok = runner.run(stop_after=args.stop_after)
-    logging.info("finished=%s in %.0fs wall, game time %s, jev calls %s", ok, time.time() - t0,
-                 agent.game.play_time(), brain.calls if brain else 0)
+    logging.info("finished=%s in %.0fs wall, game time %s", ok, time.time() - t0,
+                 agent.game.play_time())
     emu.screenshot(str(runs / "final.png"))
     return 0 if ok else 1
 
