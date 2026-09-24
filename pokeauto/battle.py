@@ -352,7 +352,20 @@ class Battle:
     def _party_menu(self, tasks) -> None:
         target = self._switch_target()
         addr = S["gPartyMenu"] + 9
+        if target is None:
+            # Every switch was refused: back out to the action menu, where
+            # decide() falls back to Struggle / running.
+            self._pending.pop(0, None)
+            self._pending.pop(2, None)
+            self.ctl.press("B", release=10)
+            return
         if any("Task_HandleSelectionMenuInput" in t for t in tasks):
+            cursor = struct.unpack("b", self.emu.read(addr, 1))[0]
+            if cursor != target:
+                # Our cursor presses were eaten while the menu slid in: this
+                # menu is for the wrong Pokemon (often the one already out).
+                self.ctl.press("B", release=10)
+                return
             # Confirming the same Pokemon again and again means the game keeps
             # refusing it ("already in battle", fainted...): try another.
             self._shift_tries[target] = self._shift_tries.get(target, 0) + 1
@@ -363,13 +376,19 @@ class Battle:
                 self._pending.pop(2, None)
                 self.ctl.press("B", release=10)
                 return
+            log.debug("BATTLE party menu: target %d, cursor %d, pending %s", target,
+                      struct.unpack("b", self.emu.read(addr, 1))[0], self._pending.get(0))
             self.ctl.press("A", release=10)          # SHIFT / SEND OUT is first
+            return
+        if self.game.fading():
+            self.ctl.idle(4)
             return
         for _ in range(8):
             if struct.unpack("b", self.emu.read(addr, 1))[0] == target:
                 break
             self.ctl.press("DOWN", release=4)
-        self.ctl.press("A", release=10)
+        if struct.unpack("b", self.emu.read(addr, 1))[0] == target:
+            self.ctl.press("A", release=10)
 
     def _switch_target(self) -> int:
         choice = self._pending.get(0)
@@ -388,7 +407,7 @@ class Battle:
         rows = [m for m in self.game.party() if not m.fainted and not m.is_egg
                 and m.personality not in out and m.slot not in self._bad_switch]
         if not rows:
-            return self.best_switch()
+            return self.best_switch(exclude_active=True)   # None: nobody left to send
         foes = self._foes()
         if foes:
             foe = combatant_from_battle(self.data, foes[0][1])
@@ -462,6 +481,8 @@ class Battle:
                     sw = max(able, key=lambda sl: self._switch_value(sl, foe0))
                     return Choice("switch", sw, why="out of PP")
             free = [i for i, mv in enumerate(me_bm.moves) if mv.id and mv.pp and i not in banned]
+            if wild and not free and not self._trapped():
+                return Choice("run", why="out of PP")
             return Choice("move", free[0] if free else 0, why="struggle")
         options.sort(key=lambda c: -c.score)
         best = options[0]

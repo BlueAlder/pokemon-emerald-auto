@@ -109,6 +109,10 @@ def e4_room(target: str):
 SOOTOPOLIS = "MAP_SOOTOPOLIS_CITY"
 LEAGUE = "MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F"
 VICTORY_ROAD = ["MAP_VICTORY_ROAD_1F", "MAP_VICTORY_ROAD_B1F"]
+# Who gets trained for doubles and the Elite Four, best first (by evolution
+# line); anyone else only by level. Castform and the Fly carrier are passengers.
+TEAM_PREF = ("SWAMPERT", "MARSHTOMP", "MUDKIP", "AZUMARILL", "MARILL", "HARIYAMA",
+             "MAKUHITA", "CROBAT", "GOLBAT", "ZUBAT")
 
 ROUTE: list[Milestone] = [
     Milestone("leave_truck", var_ge("VAR_LITTLEROOT_INTRO_STATE", 3), [

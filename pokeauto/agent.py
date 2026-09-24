@@ -650,8 +650,8 @@ class Agent:
         dry = 0                # consecutive spots without an encounter
         spots: set[str] = set()
         while self.lead().level < level and battles < max_battles:
-            if self.needs_heal(0.55):
-                self.heal()
+            if self.needs_heal(0.55) or self.low_attack_pp(0.1):
+                self.heal()            # a trainee out of PP only switches and struggles
                 spot = None
             want = self.grind_maps(self.lead().level)
             if spot is not None and want and spot[0] not in want and not fallback:
@@ -739,14 +739,18 @@ class Agent:
         log.info("GRIND done: %s after %d battles", self.lead(), battles)
 
     def train(self, level: int, members: int = 2) -> None:
-        """Bring the `members` strongest Pokemon up to `level`, one at a time.
+        """Bring `members` Pokemon (the route's TEAM_PREF first, then the
+        strongest) up to `level`, one at a time.
 
         Double battles (Tate & Liza) and the Elite Four punish a one-Pokemon
         team. Each trainee is moved to the front so it earns the whole share
         of experience, then the original order is restored.
         """
+        from .emerald import TEAM_PREF
         party = [m for m in self.game.party() if not m.is_egg]
-        ranked = sorted(party, key=lambda m: -m.level)[:members]
+        pref = {name: i for i, name in enumerate(TEAM_PREF)}
+        ranked = sorted(party, key=lambda m: (pref.get(m.species_name, len(pref)),
+                                              -m.level))[:members]
         order = [m.personality for m in party]
         for mon in ranked:
             cur = next((m for m in self.game.party() if m.personality == mon.personality), None)
