@@ -21,6 +21,7 @@ move; the executor clears them on arrival.
 from __future__ import annotations
 
 import heapq
+import time as _time
 import itertools
 from dataclasses import dataclass, field
 
@@ -359,7 +360,8 @@ class Planner:
         Searches a corridor of maps around the shortest map path first and
         widens it if that fails (one-way ledges and transports can make the
         real route longer than the map graph suggests)."""
-        for slack in (2, 6, None):
+        slacks = (2, 6) if getattr(self, "narrow", False) else (2, 6, None)
+        for slack in slacks:
             r = self._plan(start, goal, caps, live, live_objects, max_nodes, slack)
             if r is not None or not getattr(goal, "maps", None):
                 return r
@@ -369,6 +371,7 @@ class Planner:
               slack) -> list[Step] | None:
         grids: dict[str, MapGrid] = {}
         obst: dict[str, Obstacles] = {}
+        deadline = _time.process_time() + 20.0   # 20 CPU-seconds of search: a dead end
 
         def G(m):
             if m not in grids:
@@ -407,7 +410,7 @@ class Planner:
             if goal(s):
                 return self._unwind(prev, start, s)
             expanded += 1
-            if expanded > max_nodes:
+            if expanded > max_nodes or (expanded % 4096 == 0 and _time.process_time() > deadline):
                 return None
             g, ob = G(s.map), O(s.map)
             here_b = g.behavior(s.x, s.y) if g.inside(s.x, s.y) else 0

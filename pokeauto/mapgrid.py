@@ -88,6 +88,9 @@ FORCED = frozenset(
     [b for b in range(const("MB_WALK_EAST"), const("MB_TRICK_HOUSE_PUZZLE_8_FLOOR") + 1)
      if b not in CARRY]
     + [const("MB_MUDDY_SLOPE"), const("MB_CRACKED_FLOOR"),
+       # Acro Bike trick tiles: no way over them on foot (Jagged Pass climbs).
+       const("MB_BUMPY_SLOPE"), const("MB_ISOLATED_VERTICAL_RAIL"),
+       const("MB_ISOLATED_HORIZONTAL_RAIL"), const("MB_VERTICAL_RAIL"), const("MB_HORIZONTAL_RAIL"),
        const("MB_ICE"), const("MB_SECRET_BASE_JUMP_MAT"), const("MB_SECRET_BASE_SPIN_MAT")])
 
 

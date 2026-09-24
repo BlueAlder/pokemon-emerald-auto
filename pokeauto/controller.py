@@ -74,6 +74,12 @@ class Prompts:
 # Controller
 # ---------------------------------------------------------------------------
 
+def _on(map_id: str, goal):
+    """Tag a goal with its map so the planner's A* can aim at it."""
+    goal.maps = {map_id}
+    return goal
+
+
 class Controller:
     RUN_FLAG = "FLAG_SYS_B_DASH"
 
@@ -585,9 +591,14 @@ class Controller:
         last_state = None
         tried_triggers: set = set()
         plan: list[Step] | None = None
+        started = time.process_time()
         while True:
             self.pump()
             s = self.state()
+            if time.process_time() - started > 300:
+                # Searches that keep failing across the whole world are what
+                # take this long; give the route layer a chance instead.
+                raise Stuck(f"gave up on {desc or goal.__name__} after 5 minutes at {s}")
             if goal(s):
                 return
             # Resume the current plan after an interruption (a battle, a
@@ -616,6 +627,9 @@ class Controller:
                     self._in_health_check = False
             live = MapGrid.from_ram(self.game)
             use = caps or self.nav_caps()
+            # Fallbacks search only the map corridor around the shortest map
+            # path (cheap to fail); the world-wide search runs once, last.
+            self.planner.narrow = True
             plan = self.planner.plan(s, goal, use, live=live, live_objects=self.game.objects())
             if plan is None and use.active_triggers_block:
                 # The only way (or the goal itself) is across a story trigger:
@@ -649,6 +663,16 @@ class Controller:
                 if plan and self._talk_to_blocker(s, plan, tried_triggers):
                     plan = None
                     continue
+            self.planner.narrow = False
+            if plan is None:
+                objs = self.game.objects()
+                for extra in ({}, {"active_triggers_block": False},
+                              {"active_triggers_block": False, "ignore_boulders": use.strength},
+                              {"active_triggers_block": False, "ignore_story_objects": True}):
+                    plan = self.planner.plan(s, goal, NavCaps(**{**use.__dict__, **extra}),
+                                             live=live, live_objects=objs)
+                    if plan is not None:
+                        break
             if plan is None:
                 # Maybe an NPC is standing in the only corridor: wait, retry.
                 failures += 1
@@ -920,8 +944,8 @@ class Controller:
                 if template is None:
                     raise Stuck(f"object {local_id} is not on {map_id}")
                 # Objects only spawn near the camera: head for the map data position.
-                self.goto(lambda s: s.map == map_id and abs(s.x - template["x"]) <= 3
-                          and abs(s.y - template["y"]) <= 3, desc=f"towards object {local_id}")
+                self.goto(_on(map_id, lambda s: s.map == map_id and abs(s.x - template["x"]) <= 3
+                          and abs(s.y - template["y"]) <= 3), desc=f"towards object {local_id}")
                 if self.live_object(local_id) is None:
                     raise Stuck(f"object {local_id} is not on {map_id}")
                 continue
@@ -932,12 +956,12 @@ class Controller:
                 # (Merely "close" can be a dead end on the wrong side of a wall.)
                 ox, oy = o.x, o.y
                 try:
-                    self.goto(lambda st: st.map == map_id
-                              and self._talk_offset(map_id, st.x, st.y, ox, oy),
+                    self.goto(_on(map_id, lambda st: st.map == map_id
+                              and self._talk_offset(map_id, st.x, st.y, ox, oy)),
                               desc=f"to talk to object {local_id}")
                 except Stuck:
-                    self.goto(lambda st: st.map == map_id
-                              and abs(st.x - ox) + abs(st.y - oy) <= 2,
+                    self.goto(_on(map_id, lambda st: st.map == map_id
+                              and abs(st.x - ox) + abs(st.y - oy) <= 2),
                               desc=f"near object {local_id}")
                 continue
             if s.map == map_id and self._talk_offset(map_id, s.x, s.y, o.x, o.y):

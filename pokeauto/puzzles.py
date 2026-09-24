@@ -127,7 +127,8 @@ class GatePuzzle:
 
 
 def solve_boulders(grid: MapGrid, start: tuple[int, int], boulders: frozenset, goal,
-                   walls: set, elev: int = 3, max_nodes: int = 400_000) -> list[str] | None:
+                   walls: set, elev: int = 3, max_nodes: int = 400_000,
+                   time_limit: float = 20.0) -> list[str] | None:
     """Sokoban search with the game's Strength rule (TryPushBoulder).
 
     Walking into a boulder pushes it one tile if the tile beyond is free (map
@@ -137,6 +138,8 @@ def solve_boulders(grid: MapGrid, start: tuple[int, int], boulders: frozenset, g
     from .mapgrid import Caps, MB
     caps = Caps()
     door = {MB.get("MB_NON_ANIMATED_DOOR"), MB.get("MB_WATER_DOOR"), MB.get("MB_DEEP_SOUTH_WARP")}
+    import time as _time
+    deadline = _time.process_time() + time_limit
     root = ((start[0], start[1], elev), boulders)
     seen = {root: None}
     q = deque([root])
@@ -151,7 +154,7 @@ def solve_boulders(grid: MapGrid, start: tuple[int, int], boulders: frozenset, g
                 path.append(d)
             return path[::-1]
         n += 1
-        if n > max_nodes:
+        if n > max_nodes or (n % 2000 == 0 and _time.process_time() > deadline):
             return None
         for d, (dx, dy) in DELTA.items():
             tx, ty = x + dx, y + dy
@@ -165,8 +168,9 @@ def solve_boulders(grid: MapGrid, start: tuple[int, int], boulders: frozenset, g
                     continue
                 nxt = ((x, y, e), (bs - {(tx, ty)}) | {(bx, by)})
             else:
-                r = grid.step(Pos(x, y, e), d, caps, walls | bs)
-                if r is None or r == "edge":
+                # (tx, ty) is not a boulder here; only a jump's landing could be.
+                r = grid.step(Pos(x, y, e), d, caps, walls)
+                if r is None or r == "edge" or (r.x, r.y) in bs:
                     continue
                 nxt = ((r.x, r.y, r.elev), bs)
             if nxt not in seen:
