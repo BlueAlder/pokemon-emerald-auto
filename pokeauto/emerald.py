@@ -160,8 +160,12 @@ ROUTE: list[Milestone] = [
               [goto("MAP_ROUTE104_MR_BRINEYS_HOUSE"),
                talk_s("MAP_ROUTE104_MR_BRINEYS_HOUSE", "EventScript_Briney")]),
     Milestone("badge_knuckle", badges(2),
-              [goto("MAP_DEWFORD_TOWN_GYM"), talk_s("MAP_DEWFORD_TOWN_GYM", "EventScript_Brawly")],
-              min_level=20, important=True),
+              [unless(reachable("MAP_DEWFORD_TOWN"),          # whited out back to Rustboro
+                      goto("MAP_ROUTE104_MR_BRINEYS_HOUSE"),
+                      talk_s("MAP_ROUTE104_MR_BRINEYS_HOUSE", "EventScript_Briney")),
+               goto("MAP_DEWFORD_TOWN_POKEMON_CENTER_1F"),   # respawn here, not Rustboro
+               goto("MAP_DEWFORD_TOWN_GYM"), talk_s("MAP_DEWFORD_TOWN_GYM", "EventScript_Brawly")],
+              min_level=22, important=True),
     Milestone("steven_letter", flag("FLAG_DELIVERED_STEVEN_LETTER"),
               [goto("MAP_GRANITE_CAVE_STEVENS_ROOM"),
                talk_s("MAP_GRANITE_CAVE_STEVENS_ROOM", "EventScript_Steven")], min_level=21),
