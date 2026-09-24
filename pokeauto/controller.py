@@ -184,6 +184,9 @@ class Controller:
         if "Task_HandleMultichoiceInput" in tasks:
             self._answer_multichoice()
             return 0
+        if "ExecuteMatchCall" in tasks:
+            self.press("A", release=6)            # PokeNav call: page through it
+            return 0
         if self.game.text_waiting() or m.detail == "WaitForAorBPress":
             self.press("A")
             return 0
@@ -267,8 +270,30 @@ class Controller:
                 break
             self.idle(2)
 
+    def _choose_half_step(self, tasks) -> None:
+        """ChooseHalfPartyForBattle (Steven's multi battle): ENTER the strongest
+        three healthy Pokemon, then CONFIRM (party-menu slot 6)."""
+        slot_addr = S["gPartyMenu"] + 9
+        if any("Task_HandleSelectionMenuInput" in t for t in tasks):
+            self._menu_select(0)                       # ENTER
+            return
+        chosen = {b - 1 for b in self.emu.read(S["gSelectedOrderFromParty"], 3) if b}
+        party = [p for p in self.game.party() if not p.is_egg and not p.fainted]
+        want = [p.slot for p in sorted(party, key=lambda p: -p.level)][:3]
+        nxt = next((w for w in want if w not in chosen), None)
+        target = 6 if nxt is None else nxt
+        for _ in range(12):
+            cur = struct.unpack("b", self.emu.read(slot_addr, 1))[0]
+            if cur == target:
+                break
+            self.press("DOWN" if cur < target else "UP", release=5)
+        self.press("A", release=16)
+
     def _other_step(self, m) -> None:
         tasks = m.tasks
+        if "PartyMenu" in m.callback2 and self.emu.u8(S["gPartyMenu"] + 8) & 0xF == 4:
+            self._choose_half_step(tasks)
+            return
         for key, handler in self.ui_handlers.items():
             if key in m.callback2 or any(key in t for t in tasks):
                 handler(self, m)
@@ -372,7 +397,9 @@ class Controller:
                 return False          # object gone now; replan from here
             return self.state() == step.expect
         if step.action == "dive":
-            self.press("A", release=10)
+            # Dive down with A on dark water; surface with B while underwater.
+            underwater = bool(self.game.avatar()["flags"] & 0x10)
+            self.press("B" if underwater else "A", release=10)
             self.pump()
             return self.state().map == step.expect.map
         if step.action == "transport":
@@ -386,6 +413,22 @@ class Controller:
             self.pump()
             s = self.state()
             return s.map == step.expect.map and (s.x, s.y) == (step.expect.x, step.expect.y)
+        if step.action == "slide":
+            # Onto a current / walk tile: it carries us; wait for the ride to end.
+            self._hold_until_moved(d, max_frames=40)
+            still, last = 0, None
+            for _ in range(600):
+                self.emu.run(0, 1)
+                if not self.free():
+                    break
+                pos = self.game.pos()
+                moving = self.game.avatar()["tile_transition"] != 0
+                still = still + 1 if (pos == last and not moving) else 0
+                last = pos
+                if still >= 12:
+                    break
+            self.stats["steps"] += 1
+            return self.state() == step.expect
         if step.action == "door":
             self.face("up")
             moved = self._hold_until_moved("up", max_frames=90)
@@ -569,9 +612,12 @@ class Controller:
             if plan is None and use.strength:
                 # Boulders on a later map: head there; the push puzzle is
                 # solved on arrival (_try_boulders, current map only).
-                shove = NavCaps(**{**use.__dict__, "ignore_boulders": True})
-                plan = self.planner.plan(s, goal, shove, live=live,
-                                         live_objects=self.game.objects())
+                for extra in ({}, {"active_triggers_block": False}):
+                    shove = NavCaps(**{**use.__dict__, "ignore_boulders": True, **extra})
+                    plan = self.planner.plan(s, goal, shove, live=live,
+                                             live_objects=self.game.objects())
+                    if plan is not None:
+                        break
             if plan is None and self._try_story_triggers(s, tried_triggers):
                 continue
             if plan is None:
@@ -581,6 +627,9 @@ class Controller:
                                   "active_triggers_block": False})
                 plan = self.planner.plan(s, goal, bold, live=live,
                                          live_objects=self.game.objects())
+                if plan and self._talk_to_blocker(s, plan, tried_triggers):
+                    plan = None
+                    continue
             if plan is None:
                 # Maybe an NPC is standing in the only corridor: wait, retry.
                 failures += 1
@@ -599,6 +648,29 @@ class Controller:
                 failures += 1
                 if failures > max_replans:
                     raise Stuck(f"could not reach {desc or goal.__name__}; last at {self.state()}")
+
+    def _talk_to_blocker(self, s: State, plan: list[Step], tried: set) -> bool:
+        """The only route walks through a trainer or story NPC standing in a
+        doorway (the Space Center stair grunt): talk to them once -- beating
+        or hearing them out is what moves them."""
+        spots = {(o.x, o.y): o for o in self.game.objects() if not o.is_player}
+        for st in plan:
+            if st.expect.map != s.map:
+                break
+            o = spots.get((st.expect.x, st.expect.y))
+            if o is None or ("blocker", s.map, o.local_id) in tried:
+                continue
+            t = next((t for t in maps()[s.map]["objects"] if t["local_id"] == o.local_id), None)
+            if t is None or not t["script"] or t["script"] == "0x0":
+                continue
+            if t.get("trainer_type", "TRAINER_TYPE_NONE") in ("TRAINER_TYPE_NONE", "0") \
+                    and t["flag"] in ("0", ""):
+                continue
+            tried.add(("blocker", s.map, o.local_id))
+            log.info("BLOCKER %s at (%d,%d) is in the way; talking to it", t["script"], o.x, o.y)
+            self.talk(s.map, o.local_id)
+            return True
+        return False
 
     def _try_story_triggers(self, s: State, tried: set) -> bool:
         """No route: step on the nearest reachable active trigger on this map
@@ -638,6 +710,25 @@ class Controller:
         obs = self.planner.obstacles(s.map, objs)
         if not obs.boulders:
             return False
+        # Breakable rocks are part of these puzzles (Seafloor Cavern): the push
+        # solver treats them as walls, so clear every rock we can reach first.
+        if caps.smash and obs.rocks:
+            done = self.__dict__.setdefault("_smashed", set())
+            for rx, ry in sorted(obs.rocks, key=lambda r: abs(r[0] - s.x) + abs(r[1] - s.y)):
+                if (s.map, rx, ry) in done:
+                    continue
+                done.add((s.map, rx, ry))
+                near = self.planner.plan(s, adjacent(s.map, rx, ry), caps, live=live,
+                                         live_objects=objs)
+                if near is None:
+                    continue
+                log.info("BOULDERS smashing rock at (%d,%d) on %s first", rx, ry, s.map)
+                if near and not self._run_steps(near, s):
+                    return True
+                here = self.state()
+                d = facing_dir(here.x, here.y, rx, ry)
+                self._execute(Step("smash", d, State(s.map, rx, ry, here.elev)))
+                return True                    # replan with the rock gone
         loose = NavCaps(**{**caps.__dict__, "ignore_boulders": True,
                            "active_triggers_block": False, "ignore_story_objects": True})
         plan = self.planner.plan(s, goal, loose, live=live, live_objects=objs)

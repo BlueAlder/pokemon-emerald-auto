@@ -216,6 +216,10 @@ def main() -> int:
                 m = re.match(r"setholewarp (MAP_\w+)", line)
                 if m:
                     maps[mid]["hole_warp"] = m.group(1)
+                m = re.match(r"setdivewarp (MAP_\w+), (\d+), (\d+)", line)
+                if m:
+                    maps[mid]["dive_warp"] = {"dest": m.group(1), "x": int(m.group(2)),
+                                              "y": int(m.group(3))}
         overrides = []
         for body in labels.values():
             for line in body:

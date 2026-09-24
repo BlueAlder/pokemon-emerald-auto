@@ -24,7 +24,7 @@ import heapq
 import itertools
 from dataclasses import dataclass, field
 
-from .mapgrid import (ARROW_WARPS, DELTA, STEP_WARPS, Caps, MapGrid, Pos,
+from .mapgrid import (ARROW_WARPS, DELTA, JUMP, STEP_WARPS, Caps, MapGrid, Pos,
                       has_encounters, surfable, MB)
 from .symbols import const, constants, maps
 
@@ -117,6 +117,32 @@ class Planner:
         self.learned_blocks: set[tuple[str, int, int]] = set()
 
     # -- per-map data -----------------------------------------------------------
+    def emerge_target(self, underwater: str) -> State | None:
+        """Surfacing from an underwater map that has no emerge connection lands
+        on the map whose dive script leads here (Seafloor Cavern, Sootopolis):
+        beside that map's warp back underwater, else mid-lake."""
+        cache = self.__dict__.setdefault("_emerge", {})
+        if underwater in cache:
+            return cache[underwater]
+        out = None
+        src = next((m for m, i in maps().items()
+                    if (i.get("dive_warp") or {}).get("dest") == underwater), None)
+        if src:
+            g = self.grid(src)
+            water = [(x, y) for y in range(g.h) for x in range(g.w)
+                     if surfable(g.behavior(x, y)) and not g.collision(x, y)]
+            spots = [(w["x"], w["y"] - 1) for w in maps()[src]["warps"]
+                     if w["dest"].startswith("MAP_UNDERWATER")]
+            spot = next((t for t in spots if t in set(water)), None)
+            if spot is None and water:
+                cx, cy = g.w / 2, g.h / 2
+                spot = min(water, key=lambda t: (t[0] - cx) ** 2 + (t[1] - cy) ** 2)
+            if spot:
+                e = g.elevation(*spot)
+                out = State(src, spot[0], spot[1], 1 if e in (0, 15) else e, True)
+        cache[underwater] = out
+        return out
+
     def grid(self, map_id: str, live: MapGrid | None = None) -> MapGrid:
         if live is not None and live.map_id == map_id:
             return live
@@ -380,6 +406,18 @@ class Planner:
             here_b = g.behavior(s.x, s.y) if g.inside(s.x, s.y) else 0
             # Dive / emerge: press A on the current tile (TrySetDiveWarp).
             if caps.dive and s.surfing:
+                # Maps whose dive/emerge is a script (setdivewarp), not a connection.
+                dw = maps()[s.map].get("dive_warp")
+                if dw and here_b in DIVEABLE and dw["dest"] in maps() and not any(
+                        c["direction"] == "dive" for c in maps()[s.map]["connections"]):
+                    dg = G(dw["dest"])
+                    self._relax((State(dw["dest"], dw["x"], dw["y"],
+                                       dg.elevation(dw["x"], dw["y"]), True),
+                                 "dive", 10.0), s, "up", dist, prev, heap, tie, cost)
+                land = self.emerge_target(s.map)
+                if land and here_b not in NO_EMERGE and not any(
+                        c["direction"] == "emerge" for c in maps()[s.map]["connections"]):
+                    self._relax((land, "dive", 10.0), s, "up", dist, prev, heap, tie, cost)
                 for c in maps()[s.map]["connections"]:
                     if c["direction"] == "dive" and here_b in DIVEABLE and c["map"] in maps():
                         dg = G(c["map"])
@@ -455,7 +493,9 @@ class Planner:
                         nxt.append((e, "edge", 1.0))
                 elif r is not None:
                     ns = State(s.map, r.x, r.y, r.elev, r.surfing)
-                    action = ("jump" if abs(r.x - s.x) + abs(r.y - s.y) == 2 else
+                    far = abs(r.x - s.x) + abs(r.y - s.y) > 1
+                    action = ("jump" if far and g.behavior(tx, ty) in JUMP[d] else
+                              "slide" if far else
                               "surf" if r.surfing and not s.surfing else "walk")
                     step_cost = 1.0
                     if caps.avoid_grass and has_encounters(g.behavior(r.x, r.y)):

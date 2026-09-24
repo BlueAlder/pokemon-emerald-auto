@@ -201,6 +201,11 @@
 ],
 "connections": [],
 "coords": [],
+"dive_warp": {
+"dest": "MAP_ABANDONED_SHIP_UNDERWATER1",
+"x": 5,
+"y": 4
+},
 "group": 24,
 "layout": "LAYOUT_ABANDONED_SHIP_CORRIDORS_B1F",
 "mapsec": "MAPSEC_ABANDONED_SHIP",
@@ -394,6 +399,11 @@
 ],
 "connections": [],
 "coords": [],
+"dive_warp": {
+"dest": "MAP_ABANDONED_SHIP_UNDERWATER1",
+"x": 5,
+"y": 4
+},
 "group": 24,
 "layout": "LAYOUT_ABANDONED_SHIP_HIDDEN_FLOOR_CORRIDORS",
 "mapsec": "MAPSEC_ABANDONED_SHIP",
@@ -975,6 +985,11 @@
 "bgs": [],
 "connections": [],
 "coords": [],
+"dive_warp": {
+"dest": "MAP_ABANDONED_SHIP_UNDERWATER2",
+"x": 17,
+"y": 4
+},
 "group": 24,
 "layout": "LAYOUT_ABANDONED_SHIP_ROOMS_B1F",
 "mapsec": "MAPSEC_ABANDONED_SHIP",
@@ -1085,6 +1100,11 @@
 "bgs": [],
 "connections": [],
 "coords": [],
+"dive_warp": {
+"dest": "MAP_ABANDONED_SHIP_HIDDEN_FLOOR_CORRIDORS",
+"x": 0,
+"y": 10
+},
 "group": 24,
 "layout": "LAYOUT_ABANDONED_SHIP_UNDERWATER1",
 "mapsec": "MAPSEC_ABANDONED_SHIP",
@@ -1116,6 +1136,11 @@
 "bgs": [],
 "connections": [],
 "coords": [],
+"dive_warp": {
+"dest": "MAP_ABANDONED_SHIP_ROOMS_B1F",
+"x": 13,
+"y": 7
+},
 "group": 24,
 "layout": "LAYOUT_ABANDONED_SHIP_UNDERWATER2",
 "mapsec": "MAPSEC_ABANDONED_SHIP",
@@ -22060,6 +22085,11 @@
 "bgs": [],
 "connections": [],
 "coords": [],
+"dive_warp": {
+"dest": "MAP_UNDERWATER_MARINE_CAVE",
+"x": 9,
+"y": 6
+},
 "group": 24,
 "layout": "LAYOUT_MARINE_CAVE_ENTRANCE",
 "mapsec": "MAPSEC_MARINE_CAVE",
@@ -48049,6 +48079,11 @@
 }
 ],
 "coords": [],
+"dive_warp": {
+"dest": "MAP_UNDERWATER_ROUTE134",
+"x": 8,
+"y": 6
+},
 "group": 0,
 "layout": "LAYOUT_ROUTE134",
 "mapsec": "MAPSEC_ROUTE_134",
@@ -51325,6 +51360,11 @@
 "bgs": [],
 "connections": [],
 "coords": [],
+"dive_warp": {
+"dest": "MAP_UNDERWATER_SEAFLOOR_CAVERN",
+"x": 6,
+"y": 5
+},
 "group": 24,
 "layout": "LAYOUT_SEAFLOOR_CAVERN_ENTRANCE",
 "mapsec": "MAPSEC_SEAFLOOR_CAVERN",
@@ -52758,6 +52798,11 @@
 ],
 "connections": [],
 "coords": [],
+"dive_warp": {
+"dest": "MAP_UNDERWATER_SEALED_CHAMBER",
+"x": 12,
+"y": 44
+},
 "group": 24,
 "layout": "LAYOUT_SEALED_CHAMBER_OUTER_ROOM",
 "mapsec": "MAPSEC_SEALED_CHAMBER",
@@ -61373,6 +61418,11 @@
 ],
 "connections": [],
 "coords": [],
+"dive_warp": {
+"dest": "MAP_UNDERWATER_SOOTOPOLIS_CITY",
+"x": 9,
+"y": 6
+},
 "group": 0,
 "layout": "LAYOUT_SOOTOPOLIS_CITY",
 "mapsec": "MAPSEC_SOOTOPOLIS_CITY",
@@ -64007,6 +64057,11 @@
 "bgs": [],
 "connections": [],
 "coords": [],
+"dive_warp": {
+"dest": "MAP_MARINE_CAVE_ENTRANCE",
+"x": 10,
+"y": 17
+},
 "group": 24,
 "layout": "LAYOUT_UNDERWATER_MARINE_CAVE",
 "mapsec": "MAPSEC_UNDERWATER_MARINE_CAVE",
@@ -64505,6 +64560,11 @@
 "bgs": [],
 "connections": [],
 "coords": [],
+"dive_warp": {
+"dest": "MAP_ROUTE134",
+"x": 60,
+"y": 31
+},
 "group": 24,
 "layout": "LAYOUT_UNDERWATER_ROUTE134",
 "mapsec": "MAPSEC_UNDERWATER_SEALED_CHAMBER",
@@ -64529,6 +64589,11 @@
 "bgs": [],
 "connections": [],
 "coords": [],
+"dive_warp": {
+"dest": "MAP_SEAFLOOR_CAVERN_ENTRANCE",
+"x": 10,
+"y": 17
+},
 "group": 24,
 "layout": "LAYOUT_UNDERWATER_SEAFLOOR_CAVERN",
 "mapsec": "MAPSEC_UNDERWATER_SEAFLOOR_CAVERN",
@@ -64617,6 +64682,11 @@
 ],
 "connections": [],
 "coords": [],
+"dive_warp": {
+"dest": "MAP_SEALED_CHAMBER_OUTER_ROOM",
+"x": 10,
+"y": 19
+},
 "group": 24,
 "layout": "LAYOUT_UNDERWATER_SEALED_CHAMBER",
 "mapsec": "MAPSEC_UNDERWATER_SEALED_CHAMBER",
@@ -64641,6 +64711,11 @@
 "bgs": [],
 "connections": [],
 "coords": [],
+"dive_warp": {
+"dest": "MAP_SOOTOPOLIS_CITY",
+"x": 29,
+"y": 53
+},
 "group": 24,
 "layout": "LAYOUT_UNDERWATER_SOOTOPOLIS_CITY",
 "mapsec": "MAPSEC_UNDERWATER_SOOTOPOLIS",

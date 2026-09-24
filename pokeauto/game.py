@@ -438,7 +438,7 @@ class Game:
         return p.elevation if p else 0
 
     def surfing(self) -> bool:
-        return bool(self.avatar()["flags"] & 0x08)      # PLAYER_AVATAR_FLAG_SURFING
+        return bool(self.avatar()["flags"] & 0x18)      # SURFING or UNDERWATER (Dive)
 
     def on_bike(self) -> bool:
         return bool(self.avatar()["flags"] & 0x06)

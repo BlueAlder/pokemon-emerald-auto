@@ -74,9 +74,16 @@ ARROW_WARPS = {"up": _mb("MB_NORTH_ARROW_WARP", "MB_STAIRS_OUTSIDE_ABANDONED_SHI
 
 # Tiles that move the player on their own. Unsafe for the generic pathfinder;
 # the few puzzles that need them are scripted.
+# Tiles that carry you one tile per step in a fixed direction until you reach
+# ordinary ground or are blocked (DoForcedMovement): modelled as slides.
+CARRY = {const("MB_WALK_EAST"): "right", const("MB_WALK_WEST"): "left",
+         const("MB_WALK_NORTH"): "up", const("MB_WALK_SOUTH"): "down",
+         const("MB_EASTWARD_CURRENT"): "right", const("MB_WESTWARD_CURRENT"): "left",
+         const("MB_NORTHWARD_CURRENT"): "up", const("MB_SOUTHWARD_CURRENT"): "down"}
+
 FORCED = frozenset(
-    list(range(const("MB_WALK_EAST"), const("MB_TRICK_HOUSE_PUZZLE_8_FLOOR") + 1))
-    + list(range(const("MB_EASTWARD_CURRENT"), const("MB_SOUTHWARD_CURRENT") + 1))
+    [b for b in range(const("MB_WALK_EAST"), const("MB_TRICK_HOUSE_PUZZLE_8_FLOOR") + 1)
+     if b not in CARRY]
     + [const("MB_MUDDY_SLOPE"), const("MB_CRACKED_FLOOR"), const("MB_WATERFALL"),
        const("MB_ICE"), const("MB_SECRET_BASE_JUMP_MAT"), const("MB_SECRET_BASE_SPIN_MAT")])
 
@@ -173,6 +180,21 @@ class MapGrid:
     # -- movement --------------------------------------------------------------
     def step(self, p: Pos, d: str, caps: Caps, blocked: set | frozenset = frozenset()
              ) -> Pos | str | None:
+        """One press of direction d, including any ride on currents/walk tiles."""
+        r = self._step(p, d, caps, blocked)
+        seen = set()
+        while isinstance(r, Pos) and self.inside(r.x, r.y) and self.behavior(r.x, r.y) in CARRY:
+            if (r.x, r.y) in seen:
+                return None                      # a loop: never lands
+            seen.add((r.x, r.y))
+            nxt = self._step(r, CARRY[self.behavior(r.x, r.y)], caps, blocked)
+            if not isinstance(nxt, Pos):
+                break                            # blocked: the ride stops here
+            r = nxt
+        return r
+
+    def _step(self, p: Pos, d: str, caps: Caps, blocked: set | frozenset = frozenset()
+              ) -> Pos | str | None:
         """Result of pressing direction d at p.
 
         Returns the new Pos, the string "edge" if the step leaves the map
