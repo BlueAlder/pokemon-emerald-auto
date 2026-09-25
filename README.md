@@ -99,7 +99,9 @@ python3.12 -m venv .venv && ./.venv/bin/pip install -r requirements.txt
   `runs/play.log`, and snapshots of anything unexpected to `runs/debug/`.
 * **mGBA app backend:** load the ROM in mGBA, then
   *Tools ▸ Scripting… ▸ Load script* `lua/bridge.lua` (listens on 127.0.0.1:8888),
-  and run with `--backend mgba`. It plays at the app's speed.
+  and run with `--backend mgba`. It plays at the app's speed. After updating
+  `lua/bridge.lua`, restart mGBA and load it again: a second copy cannot bind
+  the port while the old one is still loaded.
 
 ## Layout
 

@@ -40,6 +40,17 @@ local left = 0
 local mask_now = 0
 local last_frame = -1
 local run_pending = false   -- a RUN command is waiting for its frames to pass
+local run_mask = 0          -- buttons of the RUN being waited on
+
+-- mGBA keeps running while Python reads RAM and decides. A hold made of
+-- back-to-back RUNs (walking: RUN LEFT 1, read, RUN LEFT 1, ...) would get
+-- released frames in between, and Emerald turns a flickering direction into
+-- turning on the spot. So a RUN's buttons stay held until the next input
+-- command, but never longer than STICKY_FRAMES: a forgotten hold must not
+-- walk the player off while Python plans. Callers end holds with RUN 0 n.
+local STICKY_FRAMES = 12
+local sticky_mask = 0
+local sticky_left = 0
 
 local function tohex(s)
   return (s:gsub(".", function(c) return string.format("%02x", c:byte()) end))
@@ -63,6 +74,7 @@ local function queue_done_frame()
 end
 
 local function enqueue(mask, hold, gap)
+  sticky_left = 0             -- new input takes over from any carried-over hold
   table.insert(queue, { mask = mask, hold = hold, gap = gap })
   return queue_done_frame()
 end
@@ -70,7 +82,12 @@ end
 local function advance_input()
   if cur == nil then
     if #queue == 0 then
-      mask_now = 0
+      if sticky_left > 0 then
+        sticky_left = sticky_left - 1
+        mask_now = sticky_mask
+      else
+        mask_now = 0
+      end
       return
     end
     cur = table.remove(queue, 1)
@@ -84,7 +101,8 @@ local function advance_input()
     if left <= 0 then
       phase = "gap"
       left = cur.gap
-      if left <= 0 then cur = nil; phase = "idle"; mask_now = 0 end
+      -- No gap: this frame is still the hold's last one, keep its mask.
+      if left <= 0 then cur = nil; phase = "idle" end
     end
   elseif phase == "gap" then
     mask_now = 0
@@ -162,6 +180,7 @@ local function handle(line)
     local m, f = rest:match("^(%d+)%s+(%d+)$")
     if not m then reply("ERR bad_args"); return end
     enqueue(tonumber(m), math.max(1, tonumber(f)), 0)
+    run_mask = tonumber(m)
     run_pending = true          -- replied to from the frame callback
 
   elseif cmd == "CAPS" then
@@ -232,7 +251,7 @@ local function on_accept()
   client = sock
   rxbuf = ""
   queue = {}; cur = nil; phase = "idle"; left = 0; mask_now = 0
-  run_pending = false
+  run_pending = false; sticky_left = 0
   client:add("received", on_client_data)
   client:add("error", function() client = nil end)
   console:log("poke_auto: agent connected")
@@ -246,6 +265,7 @@ callbacks:add("keysRead", function()
     last_frame = f
     if run_pending and cur == nil and #queue == 0 then
       run_pending = false
+      sticky_mask, sticky_left = run_mask, STICKY_FRAMES
       reply("OK " .. tostring(f))
     end
     advance_input()

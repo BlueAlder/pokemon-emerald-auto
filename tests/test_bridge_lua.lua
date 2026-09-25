@@ -110,5 +110,45 @@ local combo = {}
 for _ = 1, 6 do frame = frame + 1; tick(); combo[#combo+1] = keys_history[#keys_history] end
 check("queued presses run in order", table.concat(combo, ","), "32,32,0,8,8,0")
 
+print("\n-- RUN: frame-synchronous holds --")
+local function frames(n)
+  local out = {}
+  for _ = 1, n do frame = frame + 1; tick(); out[#out+1] = keys_history[#keys_history] end
+  return table.concat(out, ",")
+end
+-- Every frame of a RUN is held, including the last (no release gap).
+local before = #sent
+B.handle("RUN 32 3")
+check("RUN replies only after its frames", #sent, before)
+check("RUN holds all 3 frames", frames(3), "32,32,32")
+frames(1)
+check("RUN replied once done", last():match("^OK %d+$") ~= nil, true)
+
+-- A one-frame RUN presses for that frame (it used to press nothing).
+B.handle("RUN 64 1")
+check("RUN of 1 frame is held", frames(1), "64")
+
+-- Back-to-back RUNs with Python reads in between: the hold carries over the
+-- gap instead of flickering (Emerald turns in place on a flickering direction).
+B.handle("RUN 16 1")
+check("hold carries over the gap between RUNs", frames(4), "16,16,16,16")
+B.handle("RUN 16 1")
+check("next RUN continues the hold", frames(1), "16")
+
+-- RUN 0 releases at once.
+B.handle("RUN 0 2")
+check("RUN 0 releases", frames(3), "0,0,0")
+
+-- A forgotten hold expires after 12 frames.
+B.handle("RUN 128 1")
+local tail = frames(15)
+check("carried-over hold expires", tail, "128,128,128,128,128,128,128,128,128,128,128,128,128,0,0")
+
+-- Any other input command replaces a carried-over hold.
+B.handle("RUN 128 1")
+frames(2)
+B.handle("PRESS 1 2 1")
+check("PRESS takes over from a carried hold", frames(4), "1,1,0,0")
+
 print(("\n%d check(s) failed"):format(fails))
 os.exit(fails == 0 and 0 or 1)
