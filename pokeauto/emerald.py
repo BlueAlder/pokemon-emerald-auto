@@ -10,7 +10,7 @@ Assumes the default player (Brendan); rival house maps are chosen by gender.
 from __future__ import annotations
 
 from .route import (Milestone, all_of, any_of, badges, call, flag, goto, has_item, interact,
-                    party_size, prefer, reachable, answer, trigger, talk, talk_s, trainer_beaten, unless,
+                    prefer, reachable, answer, trigger, talk, talk_s, trainer_beaten, unless,
                     var_ge)
 
 
@@ -109,6 +109,10 @@ def e4_room(target: str):
 SOOTOPOLIS = "MAP_SOOTOPOLIS_CITY"
 LEAGUE = "MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F"
 VICTORY_ROAD = ["MAP_VICTORY_ROAD_1F", "MAP_VICTORY_ROAD_B1F"]
+
+
+def has_species(*names: str):
+    return lambda a: any(p.species_name in names for p in a.game.party())
 # Who gets trained for doubles and the Elite Four, best first (by evolution
 # line); anyone else only by level. Castform and the Fly carrier are passengers.
 TEAM_PREF = ("SWAMPERT", "MARSHTOMP", "MUDKIP", "AZUMARILL", "MARILL", "HARIYAMA",
@@ -366,10 +370,14 @@ ROUTE: list[Milestone] = [
               min_level=60, important=True, hint="beat Wally at the entrance of Victory Road"),
     # Five fights with no Pokemon Center: two Pokemon run out of PP. Recruit
     # two more from Victory Road (Hariyama catches easily) and train them.
-    Milestone("e4_team", party_size(5),
+    # (By species, not party size: the Fly carrier takes a slot too.)
+    Milestone("e4_team", all_of(has_species("HARIYAMA", "MAKUHITA"),
+                                has_species("GOLBAT", "CROBAT", "ZUBAT")),
               [call("shop", {"ITEM_ULTRA_BALL": 15}),
-               call("catch", "SPECIES_HARIYAMA", VICTORY_ROAD),
-               call("catch", "SPECIES_GOLBAT", VICTORY_ROAD)],
+               unless(has_species("HARIYAMA", "MAKUHITA"),
+                      call("catch", "SPECIES_HARIYAMA", VICTORY_ROAD)),
+               unless(has_species("GOLBAT", "CROBAT", "ZUBAT"),
+                      call("catch", "SPECIES_GOLBAT", VICTORY_ROAD))],
               hint="catch a Hariyama and a Golbat in Victory Road for the Elite Four"),
     # More PP for five fights in a row: Water Pulse (20 PP) over Take Down,
     # Facade (Huge Power) over Hydro Pump's 5 PP.

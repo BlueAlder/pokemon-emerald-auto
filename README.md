@@ -44,7 +44,7 @@ models the game instead:
   * the Mauville/Mossdeep switch gyms (a simulation of `rotating_tile_puzzle.c`)
   * the Sootopolis ice floors (Hamiltonian path per room)
   * the Sky Pillar's intentional drop through a cracked floor
-* **The route is data.** `pokeauto/emerald.py` is 78 milestones, each a
+* **The route is data.** `pokeauto/emerald.py` is 80 milestones, each a
   done-predicate over monotonic game facts (flags, vars, badges) plus a few
   actions (`goto`, `talk`, `trigger`, `call`). The runner resumes after the
   latest finished milestone and checkpoints a savestate after each one.

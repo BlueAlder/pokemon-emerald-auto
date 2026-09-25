@@ -785,8 +785,15 @@ class Controller:
                     continue
                 near = self.planner.plan(s, adjacent(s.map, rx, ry), caps, live=live,
                                          live_objects=objs)
-                if near is None:
-                    done.add(key)              # out of reach for now
+                if near is None or any(st.expect.map != s.map for st in near):
+                    # Out of reach from this side. Never detour through another
+                    # floor to get there: coming back respawns every rock.
+                    done.add(key)
+                    continue
+                tries = self.__dict__.setdefault("_smash_tries", {})
+                tries[key] = tries.get(key, 0) + 1
+                if tries[key] > 2:
+                    done.add(key)              # smashing it keeps failing: route around
                     continue
                 log.info("BOULDERS smashing rock at (%d,%d) on %s first", rx, ry, s.map)
                 if near and not self._run_steps(near, s):
