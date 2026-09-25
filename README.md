@@ -124,7 +124,7 @@ python3.12 -m venv .venv && ./.venv/bin/pip install -r requirements.txt
 
 ## Status
 
-**The player has beaten the game twice**, both times with no model calls:
+**The player has beaten the game three times**, all with no model calls:
 
 1. The development run reached the Hall of Fame at about 21:30 in-game time.
 2. A second playthrough started from a brand-new game and reached the Hall of
@@ -133,6 +133,14 @@ python3.12 -m venv .venv && ./.venv/bin/pip install -r requirements.txt
    was one game, but it was restarted four times from its own checkpoints
    after fixes (goods_stolen, reach_mossdeep, teach_dive, enter_league). It
    took about 45 minutes of wall time at full speed, most of it grinding.
+3. After the speed work (Fly, planner caching, battle and grinding fixes) a
+   new game reached Victory Road in 13.6 minutes of wall time. From there it
+   reached the Hall of Fame in another 19.7 minutes, at 23:44 in-game time,
+   and beat the Elite Four on the first attempt. That is 33 minutes in
+   total; Mossdeep to the Hall of Fame took 26 minutes, down from 43. The
+   final team was Swampert L74, Azumarill L66, Hariyama L66 and Crobat L66,
+   with Castform and a Wingull carrying Fly. Grinding is still the largest
+   cost: Hariyama needs about 640 wild battles on Victory Road.
 
 The runner handles setbacks by itself. It retries failed attempts, re-takes
 Mr. Briney's boat after whiting out on an island, re-trains between Elite
