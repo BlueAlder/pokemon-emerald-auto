@@ -160,9 +160,12 @@ class Battle:
                 if cb == "BattleMainCB2" and (self.game.text_waiting() or idle > 30):
                     self.ctl.press("B", hold=2, release=4)
                     idle = 0
-                elif cb == "BattleMainCB2" and self.game.text_printing():
-                    # Holding B while a message prints skips the per-letter
-                    # delay (RenderText); released before any box can open.
+                elif cb == "BattleMainCB2" and self.game.text_printing() and \
+                        self.game.battle_controller(0).startswith("CompleteOnInactiveTextPrinter"):
+                    # Holding B while a battle message prints skips the
+                    # per-letter delay (RenderText). Only then: the move menu
+                    # prints its TYPE/PP box too, and B there means "back"
+                    # (every move looked refused and a fight looped).
                     self.emu.run(keymask("B"), 3)
                     idle += 1
                 elif cb != "BattleMainCB2" and self.game.mode().kind in ("overworld", "script"):
