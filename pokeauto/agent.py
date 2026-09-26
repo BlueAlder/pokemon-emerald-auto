@@ -617,7 +617,8 @@ class Agent:
         return const_names()["MOVE_"].get(mid, "")
 
     # -- milestone hooks ----------------------------------------------------------------
-    LOSS_BOOST = 4             # levels added to a milestone's targets per loss
+    LOSS_BOOST = 4             # levels added to a boss milestone's targets per loss
+    LOSS_BOOST_MAX = 12
 
     def before_milestone(self, m) -> None:
         if not hasattr(self, "_level_boost"):
@@ -637,13 +638,18 @@ class Agent:
         # Targets are set low enough to win without overkill grinding; each
         # trainer battle lost since the last milestone start raises the
         # targets of the milestone we are (re)starting.
+        # Only boss milestones are boosted: a rival lost to on the way (the
+        # Route 110 Grovyle beats a Marshtomp that only has Tackle) must not
+        # inflate whatever milestone happens to start next. Capped.
         losses = self.battle.trainer_losses
         if losses > self._losses_seen:
-            self._level_boost[m.name] = self._level_boost.get(m.name, 0) + \
-                self.LOSS_BOOST * (losses - self._losses_seen)
+            if m.important:
+                self._level_boost[m.name] = min(
+                    self.LOSS_BOOST_MAX, self._level_boost.get(m.name, 0) +
+                    self.LOSS_BOOST * (losses - self._losses_seen))
+                log.info("LOST a trainer battle: %s targets now +%d levels",
+                         m.name, self._level_boost[m.name])
             self._losses_seen = losses
-            log.info("LOST a trainer battle: %s targets now +%d levels",
-                     m.name, self._level_boost[m.name])
         boost = self._level_boost.get(m.name, 0)
         self._grind_blocked = {}       # reachability changes with the story
         trained = False
