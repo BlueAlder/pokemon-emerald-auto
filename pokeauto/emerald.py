@@ -113,7 +113,11 @@ VICTORY_ROAD = ["MAP_VICTORY_ROAD_1F", "MAP_VICTORY_ROAD_B1F"]
 
 # (TM, move, who it is for, the move it replaces). Skipped when that Pokemon
 # is not on the team (with Rayquaza, Hariyama and Golbat never join).
-E4_TMS_FULL = [("ITEM_TM03", "MOVE_WATER_PULSE", ("SWAMPERT",), "MOVE_TAKE_DOWN"),
+# Rayquaza as the runners teach it: Aerial Ace over ExtremeSpeed (5 PP), and
+# Waterfall over Rest; Fly and Outrage stay.
+E4_TMS_FULL = [("ITEM_TM40", "MOVE_AERIAL_ACE", ("RAYQUAZA",), "MOVE_EXTREME_SPEED"),
+               ("ITEM_HM07", "MOVE_WATERFALL", ("RAYQUAZA",), "MOVE_REST"),
+               ("ITEM_TM03", "MOVE_WATER_PULSE", ("SWAMPERT",), "MOVE_TAKE_DOWN"),
                ("ITEM_TM42", "MOVE_FACADE", ("AZUMARILL",), "MOVE_HYDRO_PUMP"),
                ("ITEM_TM39", "MOVE_ROCK_TOMB", ("HARIYAMA",), "MOVE_WHIRLWIND"),
                ("ITEM_TM40", "MOVE_AERIAL_ACE", ("GOLBAT", "CROBAT"), None)]
@@ -451,7 +455,7 @@ ROUTE: list[Milestone] = [
     # More PP for five fights in a row: Water Pulse (20 PP) over Take Down,
     # Facade (Huge Power) over Hydro Pump's 5 PP.
     Milestone("e4_moves", lambda a: a.game.flag("FLAG_DEFEATED_WALLY_VICTORY_ROAD") and all(
-        not a.game.has_item(tm) or any(p.knows(mv) for p in a.game.party())
+        not a.game.has_item(tm) or any(p.knows(mv) for p in a.game.party() if p.species_name in who)
         or not any(p.species_name in who for p in a.game.party())
         for tm, mv, who in E4_TMS),
               [unless(lambda a, who=who, tm=tm: not a.game.has_item(tm)

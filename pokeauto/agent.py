@@ -721,7 +721,11 @@ class Agent:
         idx = tmhm_index(item)
         party = self.game.party()
         move_name = self._tmhm_move(item)
-        if any(p.knows(move_name) for p in party):
+        # Done if the intended Pokemon already knows it (HMs can go to more
+        # than one: Azumarill's Waterfall must not stop Rayquaza's).
+        knowers = [p for p in party if p.knows(move_name)]
+        if any(any(s in p.species_name for s in species_pref) for p in knowers) \
+                if species_pref else knowers:
             return
         able = [p for p in party if not p.is_egg and self.data.can_learn_tmhm(p.species, idx)]
         if species_pref:

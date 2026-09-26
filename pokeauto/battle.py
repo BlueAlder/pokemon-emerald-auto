@@ -578,6 +578,20 @@ class Battle:
                              for mv in mon.moves if mv.pp), default=0.0)
                 if dealt / max(1, fbm.hp) >= max(0.3, 3 * best.score):
                     return Choice("switch", sw, why=f"{best.why} is feeble vs {fbm.species_name}")
+        # In a boss fight, a teammate who hits twice as hard is worth the
+        # switch: Swampert's Surf chipped 52 off a Gyarados that Wallace kept
+        # healing, while Rayquaza's Outrage did 133.
+        if not wild and self.policy.important and best.score < 0.5 and not self.is_double() \
+                and not self._trapped():
+            sw = self.best_switch(exclude_active=True, against=foe)
+            if sw is not None and self._switch_value(sw, foe) > 0.35:
+                mon = next(m for m in self.game.party() if m.slot == sw)
+                them = combatant_from_party(self.data, mon)
+                dealt = max((estimate_damage(self.data, them, foe, self.data.move(mv.id))
+                             for mv in mon.moves if mv.pp), default=0.0)
+                if dealt / max(1, fbm.hp) >= max(0.45, 2.0 * best.score):
+                    return Choice("switch", sw, why=f"{mon.species_name} hits "
+                                  f"{fbm.species_name} twice as hard")
         return best
 
     def first_turn(self, battler: int) -> bool:
@@ -604,8 +618,11 @@ class Battle:
                     score *= 0.1
                 if eff in ("EFFECT_RECOIL", "EFFECT_DOUBLE_EDGE"):
                     score *= 0.9
+                # Two-turn moves (Fly, Dig, Dive included) hand the foe a free
+                # turn: Rayquaza's Fly let Wallace's Milotic Ice Beam it.
                 if eff in ("EFFECT_SOLAR_BEAM", "EFFECT_RAZOR_WIND", "EFFECT_SKY_ATTACK",
-                           "EFFECT_SKULL_BASH", "EFFECT_FOCUS_PUNCH", "EFFECT_RECHARGE"):
+                           "EFFECT_SKULL_BASH", "EFFECT_FOCUS_PUNCH", "EFFECT_RECHARGE",
+                           "EFFECT_SEMI_INVULNERABLE"):
                     score *= 0.55
                 if eff in ("EFFECT_DREAM_EATER",) and not fbm.status1 & 7:
                     score = 0
