@@ -104,6 +104,7 @@ class Snapshot:
     team_target: int = 0
     whiteouts: int = 0             # battles lost (the whole party fainted)
     faints: int = 0                # our Pokemon knocked out
+    report: object = None          # runstats.Report once the run has ended
 
 
 def grind_view(agent, party) -> GrindView | None:
@@ -183,6 +184,7 @@ class RunControl:
         self.frame = 0                     # emulator frame at the latest hook call
         self.ok: bool | None = None
         self.summary = ""
+        self.report = None                 # runstats.Report, set by finish()
         self.done_event = threading.Event()   # worker thread has finished
         self._lock = threading.Lock()
         self._running = threading.Event()
@@ -256,8 +258,8 @@ class RunControl:
         self._state = state
         self.publish(force=True)
 
-    def finish(self, state: str, ok: bool, summary: str = "") -> None:
-        self.ok, self.summary = ok, summary
+    def finish(self, state: str, ok: bool, summary: str = "", report=None) -> None:
+        self.ok, self.summary, self.report = ok, summary, report
         self._state = state
         self.publish(force=True)
         self.done_event.set()
@@ -310,7 +312,7 @@ class RunControl:
         with self._lock:
             prev, activity = self._snap, self._activity
         kw: dict = {"state": self._state, "frame": self.frame, "activity": activity,
-                    "message": self._message,
+                    "message": self._message, "report": self.report,
                     "t_end": now if self._state in ENDED else None}
         r = self._runner
         if r is not None:

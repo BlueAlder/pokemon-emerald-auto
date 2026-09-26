@@ -55,6 +55,7 @@ caffeinate -dimsu ./.venv/bin/python scripts/play.py
 | `--no-tui` | off | Print plain log lines instead of starting the TUI. This is automatic when stdout or stdin is not a terminal. |
 | `--start-paused` | off | TUI only: start paused, so you can look around first. Press space to start. |
 | `--new-game` | off | Start a new game even if the cartridge holds a save: soft reset (A+B+SELECT+START), choose NEW GAME at the title menu, then play from the truck. Without it, mGBA continues whatever game its `.sav` holds. Can't be combined with `--resume`. |
+| `--compare RUN` | `auto` | Which earlier run the [run report](#run-reports) compares with: `auto` (the previous run from the same start, plus the fastest one to the Hall of Fame), `last`, `best`, `none`, or a run id (a unique prefix is enough). |
 
 Milestone names are the first argument of each `Milestone(...)` in
 `pokeauto/emerald.py`, for example `set_clock`, `starter`, `badge_stone`,
@@ -81,8 +82,9 @@ Examples:
 | `0` | The route finished (the Hall of Fame, or the `--stop-after` milestone). |
 | `1` | The run failed (a milestone could not be completed), crashed, or was stopped with `q` / Ctrl+C. |
 
-The last log line is always `finished=<True|False> in <N>s wall, game time <H:MM>`.
-The TUI prints it again after it closes.
+The last log lines are always `finished=<True|False> in <N>s wall, game time <H:MM>`
+and `REPORT runs/history/<id>.md` (see [Run reports](#run-reports)). The TUI
+prints the summary and the report again after it closes.
 
 ## The TUI
 
@@ -243,6 +245,7 @@ milestone continues with the next one.
 | `runs/live.png` | The current frame, refreshed every `--live` seconds (headless). |
 | `runs/final.png` | The last frame of the run. |
 | `runs/debug/` | Snapshots of anything unexpected. |
+| `runs/history/<id>.{json,md,log}` | One [run report](#run-reports) per run: the record, the readable report, and the run's own log lines. |
 | `runs/play.lock` | Holds the pid of the running player; a second run in the same checkout refuses to start. |
 
 ## Plain output (`--no-tui`)
@@ -259,6 +262,70 @@ tail -f runs/play.log
 
 Ctrl+C stops a plain run the same way `q` does in the TUI. There is no pause
 in this mode.
+
+## Run reports
+
+Every run leaves a report when it ends, whether it finished, failed, crashed or
+was stopped with `q` / Ctrl+C. It is about time: the in-game time to each
+badge, the League and each Elite Four member, so runs can be compared as the
+tactics change. In-game time is the metric, and lower is better.
+
+| File | What |
+| --- | --- |
+| `runs/history/<id>.json` | The record, for scripts. |
+| `runs/history/<id>.md` | The report: summary, major milestones, the comparison, every milestone. Links to the log and to the reference run's report and log. |
+| `runs/history/<id>.log` | Just this run's log lines (`runs/play.log` has every run). |
+
+`<id>` is the start time and where the run started, e.g.
+`20260926-133012-new` (a new game) or `20260926-134408-badge_heat` (`--resume badge_heat`).
+
+A record holds: start and end time, outcome (`finished`, `failed`, `stopped`,
+`crashed`) and the milestone it failed at, backend, start point, the command
+line, the commit hash (and whether the checkout had uncommitted changes, shown
+as `dirty` or `+`), wall seconds, the game clock at the start and end,
+deaths (whiteouts: battles lost; faints: our Pokémon knocked out; trainer
+losses), battles and steps, and for every milestone finished in the run: wall
+seconds since the start, the game clock when it was done (to the second), and
+the attempts it took. Badges, `enter_league`, the Elite Four and `champion`
+(the Hall of Fame) are the major milestones and get names like
+"Stone Badge (Roxanne)" or "Elite Four: Sidney".
+
+When the run ends, the TUI shows the summary in a *Run report* panel above
+the goal and party (`q` still exits), and the banner names the report file.
+With `--no-tui` the summary is printed at the end.
+
+### Comparing runs
+
+Each report compares with earlier runs **from the same start** (the same
+first milestone, and both a new game or both not):
+
+* the previous such run that finished at least one milestone, and
+* the one with the least in-game time to the Hall of Fame, when that is a different run.
+
+`--compare` changes this (`last`, `best`, `none` or a run id). For each major
+milestone the report shows the in-game and wall time of both runs and the
+difference (`-0:03:12` faster, `+0:01:00` slower), then the totals: in-game
+time, wall time, whiteouts, faints, trainer losses, battles. When both runs
+started a new game the game clock itself is compared; otherwise (`--resume`)
+the game time elapsed since each run began. The report says which. Totals are
+only judged when both runs got to the same milestone.
+
+### `scripts/runstats.py`
+
+```bash
+./.venv/bin/python scripts/runstats.py                          # the recent runs
+./.venv/bin/python scripts/runstats.py last                     # the newest run, vs its references
+./.venv/bin/python scripts/runstats.py 20260926-1344 --vs best  # vs the fastest run from the same start
+./.venv/bin/python scripts/runstats.py last --vs 20260926-133012-new --all   # every milestone
+./.venv/bin/python scripts/runstats.py --import runs/validation/full_new_game.txt
+```
+
+A run is named by its id, a unique prefix of it, or `last`. `--vs` takes an
+id, `best` or `last`. `--import` builds records from logs written before the
+reports existed (a validation log, or `runs/play.log`, which it splits into
+runs at each `finished=` line). Imported runs have in-game times to the minute,
+count only trainer losses (whiteouts and faints are not in the log), and take
+their date from the file's modification time.
 
 ## Troubleshooting
 

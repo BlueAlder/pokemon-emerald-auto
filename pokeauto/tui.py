@@ -261,18 +261,19 @@ def render_party(s: Snapshot) -> Table:
 
 
 def render_banner(s: Snapshot, stopping: bool) -> Text | None:
+    report = f" Report: {s.report.path}." if s.report is not None else ""
     if stopping and s.state not in ENDED:
         return Text(" ■ Stopping the run… ", style=f"bold black on {ORANGE}")
     if s.state == "paused":
         return Text(" ⏸  PAUSED: the emulator is frozen. Press space to resume. ",
                     style=f"bold black on {YELLOW}")
     if s.state == "finished":
-        return Text(" ✔ RUN FINISHED. Press q to exit. ", style=f"bold black on {LIME}")
+        return Text(f" ✔ RUN FINISHED.{report} Press q to exit. ", style=f"bold black on {LIME}")
     if s.state == "failed":
-        return Text(" ✖ RUN FAILED: see the log above (and runs/play.log). Press q to exit. ",
-                    style=f"bold white on {DARK_RED}")
+        return Text(f" ✖ RUN FAILED: see the log above (and runs/play.log).{report} "
+                    "Press q to exit. ", style=f"bold white on {DARK_RED}")
     if s.state == "stopped":
-        return Text(" ■ RUN STOPPED. Press q to exit. ", style=f"bold black on {ORANGE}")
+        return Text(f" ■ RUN STOPPED.{report} Press q to exit. ", style=f"bold black on {ORANGE}")
     return None
 
 
@@ -309,6 +310,9 @@ class PlayApp(App):
            border-subtitle-color: $text-muted; scrollbar-size-vertical: 1; }
     #banner { height: auto; width: 100%; display: none; }
     #banner.show { display: block; }
+    #report { height: auto; max-height: 50%; display: none; overflow-y: auto; padding: 0 1;
+              border: round #ffd700; border-title-color: #ffd700; }
+    #report.show { display: block; }
     #overview { height: auto; max-height: 60%; overflow-y: auto; }
     #left { width: 1fr; min-width: 30; height: auto; }
     #goal { border: round #d787ff; border-title-color: #d787ff; padding: 0 1; height: auto; }
@@ -342,10 +346,12 @@ class PlayApp(App):
         self._stop_at = 0.0
         self._quit_armed = 0.0
         self._rewrap_timer = None
+        self._report = None
 
     def compose(self) -> ComposeResult:
         yield LogView(id="log", max_lines=5000, wrap=True, markup=False, highlight=False)
         yield Static(id="banner")
+        yield Static(id="report")
         with Horizontal(id="overview"):
             with Vertical(id="left"):
                 yield Static(id="goal")
@@ -359,6 +365,7 @@ class PlayApp(App):
         self.query_one("#goal").border_title = "Current goal"
         self.query_one("#run").border_title = "Run"
         self.query_one("#party").border_title = "Party"
+        self.query_one("#report").border_title = "Run report"
         log.focus()
         self._update_narrow()
         self.set_interval(0.1, self.poll_log)
@@ -409,6 +416,12 @@ class PlayApp(App):
         b.set_class(banner is not None, "show")
         if banner is not None:
             b.update(banner)
+        if s.report is not None and s.report is not self._report:
+            self._report = s.report
+            r = self.query_one("#report", Static)
+            r.update(s.report.renderable())
+            r.border_subtitle = s.report.path
+            r.add_class("show")
         self._log_subtitle()
         if self.stopping and (self.control.done_event.is_set() or time.time() - self._stop_at > 15):
             self.poll_log()

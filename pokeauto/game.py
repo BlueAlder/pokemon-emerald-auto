@@ -460,6 +460,14 @@ class Game:
         raw = self.emu.read(self.sb2() + SB2_PLAYTIME, 3)
         return f"{struct.unpack_from('<H', raw)[0]}:{raw[2]:02d}"
 
+    def play_seconds(self) -> int | None:
+        """Play time in whole seconds (playTimeHours/Minutes/Seconds); None if not a clock."""
+        raw = self.emu.read(self.sb2() + SB2_PLAYTIME, 4)
+        hours = struct.unpack_from('<H', raw)[0]
+        if hours > 999 or raw[2] > 59 or raw[3] > 59:       # save blocks not loaded yet
+            return None
+        return hours * 3600 + raw[2] * 60 + raw[3]
+
     def options(self) -> dict:
         v = self.emu.u16(self.sb2() + SB2_OPTIONS)
         return {"text_speed": v & 7, "battle_scene_off": bool(v >> 9 & 1),

@@ -119,6 +119,10 @@ shown below. `space` pauses and resumes the game at any moment, `q` quits,
   frame limit. `runs/live.png` is refreshed every few seconds so you can watch.
 * Checkpoints go to `runs/checkpoints/<milestone>.state`, the log to
   `runs/play.log`, and snapshots of anything unexpected to `runs/debug/`.
+* Every run writes a report to `runs/history/` (in-game and wall time to each
+  badge and Elite Four member, deaths, compared with an earlier run);
+  `scripts/runstats.py` lists and compares them. See
+  [Run reports](docs/CLI.md#run-reports).
 * **mGBA app backend:** load the ROM in mGBA, then
   *Tools ▸ Scripting… ▸ Load script* `lua/bridge.lua` (listens on 127.0.0.1:8888),
   and run with `--backend mgba`. The bridge runs the game in lockstep with
@@ -147,10 +151,12 @@ shown below. `space` pauses and resumes the game at any moment, `q` quits,
 | `scripts/play.py` | CLI (see [docs/CLI.md](docs/CLI.md)) |
 | `pokeauto/runstate.py` | Run control between the game thread and the UI: status snapshots, pause, stop |
 | `pokeauto/tui.py` | The Textual TUI: log, current goal, run stats, party |
+| `pokeauto/runstats.py`, `scripts/runstats.py` | Run reports in `runs/history/`: records, comparisons, the CLI |
 | `scripts/gen_data.py` | Regenerates `data/*.json` from a pokeemerald checkout |
 | `lua/bridge.lua` | mGBA-side TCP bridge |
 | `tests/test_offline.py` | Solver checks against the ROM (`python tests/test_offline.py`) |
 | `tests/test_tui.py` | TUI and pause/quit checks, plus a short headless run (`python tests/test_tui.py`) |
+| `tests/test_runstats.py` | Run reports: records, comparisons, markdown, log import (`python tests/test_runstats.py`) |
 
 ## Status
 

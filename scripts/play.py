@@ -49,10 +49,21 @@ def run_game(args, rom: Path, runs: Path, control, hook: bool) -> None:
     from pokeauto.emu import BridgeError, HeadlessEmu, MgbaEmu
     from pokeauto.route import RouteRunner
     from pokeauto.runstate import StopRun
+    from pokeauto.runstats import NEW_GAME, RunRecorder
 
     t0 = time.time()
-    ok, state, emu, agent = False, "failed", None, None
+    ok, state, outcome, error = False, "failed", "failed", None
+    emu = agent = runner = recorder = None
+    start = args.resume or (NEW_GAME if args.new_game or args.backend == "headless" else "mGBA save")
     try:
+        try:
+            recorder = RunRecorder(Path(getattr(args, "history", None) or runs / "history"),
+                                   backend=args.backend, start_point=start,
+                                   new_game=start == NEW_GAME, stop_after=args.stop_after,
+                                   compare=getattr(args, "compare", "auto"),
+                                   command=getattr(args, "command", None), root=ROOT)
+        except Exception:
+            logging.error("no run report (could not start the record):\n%s", traceback.format_exc())
         if args.backend == "headless":
             emu = HeadlessEmu(rom)
             if args.resume:
@@ -79,6 +90,8 @@ def run_game(args, rom: Path, runs: Path, control, hook: bool) -> None:
 
         if args.new_game:
             agent.new_game()
+        if recorder:
+            recorder.begin(agent)
         runner = RouteRunner(agent, ROUTE, checkpoint=checkpoint)
         control.attach(agent, runner)
         control.set_state("running")
@@ -87,13 +100,15 @@ def run_game(args, rom: Path, runs: Path, control, hook: bool) -> None:
                             "the cartridge save mGBA loads is a finished game. "
                             "Start over with --new-game.", agent.game.play_time())
         ok = runner.run(stop_after=args.stop_after)
-        state = "finished" if ok else "failed"
+        state = outcome = "finished" if ok else "failed"
     except (StopRun, KeyboardInterrupt):
-        state = "stopped"
+        state = outcome = "stopped"
         logging.info("STOPPED by the user")
     except BridgeError as exc:
+        outcome, error = "crashed", f"mGBA: {exc}"
         logging.error("mGBA: %s", exc)
-    except Exception:
+    except Exception as exc:
+        outcome, error = "crashed", f"{type(exc).__name__}: {exc}"
         logging.error("run crashed:\n%s", traceback.format_exc())
     finally:
         summary = ""
@@ -105,6 +120,13 @@ def run_game(args, rom: Path, runs: Path, control, hook: bool) -> None:
                 emu.screenshot(str(runs / "final.png"))
         except Exception:
             logging.error("could not finish cleanly:\n%s", traceback.format_exc())
+        report = None
+        if recorder:
+            try:
+                report = recorder.finish(outcome, agent, runner, error)
+            except Exception:
+                logging.error("could not write the run report:\n%s", traceback.format_exc())
+                recorder.close()
         try:
             if emu:
                 # mGBA runs in lockstep while we are connected (the game only
@@ -113,7 +135,7 @@ def run_game(args, rom: Path, runs: Path, control, hook: bool) -> None:
                 emu.close()
         except Exception:
             pass
-        control.finish(state, ok, summary)
+        control.finish(state, ok, summary, report)
 
 
 def main() -> int:
@@ -132,7 +154,12 @@ def main() -> int:
     p.add_argument("--new-game", action="store_true",
                    help="start a new game even if the cartridge has a save (mGBA loads the .sav "
                         "next to the ROM; beating the Elite Four saves). Not with --resume")
+    p.add_argument("--compare", default="auto", metavar="RUN",
+                   help="run report reference: auto (previous run from the same start and the "
+                        "fastest to the Hall of Fame), last, best, none, or a run id "
+                        "(see scripts/runstats.py)")
     args = p.parse_args()
+    args.command = " ".join(["scripts/play.py", *sys.argv[1:]])
     use_tui = not args.no_tui and sys.stdout.isatty() and sys.stdin.isatty()
     if args.new_game and args.resume:
         sys.exit("--new-game and --resume contradict each other")
@@ -153,6 +180,15 @@ def main() -> int:
     if args.resume and args.backend == "headless" \
             and not (runs / "checkpoints" / f"{args.resume}.state").exists():
         sys.exit(f"no checkpoint runs/checkpoints/{args.resume}.state")
+    if args.compare not in ("auto", "last", "best", "none"):
+        from pokeauto.runstats import find, load_runs
+        try:
+            ref = find(load_runs(runs / "history"), args.compare)
+        except KeyError as exc:
+            sys.exit(str(exc.args[0]))
+        if ref is None:
+            sys.exit(f"--compare: no run {args.compare!r} in runs/history (scripts/runstats.py lists them)")
+        args.compare = ref["id"]
 
     from pokeauto.runstate import QueueLogHandler, RunControl
 
@@ -169,6 +205,7 @@ def main() -> int:
 
     if not use_tui:
         run_game(args, rom, runs, control, hook=False)
+        print_report(control)
         return 0 if control.ok else 1
 
     from pokeauto.tui import PlayApp
@@ -184,7 +221,14 @@ def main() -> int:
         control.stop()                 # no-op if the run already ended
         worker.join(timeout=30)
     print(control.summary or "the run did not stop in time; see runs/play.log")
+    print_report(control)
     return 0 if control.ok else 1
+
+
+def print_report(control) -> None:
+    if control.report is not None:
+        from rich.console import Console
+        Console().print(control.report.renderable())
 
 
 if __name__ == "__main__":

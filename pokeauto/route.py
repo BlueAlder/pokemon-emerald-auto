@@ -201,6 +201,12 @@ class RouteRunner:
         self.milestones = milestones
         self.checkpoint = checkpoint      # callable(name) -> None (save a state)
         self.history: list[tuple[str, float]] = []
+        # Per finished milestone, for run reports: name, wall (s since run()),
+        # game (play time in s, None if unreadable), attempts (all tries, all visits).
+        self.records: list[dict] = []
+        self.first: str | None = None     # the first milestone this run started
+        self._tries: dict[str, int] = {}
+        self._open: Milestone | None = None   # started, not yet recorded as done
         # Read-only progress for status displays (never call current() from a UI).
         self.active: Milestone | None = None
         self.active_index = -1
@@ -230,6 +236,9 @@ class RouteRunner:
         self.state = "running"
         while True:
             m = self.current()
+            if self._open is not None and self._open is not m and self._open.done(a):
+                # Done without its own "done" (the champion's credits end the route).
+                self._record(self._open, t0)
             if m is None:
                 self.state = "finished"
                 log.info("ROUTE complete")
@@ -243,9 +252,12 @@ class RouteRunner:
                 log.info("ROUTE time budget exhausted at %s", m.name)
                 return False
             log.info("=== MILESTONE %s === %s", m.name, a.status_line())
+            self.first = self.first or m.name
+            self._open = m
             ok = False
             for attempt in range(m.attempts):
                 self.attempt = attempt + 1
+                self._tries[m.name] = self._tries.get(m.name, 0) + 1
                 try:
                     a.before_milestone(m)
                     m.run(a)
@@ -272,12 +284,22 @@ class RouteRunner:
                 self.state = "failed"
                 log.error("ROUTE failed at %s", m.name)
                 return False
-            self.history.append((m.name, time.time() - t0))
+            self._record(m, t0)
             a.ctl.planner.learned_blocks.clear()      # story state changed
-            log.info("--- done %s (%.0fs elapsed, game %s)", m.name, time.time() - t0,
-                     a.game.play_time())
             if self.checkpoint:
                 self.checkpoint(m.name)
             if stop_after and m.name == stop_after:
                 self.state = "finished"
                 return True
+
+    def _record(self, m: Milestone, t0: float) -> None:
+        a, wall = self.agent, time.time() - t0
+        self._open = None
+        self.history.append((m.name, wall))
+        try:
+            game = a.game.play_seconds()
+        except Exception:
+            game = None
+        self.records.append({"name": m.name, "wall": round(wall, 1), "game": game,
+                             "attempts": self._tries.pop(m.name, 1)})
+        log.info("--- done %s (%.0fs elapsed, game %s)", m.name, wall, a.game.play_time())

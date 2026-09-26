@@ -255,6 +255,36 @@ def test_tui_narrow_and_finished():
     asyncio.run(go())
 
 
+def test_tui_report_panel():
+    """When the run ends, the report (milestones, deltas, path) shows above the panes."""
+    from pokeauto import runstats as rs
+    run = rs.finalize(rs.new_record("r2", outcome="stopped", new_game=True, game_start=0,
+                                    first_milestone="leave_truck", milestones=[
+                                        {"name": "badge_stone", "game": 1900, "wall": 45.0,
+                                         "attempts": 2}]))
+    ref = rs.finalize(rs.new_record("r1", outcome="finished", new_game=True, game_start=0,
+                                    first_milestone="leave_truck", milestones=[
+                                        {"name": "badge_stone", "game": 2000, "wall": 50.0,
+                                         "attempts": 1}]))
+    report = rs.Report(run, [rs.compare(run, ref, "previous run")], "runs/history/r2.md")
+    control = RunControl("headless", interval=0.05)
+    control.attach(FakeAgent(), FakeRunner())
+    control.finish("stopped", False, "finished=False", report)
+
+    async def go():
+        app = PlayApp(control, "report")
+        async with app.run_test(size=(140, 40)) as pilot:
+            await pilot.pause(0.5)
+            panel = app.query_one("#report")
+            assert "show" in panel.classes
+            text = "\n".join(panel.render_line(y).text for y in range(panel.size.height))
+            assert "Stone Badge (Roxanne)" in text and "-0:01:40" in text, text
+            assert "runs/history/r2.md" in str(app.query_one("#banner").content)
+            await pilot.press("q")
+            assert await wait_for(pilot, lambda: not app.is_running)
+    asyncio.run(go())
+
+
 def test_end_to_end_headless():
     """A fresh game in a worker thread: pause freezes the core, q stops the run."""
     if not ROM.exists():
@@ -266,8 +296,10 @@ def test_end_to_end_headless():
     (runs / "checkpoints").mkdir(parents=True, exist_ok=True)
     control = RunControl("headless", save_manual=lambda e: "unused")
     h = install_handler(control)
+    import tempfile
+    history = Path(tempfile.mkdtemp())
     args = Namespace(backend="headless", resume=None, live=5.0, stop_after=None, port=8888,
-                     new_game=False)
+                     new_game=False, history=history)
     worker = threading.Thread(target=play.run_game, args=(args, ROM, runs, control, True),
                               name="game", daemon=True)
 
@@ -304,6 +336,10 @@ def test_end_to_end_headless():
         assert control.snapshot().state == "stopped" and control.ok is False
         assert control.summary.startswith("finished=False"), control.summary
         print("ok   quit stopped the worker:", control.summary)
+        rec = control.report.record
+        assert rec["outcome"] == "stopped" and rec["new_game"] and rec["failed_at"]
+        assert (history / f"{rec['id']}.md").exists() and (history / rec["log"]).stat().st_size
+        print("ok   the stopped run left a report:", control.report.path)
     try:
         asyncio.run(go())
     finally:
