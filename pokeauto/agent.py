@@ -40,6 +40,7 @@ class Agent:
         self.battle.move_learner = self.choose_move_to_forget
         self.ctl.health_check = self._health_check
         self.ctl.fly_hook = self._fly
+        self.ctl.bike_hook = self.ride
         self.grinding: dict | None = None      # who/what level while grind_to runs (TUI)
         self.training: dict | None = None      # team target while train() runs (TUI)
         self.started = time.time()
@@ -520,7 +521,7 @@ class Agent:
         raise Stuck(f"item {item_id} is not in the bag")
 
     def use_item(self, item: str, target_slot: int = 0, forget_slot: int | None = None,
-                 teach_ok: bool = True, give: bool = False) -> None:
+                 teach_ok: bool = True, give: bool = False, register: bool = False) -> None:
         """Use an item from the bag on a party member (TMs/HMs, potions, ...).
 
         forget_slot: which known move a TM/HM replaces when the mon already
@@ -534,12 +535,15 @@ class Agent:
                 break
             self.ctl.idle(4)
         self.ctl.idle(20)
+        from .menus import _bag_ready
         pidx = self.BAG_POCKETS.index(pocket)
         for _ in range(8):
+            _bag_ready(self.ctl)       # presses during a pocket's slide are dropped
             cur = self._bag_pos()["pocket"]
             if cur == pidx:
                 break
             self.ctl.press("RIGHT" if cur < pidx else "LEFT", release=16)
+        _bag_ready(self.ctl)
         order = self.game.bag_order(pocket)
         want = order.index(iid)
         for _ in range(80):
@@ -548,8 +552,9 @@ class Agent:
                 break
             self.ctl.press("DOWN" if cur < want else "UP", release=6)
         self.ctl.press("A", release=16)                  # context menu
-        if give:
-            # The Items pocket's context menu is a grid: USE GIVE / TOSS CANCEL.
+        if give or register:
+            # Context menus are grids: USE GIVE / TOSS CANCEL (items) or USE
+            # REGISTER / - CANCEL (key items); the second entry is top right.
             # Its cursor variable is stale until moved (a second GIVE read "1"
             # and pressed A on USE), so walk from the known corner instead.
             self.ctl.idle(8)
@@ -559,6 +564,36 @@ class Agent:
         else:
             self.ctl._menu_select(0)                     # USE
         self._drive_item_flow(target_slot, forget_slot, teach_ok)
+
+    def register_item(self, item: str) -> None:
+        """Register a key item to SELECT (the Mach Bike)."""
+        self.use_item(item, register=True)
+        if self.game.registered_item() != const(item):
+            raise Stuck(f"registering {item} did not take")
+        log.info("REGISTERED %s to SELECT", item)
+
+    def ride(self, on: bool = True) -> bool:
+        """Get on or off the Mach Bike with SELECT. False where cycling is
+        not allowed (the game says so and we stay on foot)."""
+        if self.game.on_bike() == on:
+            return True
+        if on:
+            from .symbols import maps
+            if not maps()[self.game.map_id()].get("allow_cycling") or self.game.surfing():
+                return False
+            if not self.game.has_item("ITEM_MACH_BIKE"):
+                return False
+            if self.game.registered_item() != const("ITEM_MACH_BIKE"):
+                self.register_item("ITEM_MACH_BIKE")
+        self.ctl.press("SELECT", release=20)
+        for _ in range(30):
+            if self.game.on_bike() == on and self.ctl.free():
+                break
+            if self.game.text_printing() or self.game.text_waiting():
+                self.ctl.press("B", release=10)
+            else:
+                self.ctl.idle(4)
+        return self.game.on_bike() == on
 
     def give_item(self, item: str, slot: int) -> None:
         """Have party member `slot` hold `item` from the bag (swapping out
@@ -749,16 +784,17 @@ class Agent:
         boost = self._level_boost.get(m.name, 0)
         self._grind_blocked = {}       # reachability changes with the story
         trained = False
-        if m.min_level:
+        min_level, team_level = m.targets(self)
+        if min_level:
             self._ace_to_front()       # the lead target is the ace's, whoever led last
-            trained |= self.lead().level < m.min_level + boost
+            trained |= self.lead().level < min_level + boost
             self._grind_why = "lead target"
             try:
-                self.grind_to(m.min_level + boost)
+                self.grind_to(min_level + boost)
             finally:
                 self._grind_why = ""
-        if m.team_level:
-            trained |= self.train(m.team_level + boost, members=m.team_size)
+        if team_level:
+            trained |= self.train(team_level + boost, members=m.team_size)
         # Grinding spends PP and HP: a boss fight starts fresh.
         if trained and m.important and not self.game.map_id().startswith(self.NO_CENTER_MAPS) \
                 and (self.party_hp() < 0.95 or self.low_attack_pp(0.9)):

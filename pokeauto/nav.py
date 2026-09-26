@@ -93,6 +93,7 @@ class NavCaps:
     trigger_exempt_map: str = ""        # ...except on this map
     ignore_story_objects: bool = False  # plan through NPCs that a script may move away
     fly: tuple = ()             # State we land on for every town Fly can reach
+    mach: bool = False          # Mach Bike dashes over cracked floors (Sky Pillar)
 
     def grid_caps(self) -> Caps:
         return Caps(surf=self.surf, waterfall=self.waterfall)
@@ -395,7 +396,7 @@ class Planner:
         capkey = (caps.surf, caps.cut, caps.smash, caps.waterfall, caps.dive,
                   caps.ignore_boulders, caps.avoid_grass, caps.avoid_triggers,
                   caps.triggers_block, caps.active_triggers_block, caps.trigger_exempt_map,
-                  caps.ignore_story_objects)
+                  caps.ignore_story_objects, caps.mach)
         ctxs: dict[str, tuple] = {}
 
         def ctx(m):
@@ -516,6 +517,9 @@ class Planner:
         script_warps = info.get("script_warps", ())
         hole = info.get("hole_warp")
         pos = s.pos
+        if caps.mach and not s.surfing and g.inside(s.x, s.y) \
+                and g.behavior(s.x, s.y) not in FALL_TILES and self._has_cracks(g):
+            out.extend(self._rides(s, g, blocked))
         for d in DELTA:
             # Arrow warps fire when pressing their direction on them.
             if here_b in ARROW_WARPS[d]:
@@ -590,6 +594,170 @@ class Planner:
                 elif (tx, ty) in ob.rocks and caps.smash and not s.surfing:
                     out.append((State(s.map, tx, ty, s.elev), "smash", d, 12.0))
         return out
+
+    # -- Mach Bike ---------------------------------------------------------------
+    # Measured on the Sky Pillar (bike.c): from a standstill the bike enters
+    # tile 1 at walking speed, tile 2 fast, tile 3 on at the fastest speed, and
+    # turning keeps the speed. Released, it rolls on in its last direction: one
+    # tile at the fastest speed, one fast, one walking, then stops (a wall stops
+    # it at once). A cracked floor entered below the fastest speed breaks under
+    # you, and one you have crossed is a hole a few frames later (field_tasks.c
+    # CrackedFloorPerStepCallback, cave_hole.inc): never stop on one, never
+    # cross one twice.
+    CRACK, CRACK_HOLE = MB["MB_CRACKED_FLOOR"], MB["MB_CRACKED_FLOOR_HOLE"]
+    RIDE_MAX = 40
+    LETTER = {"up": "U", "down": "D", "left": "L", "right": "R"}
+
+    def _has_cracks(self, g: MapGrid) -> bool:
+        cache = self.__dict__.setdefault("_cracks", {})
+        key = id(g)
+        if key not in cache:
+            cache[key] = any(g.behavior(x, y) == self.CRACK
+                             for y in range(g.h) for x in range(g.w))
+        return cache[key]
+
+    def _rides(self, s: State, g: MapGrid, blocked) -> list:
+        """Mach Bike rides from standing at s that cross cracked floor:
+        (landing, "ride:<direction letters>", first direction, cost). A
+        breadth-first search over (tile, speed stage)."""
+        from collections import deque
+
+        def tile(x, y):
+            if not g.inside(x, y) or g.collision(x, y) or (x, y) in blocked:
+                return None
+            b = g.behavior(x, y)
+            if b == self.CRACK_HOLE:
+                return None
+            if b in STEP_WARPS:
+                return "warp"
+            return "crack" if b == self.CRACK else "solid"
+
+        hole = maps()[s.map].get("hole_warp")
+
+        def fall(x, y):
+            """Slowing onto a cracked tile drops us a floor, same x, y: the
+            Sky Pillar sometimes wants exactly that (4F's pocket of 3F)."""
+            if not hole or hole not in maps():
+                return None
+            dg = self.grid(hole)
+            if not dg.inside(x, y) or dg.collision(x, y):
+                return None
+            de = dg.elevation(x, y)
+            return State(hole, x, y, de if de not in (0, 15) else 3)
+
+        start = (s.x, s.y, 0)
+        prev: dict = {start: None}
+        queue = deque([start])
+        landings: dict = {}
+
+        def path_to(node):
+            moves = []
+            while prev[node] is not None:
+                node, d = prev[node]
+                moves.append(d)
+            return moves[::-1]
+
+        def valid(moves) -> bool:
+            x, y, seen = s.x, s.y, set()
+            for d in moves:
+                dx, dy = DELTA[d]
+                x, y = x + dx, y + dy
+                if tile(x, y) == "crack":
+                    if (x, y) in seen:
+                        return False
+                    seen.add((x, y))
+            return True
+
+        def add(dest, moves, crossed):
+            if not crossed or not moves or len(moves) > self.RIDE_MAX:
+                return
+            key = (dest.map, dest.x, dest.y)
+            if key not in landings or len(moves) < len(landings[key][1]):
+                landings[key] = (dest, moves)
+
+        while queue:
+            node = queue.popleft()
+            x, y, stage = node
+            moves = path_to(node)
+            if len(moves) >= self.RIDE_MAX:
+                continue
+            crossed = any(tile(*p) == "crack" for p in self._ride_tiles(s, moves))
+            # Let go here (only once at speed): roll up to three tiles on.
+            if stage == 3 and moves:
+                d = moves[-1]
+                dx, dy = DELTA[d]
+                lx, ly, ok, coast = x, y, True, []
+                for i in range(3):
+                    t = tile(lx + dx, ly + dy)
+                    if t is None:
+                        break
+                    if t == "warp":
+                        coast.append(d)
+                        lx, ly = lx + dx, ly + dy
+                        break
+                    if t == "crack" and i > 0:
+                        # Rolling onto it below top speed: we fall through.
+                        full = moves + coast + [d]
+                        dest = fall(lx + dx, ly + dy)
+                        if dest is not None and valid(full):
+                            add(dest, [*moves, "|", *coast, d], True)
+                        ok = False
+                        break
+                    coast.append(d)
+                    lx, ly = lx + dx, ly + dy
+                if ok and tile(lx, ly) in ("solid", "warp"):
+                    full = moves + coast
+                    if valid(full):
+                        dest = self._ride_landing(s, lx, ly, d, g)
+                        if dest is not None:
+                            add(dest, [*moves, "|", *coast],
+                                crossed or any(tile(*p) == "crack"
+                                               for p in self._ride_tiles(s, full)))
+            for d in DELTA:
+                dx, dy = DELTA[d]
+                nx, ny = x + dx, y + dy
+                t = tile(nx, ny)
+                if t is None:
+                    continue
+                nstage = min(stage + 1, 3)
+                if t == "crack" and nstage < 3:
+                    continue           # (the walking fall edge covers stage 1)
+                if t == "warp":
+                    full = moves + [d]
+                    if valid(full):
+                        dest = self._ride_landing(s, nx, ny, d, g)
+                        if dest is not None:
+                            add(dest, full, crossed)
+                    continue
+                nxt = (nx, ny, nstage)
+                if nxt in prev:
+                    continue
+                prev[nxt] = (node, d)
+                queue.append(nxt)
+        out = []
+        for dest, moves in landings.values():
+            held = [m for m in moves if m != "|"]
+            word = "".join(self.LETTER[m] if m != "|" else "|" for m in moves)
+            out.append((dest, f"ride:{word}", held[0], float(len(held)) + 6.0))
+        return out
+
+    @staticmethod
+    def _ride_tiles(s: State, moves) -> list:
+        x, y, out = s.x, s.y, []
+        for d in moves:
+            if d == "|":
+                continue
+            dx, dy = DELTA[d]
+            x, y = x + dx, y + dy
+            out.append((x, y))
+        return out
+
+    def _ride_landing(self, s: State, x: int, y: int, d: str, g: MapGrid) -> State | None:
+        if g.behavior(x, y) in STEP_WARPS:
+            w = self.warp_at(s.map, x, y)
+            return self.arrive(w, d) if w else None
+        e = g.elevation(x, y)
+        return State(s.map, x, y, s.elev if e in (0, 15) else e, False)
 
     @staticmethod
     def _unwind(prev, start, end) -> list[Step]:

@@ -251,6 +251,7 @@ class Mode:
 
 
 class Game:
+    REGISTERED_ITEM = 0x496       # SaveBlock1.registeredItem (the SELECT key item)
     def __init__(self, emu: Emu):
         self.emu = emu
         self.a_main = S["gMain"]
@@ -451,6 +452,14 @@ class Game:
 
     def on_bike(self) -> bool:
         return bool(self.avatar()["flags"] & 0x06)
+
+    def bike_speed(self) -> int:
+        """gPlayerAvatar.bikeSpeed: 0 standing ... 3 the Mach Bike's fastest."""
+        return self.emu.u8(self.a_avatar + 0x0B)
+
+    def registered_item(self) -> int:
+        """The key item on SELECT (SaveBlock1.registeredItem)."""
+        return self.emu.u16(self.sb1() + self.REGISTERED_ITEM)
 
     # -- trainer card -----------------------------------------------------------
     def player_name(self) -> str:

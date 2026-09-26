@@ -35,6 +35,11 @@ class Milestone:
     attempts: int = 4
     hint: str = ""                # plain-English goal, for logs and readers
 
+    def targets(self, agent) -> tuple[int, int]:
+        """(min_level, team_level); either may be a callable(agent) -> int."""
+        return tuple(int(t(agent)) if callable(t) else int(t)
+                     for t in (self.min_level, self.team_level))
+
     def run(self, agent) -> None:
         for act in self.actions:
             if self.done(agent):

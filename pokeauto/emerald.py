@@ -120,8 +120,16 @@ E4_TMS_FULL = [("ITEM_TM03", "MOVE_WATER_PULSE", ("SWAMPERT",), "MOVE_TAKE_DOWN"
 E4_TMS = [(tm, mv, who) for tm, mv, who, _ in E4_TMS_FULL]
 
 
+def e4_lead(a) -> int:
+    """Swampert's own Elite Four target: with Rayquaza (L70) carrying the
+    fights the team target (66) is enough; without it, 74."""
+    return 0 if any(p.species_name == "RAYQUAZA" for p in a.game.party()) else 74
+
+
 def has_species(*names: str):
     return lambda a: any(p.species_name in names for p in a.game.party())
+
+
 # Who gets trained for doubles and the Elite Four, best first (by evolution
 # line); anyone else only by level. Castform and the Fly carrier are passengers.
 TEAM_PREF = ("SWAMPERT", "MARSHTOMP", "MUDKIP", "AZUMARILL", "MARILL", "HARIYAMA",
@@ -137,6 +145,7 @@ def team_pref(a) -> tuple:
     if any(p.species_name == "RAYQUAZA" for p in a.game.party()):
         return TEAM_WITH_RAYQUAZA
     return TEAM_PREF
+
 
 ROUTE: list[Milestone] = [
     Milestone("leave_truck", var_ge("VAR_LITTLEROOT_INTRO_STATE", 3), [
@@ -228,6 +237,12 @@ ROUTE: list[Milestone] = [
                goto("MAP_SLATEPORT_CITY_POKEMON_CENTER_1F"),   # respawn on the mainland
                goto("MAP_MAUVILLE_CITY")],
               min_level=27, important=True, hint="walk Route 110 to Mauville (the rival waits there)"),
+    # Rydel's free bike: the Mach Bike, the only way over the Sky Pillar's
+    # cracked floors once Rayquaza has woken (see catch_rayquaza).
+    Milestone("mach_bike", has_item("ITEM_MACH_BIKE"),
+              [prefer("MACH"), goto("MAP_MAUVILLE_CITY_BIKE_SHOP"),
+               talk_s("MAP_MAUVILLE_CITY_BIKE_SHOP", "EventScript_Rydel"), prefer()],
+              hint="get the Mach Bike from Rydel in Mauville"),
     Milestone("rock_smash", flag("FLAG_RECEIVED_HM_ROCK_SMASH"),
               [goto("MAP_MAUVILLE_CITY_HOUSE1"),
                talk_s("MAP_MAUVILLE_CITY_HOUSE1", "EventScript_RockSmashDude")]),
@@ -421,9 +436,12 @@ ROUTE: list[Milestone] = [
     # Five fights with no Pokemon Center: two Pokemon run out of PP. Recruit
     # two more from Victory Road (Hariyama catches easily) and train them.
     # (By species, not party size: the Fly carrier takes a slot too.)
-    Milestone("e4_team", any_of(has_species("RAYQUAZA"),
-                                all_of(has_species("HARIYAMA", "MAKUHITA"),
-                                       has_species("GOLBAT", "CROBAT", "ZUBAT"))),
+    # (Gated on Victory Road's Wally: with Rayquaza alone this was "done" from
+    # the Sky Pillar on, and the runner resumes after the latest done milestone.)
+    Milestone("e4_team", all_of(flag("FLAG_DEFEATED_WALLY_VICTORY_ROAD"), any_of(
+                  has_species("RAYQUAZA"),
+                  all_of(has_species("HARIYAMA", "MAKUHITA"),
+                         has_species("GOLBAT", "CROBAT", "ZUBAT")))),
               [call("shop", {"ITEM_ULTRA_BALL": 15}),
                unless(has_species("HARIYAMA", "MAKUHITA"),
                       call("catch", "SPECIES_HARIYAMA", VICTORY_ROAD)),
@@ -436,13 +454,14 @@ ROUTE: list[Milestone] = [
         not a.game.has_item(tm) or any(p.knows(mv) for p in a.game.party())
         or not any(p.species_name in who for p in a.game.party())
         for tm, mv, who in E4_TMS),
-              [unless(lambda a, who=who: not any(p.species_name in who for p in a.game.party()),
+              [unless(lambda a, who=who, tm=tm: not a.game.has_item(tm)
+                      or not any(p.species_name in who for p in a.game.party()),
                       call("teach", tm, list(who), *([old] if old else [])))
                for tm, mv, who, old in E4_TMS_FULL]),
     Milestone("enter_league", flag("FLAG_ENTERED_ELITE_FOUR"),
               [goto(LEAGUE), call("league_supplies"),
                talk_s(LEAGUE, "PokemonLeague_1F_EventScript_DoorGuard")],
-              min_level=74, team_level=66, team_size=4, important=True,
+              min_level=e4_lead, team_level=66, team_size=4, important=True,
               hint="cross Victory Road and show the guards all eight badges"),
     Milestone("sidney", flag("FLAG_DEFEATED_ELITE_4_SIDNEY"),
               [call("heal_with_items"), call("rotate_lead"), e4_room("MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM"),
@@ -451,7 +470,7 @@ ROUTE: list[Milestone] = [
               # with a rotating lead; L66 wins. Train once, before the League,
               # and start with full HP and PP (the League 1F has a nurse).
               # Each loss still raises these targets (Agent.LOSS_BOOST).
-              min_level=74, team_level=66, team_size=4, important=True,
+              min_level=e4_lead, team_level=66, team_size=4, important=True,
               hint="beat Sidney of the Elite Four"),
     Milestone("phoebe", flag("FLAG_DEFEATED_ELITE_4_PHOEBE"),
               [call("heal_with_items"), call("rotate_lead"), e4_room("MAP_EVER_GRANDE_CITY_PHOEBES_ROOM"),

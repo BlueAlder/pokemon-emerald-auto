@@ -107,6 +107,15 @@ class Snapshot:
     report: object = None          # runstats.Report once the run has ended
 
 
+def _target(m, name: str, agent) -> int:
+    """A milestone's level target (plain, or a callable of the agent)."""
+    t = getattr(m, name, 0)
+    try:
+        return int(t(agent)) if callable(t) else int(t)
+    except Exception:
+        return 0
+
+
 def grind_view(agent, party) -> GrindView | None:
     """agent.grinding (set while grind_to runs) plus experience progress."""
     g = getattr(agent, "grinding", None)
@@ -322,7 +331,8 @@ class RunControl:
                       done=tuple(name for name, _ in r.history))
             if m is not None:
                 kw.update(milestone=m.name, hint=m.hint, attempts=m.attempts,
-                          min_level=m.min_level, team_level=m.team_level,
+                          min_level=_target(m, "min_level", self._agent),
+                          team_level=_target(m, "team_level", self._agent),
                           important=m.important)
         a = self._agent
         if a is not None:

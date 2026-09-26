@@ -89,6 +89,7 @@ class Controller:
         self.ui_handlers: dict[str, object] = {}
         self.health_check = None              # callable() -> True if it detoured to heal
         self.fly_hook = None                  # callable(dest_map) -> True once there
+        self.bike_hook = None                 # callable(on) -> True once on/off the Mach Bike
         self.fly_banned: set[str] = set()     # landing maps Fly failed to reach
         self._last_map, self._map_visit = "", 0
         self._in_health_check = False
@@ -377,6 +378,7 @@ class Controller:
             waterfall=knows("MOVE_WATERFALL") and f("FLAG_BADGE08_GET"),
             avoid_grass=avoid_grass,
             fly=self.fly_destinations(),
+            mach=self.bike_hook is not None and bool(self.game.has_item("ITEM_MACH_BIKE")),
         )
 
     def fly_destinations(self) -> tuple:
@@ -449,6 +451,8 @@ class Controller:
             self.press("B" if underwater else "A", release=10)
             self.pump()
             return self.state().map == step.expect.map
+        if step.action.startswith("ride:"):
+            return self._ride(step)
         if step.action == "fly":
             ok = bool(self.fly_hook and self.fly_hook(step.expect.map))
             s = self.state()
@@ -506,6 +510,42 @@ class Controller:
             return s.map == step.expect.map and (s.x, s.y) == (step.expect.x, step.expect.y)
         if not moved:
             return False
+        s = self.state()
+        return s.map == step.expect.map and (s.x, s.y) == (step.expect.x, step.expect.y)
+
+    def _ride(self, step: Step) -> bool:
+        """Mach Bike ride (see Planner._rides): on the bike, hold each letter's
+        direction for one tile, let go at "|" and roll to a stop, get off."""
+        word = step.action.split(":", 1)[1]
+        held, _, coast = word.partition("|")
+        if not (self.bike_hook and self.bike_hook(True)):
+            return False
+        names = {"U": "UP", "D": "DOWN", "L": "LEFT", "R": "RIGHT"}
+        start_map = self.game.map_id()
+        warped = False
+        for letter in held:
+            before = self.game.pos()
+            mask = keymask(names[letter])
+            for _ in range(40):
+                self.emu.run(mask, 1)
+                if self.game.map_id() != start_map:
+                    warped = True
+                    break
+                if self.game.pos() != before:
+                    break
+            if warped:
+                break
+        if not warped:
+            for _ in range(120):                      # roll to a stop
+                self.emu.run(0, 1)
+                if self.game.map_id() != start_map:
+                    break
+                if self.game.bike_speed() == 0 and self.game.avatar()["tile_transition"] == 0:
+                    break
+        self.emu.run(0, 2)
+        self.pump()
+        self.bike_hook(False)
+        self.stats["steps"] += len(held) + len(coast)
         s = self.state()
         return s.map == step.expect.map and (s.x, s.y) == (step.expect.x, step.expect.y)
 
@@ -1000,6 +1040,12 @@ class Controller:
         """
         template = next((t for t in maps()[map_id]["objects"] if t["local_id"] == local_id), None)
         self.goto(at(map_id), desc=f"{map_id}")
+        # Scripts move people when a map loads (setobjectxyperm: Wallace waits
+        # outside the Sootopolis Gym, not at his map-data spot); the save's
+        # copy of this map's templates has where they really are.
+        moved = self.game.object_templates().get(local_id) if template else None
+        if moved:
+            template = {**template, "x": moved[0], "y": moved[1]}
         for _ in range(max_steps):
             self.pump()
             o = self.live_object(local_id)
