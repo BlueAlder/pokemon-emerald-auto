@@ -72,7 +72,7 @@ models the game instead:
     * The spot is the strongest reachable tier of wild levels; when a tier
       is out of reach, the next one down. It is never just the nearest grass.
     * Targets are what the fights need. Tate & Liza train the partner to 40
-      and Juan to 46. The Elite Four needs Swampert 70 and three more at 66:
+      and Juan to 46. The Elite Four needs Swampert 74 and three more at 66:
       a team of 58–62 lost to Wallace's Full Restores in testing.
     * Each lost trainer battle adds 4 levels to the retried milestone's
       targets.

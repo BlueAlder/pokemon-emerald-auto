@@ -92,6 +92,7 @@ class Battle:
         self._bad_switch = set()
         self._shift_tries = {}
         self._items_disabled = False
+        self._bad_items: set = set()
         self._item_count_before = None
         self._trapped_now = False
         self._log_start = len(self.log)
@@ -209,8 +210,14 @@ class Battle:
         last = self._pending.get(battler)
         if last and last.kind == "item" and self._item_count_before is not None:
             if self.game.has_item(last.slot) >= self._item_count_before:
-                log.info("BATTLE item %s had no effect; no more items this battle", last.slot)
-                self._items_disabled = True
+                # Ban that item for this battle; give up on items only when a
+                # second one fails too (a single miss once left the whole
+                # Wallace fight without healing).
+                self._bad_items.add(last.slot)
+                self._items_disabled = len(self._bad_items) >= 2
+                log.info("BATTLE item %s had no effect; %s", last.slot,
+                         "no more items this battle" if self._items_disabled
+                         else "not using it again this battle")
         self._item_count_before = None
         self._submitted.pop(battler, None)
         self._refused.pop(battler, None)
@@ -611,7 +618,8 @@ class Battle:
 
     def best_potion(self, me_bm):
         missing = me_bm.max_hp - me_bm.hp
-        have = [(C(n), heal) for n, heal in self.POTIONS if self.game.has_item(n)]
+        have = [(C(n), heal) for n, heal in self.POTIONS
+                if self.game.has_item(n) and C(n) not in getattr(self, "_bad_items", ())]
         if not have:
             return None
         # smallest potion that covers most of the gap, else the biggest
