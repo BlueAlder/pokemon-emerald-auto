@@ -309,7 +309,7 @@ ROUTE: list[Milestone] = [
     # -- Mossdeep, the Space Center, Dive, Seafloor Cavern ---------------------------------
     Milestone("badge_mind", badges(7),
               [call("rotating_tile_gym", "MAP_MOSSDEEP_CITY_GYM", "EventScript_TateAndLiza", 7)],
-              min_level=54, team_level=42, important=True,
+              min_level=52, team_level=40, important=True,
               hint="beat Tate and Liza at the Mossdeep Gym"),
     Milestone("space_center", flag("FLAG_DEFEATED_MAGMA_SPACE_CENTER"),
               [goto("MAP_MOSSDEEP_CITY_SPACE_CENTER_2F"),
@@ -356,7 +356,7 @@ ROUTE: list[Milestone] = [
     Milestone("badge_rain", badges(8),
               [goto("MAP_SOOTOPOLIS_CITY_GYM_1F"),
                call("ice_gym", "MAP_SOOTOPOLIS_CITY_GYM_1F", "EventScript_Juan", 8)],
-              min_level=58, team_level=50, important=True,
+              min_level=56, team_level=46, important=True,
               hint="crack the ice floors of the Sootopolis Gym and beat Juan"),
 
     # -- Ever Grande, Victory Road, the Elite Four ------------------------------------------
@@ -392,14 +392,15 @@ ROUTE: list[Milestone] = [
     Milestone("enter_league", flag("FLAG_ENTERED_ELITE_FOUR"),
               [goto(LEAGUE), call("league_supplies"),
                talk_s(LEAGUE, "PokemonLeague_1F_EventScript_DoorGuard")],
-              min_level=70, team_level=60, team_size=4, important=True,
+              min_level=66, team_level=58, team_size=4, important=True,
               hint="cross Victory Road and show the guards all eight badges"),
     Milestone("sidney", flag("FLAG_DEFEATED_ELITE_4_SIDNEY"),
               [call("heal_with_items"), e4_room("MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM"),
                talk_s("MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM", "EventScript_Sidney")],
-              # Whiting out restarts the challenge here, so this is also where
-              # the team gets stronger between attempts (grinding is free).
-              heal_first=False, min_level=74, team_level=66, team_size=4, important=True,
+              # The Elite Four tops out at L58. Losing restarts the challenge
+              # here, and each loss raises these targets (Agent.LOSS_BOOST).
+              # Start it with full HP and PP: the League 1F has a nurse.
+              min_level=66, team_level=58, team_size=4, important=True,
               hint="beat Sidney of the Elite Four"),
     Milestone("phoebe", flag("FLAG_DEFEATED_ELITE_4_PHOEBE"),
               [call("heal_with_items"), e4_room("MAP_EVER_GRANDE_CITY_PHOEBES_ROOM"),

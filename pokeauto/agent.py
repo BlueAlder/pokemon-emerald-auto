@@ -208,7 +208,8 @@ class Agent:
         log.info("OPTIONS now %s", self.game.options())
 
     # -- healing ------------------------------------------------------------------------
-    CENTERS = [m for m in maps() if m.endswith("_POKEMON_CENTER_1F")]
+    CENTERS = [m for m in maps() if m.endswith("_POKEMON_CENTER_1F")] + [
+        "MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F"]    # has its own nurse
 
     def party_hp(self) -> float:
         party = [m for m in self.game.party() if not m.is_egg]
@@ -344,13 +345,16 @@ class Agent:
     def league_supplies(self) -> None:
         """Stock up for the Elite Four: no Pokemon Center between the five fights."""
         budget = self.game.money() - 2000
-        wants = {}
-        for item, price, n in (("ITEM_FULL_RESTORE", 3000, 12), ("ITEM_REVIVE", 1500, 8),
-                               ("ITEM_MAX_POTION", 2500, 8), ("ITEM_FULL_HEAL", 600, 5)):
-            k = max(0, n - self.game.has_item(item))
+        wants: dict[str, int] = {}
+        # Essentials first, then spare money buys more Full Restores: items
+        # are cheaper than levels, and the training targets lean on them.
+        for item, price, n in (("ITEM_FULL_RESTORE", 3000, 12), ("ITEM_REVIVE", 1500, 10),
+                               ("ITEM_MAX_POTION", 2500, 8), ("ITEM_FULL_HEAL", 600, 5),
+                               ("ITEM_FULL_RESTORE", 3000, 25)):
+            k = max(0, n - self.game.has_item(item) - wants.get(item, 0))
             k = min(k, max(0, budget) // price)
             if k:
-                wants[item] = k
+                wants[item] = wants.get(item, 0) + k
                 budget -= k * price
         log.info("LEAGUE supplies: %s", wants)
         self.shop(wants)
@@ -561,7 +565,12 @@ class Agent:
         return const_names()["MOVE_"].get(mid, "")
 
     # -- milestone hooks ----------------------------------------------------------------
+    LOSS_BOOST = 4             # levels added to a milestone's targets per loss
+
     def before_milestone(self, m) -> None:
+        if not hasattr(self, "_level_boost"):
+            self._level_boost: dict[str, int] = {}
+            self._losses_seen = self.battle.trainer_losses
         self.battle.policy.important = m.important
         self.pump()
         if self.game.party() and m.heal_first and (
@@ -573,10 +582,27 @@ class Agent:
                 self.restock()
             except Stuck as exc:
                 log.info("RESTOCK skipped: %s", exc)
+        # Targets are set low enough to win without overkill grinding; each
+        # trainer battle lost since the last milestone start raises the
+        # targets of the milestone we are (re)starting.
+        losses = self.battle.trainer_losses
+        if losses > self._losses_seen:
+            self._level_boost[m.name] = self._level_boost.get(m.name, 0) + \
+                self.LOSS_BOOST * (losses - self._losses_seen)
+            self._losses_seen = losses
+            log.info("LOST a trainer battle: %s targets now +%d levels",
+                     m.name, self._level_boost[m.name])
+        boost = self._level_boost.get(m.name, 0)
+        trained = False
         if m.min_level:
-            self.grind_to(m.min_level)
+            trained |= self.lead().level < m.min_level + boost
+            self.grind_to(m.min_level + boost)
         if m.team_level:
-            self.train(m.team_level, members=m.team_size)
+            trained |= self.train(m.team_level + boost, members=m.team_size)
+        # Grinding spends PP and HP: a boss fight starts fresh.
+        if trained and m.important and not self.game.map_id().startswith(self.NO_CENTER_MAPS) \
+                and (self.party_hp() < 0.95 or self.low_attack_pp(0.9)):
+            self.heal()
 
     def recover(self, m, exc) -> None:
         """Get back to a sane state after a Stuck/crash."""
@@ -595,6 +621,7 @@ class Agent:
     # Places a grinding session should never pick: no battles (Safari Zone),
     # tide/one-way layouts, or story-locked towers.
     GRIND_EXCLUDE = ("SAFARI_ZONE", "SHOAL_CAVE", "SKY_PILLAR", "MIRAGE", "ARTISAN_CAVE",
+                     "ROUTE130",           # its grass is Mirage Island: rarely there
                      "DESERT_UNDERPASS", "ALTERING_CAVE", "TERRA_CAVE", "MARINE_CAVE",
                      "SOUTHERN_ISLAND", "NAVEL_ROCK", "BIRTH_ISLAND", "FARAWAY_ISLAND",
                      "SEAFLOOR_CAVERN", "CAVE_OF_ORIGIN", "MAGMA_HIDEOUT",
@@ -608,26 +635,26 @@ class Agent:
         return {m for m in self.data.wild_land()
                 if not any(x in m for x in self.GRIND_EXCLUDE) and m not in dead}
 
+    # Experience per battle grows with the foe's level, and walking there is
+    # cheap (Fly), so grind among the strongest wild levels a trainee still
+    # outlevels -- never in whatever grass happens to be nearest.
+    GRIND_TIER = 3
+
     def grind_maps(self, level: int) -> set[str]:
-        """Maps whose wild levels suit a L`level` trainee: tough enough to pay,
-        weak enough to win against. Falls back to the strongest easy ones."""
+        """The best tier of maps for a L`level` trainee: the highest wild
+        levels up to level+2 (and those within GRIND_TIER of them) among maps
+        not yet found unreachable with today's abilities."""
         caps = self.ctl.nav_caps()
         key = (caps.surf, caps.waterfall, caps.dive, caps.strength)
         blocked = getattr(self, "_grind_blocked", {}).get(key, set())
         usable = self._grind_usable_maps()
-        table = {m: v for m, v in self.data.wild_land().items()
-                 if m in usable and m not in blocked}
-        good = {m for m, mons in table.items()
-                if max(hi for _, hi, _ in mons) <= level + 2
-                and max(hi for _, hi, _ in mons) >= level - 10}
-        if good:
-            return good
-        easy = {m: max(hi for _, hi, _ in mons) for m, mons in table.items()
-                if max(hi for _, hi, _ in mons) <= level + 2}
+        tops = {m: max(hi for _, hi, _ in mons) for m, mons in self.data.wild_land().items()
+                if m in usable and m not in blocked}
+        easy = {m: v for m, v in tops.items() if v <= level + 2}
         if not easy:
             return set()
-        top = max(easy.values())
-        return {m for m, v in easy.items() if v >= top - 3}
+        best = max(easy.values())
+        return {m for m, v in easy.items() if v >= best - self.GRIND_TIER}
 
     def grind_to(self, level: int, max_battles: int = 400) -> None:
         """Fight wild Pokemon until the lead reaches `level`.
@@ -646,7 +673,6 @@ class Agent:
         planner = self.ctl.planner
         battles = 0
         spot = None            # (map, x, y, direction, back)
-        fallback = False       # spot is "any grass" because the ideal maps are out of reach
         dry = 0                # consecutive spots without an encounter
         spots: set[str] = set()
         while self.lead().level < level and battles < max_battles:
@@ -654,7 +680,7 @@ class Agent:
                 self.heal()            # a trainee out of PP only switches and struggles
                 spot = None
             want = self.grind_maps(self.lead().level)
-            if spot is not None and want and spot[0] not in want and not fallback:
+            if spot is not None and want and spot[0] not in want:
                 spot = None    # outgrew this area
             if spot is not None and (self.game.map_id(), *self.game.pos()) != spot[:3]:
                 try:
@@ -662,6 +688,8 @@ class Agent:
                 except Stuck:
                     spot = None
             if spot is None:
+                if not want:
+                    raise Stuck(f"grinding: no reachable map suits L{self.lead().level}")
                 spots = set(want)
 
                 usable = self._grind_usable_maps()
@@ -674,12 +702,11 @@ class Agent:
                     g = planner.grid(s.map)
                     return g.inside(s.x, s.y) and has_encounters(g.behavior(s.x, s.y)) \
                         and not s.surfing
-                in_grass.maps = spots or None
-                fallback = False
+                in_grass.maps = spots
                 try:
                     # One bounded search first: a failing goto runs the whole
                     # fallback chain, which is far too slow to learn "no".
-                    if spots and self.ctl.planner.plan(
+                    if self.ctl.planner.plan(
                             self.ctl.state(), in_grass, self.ctl.nav_caps(avoid_grass=0.0),
                             live=MapGrid.from_ram(self.game),
                             live_objects=self.game.objects()) is None:
@@ -687,20 +714,18 @@ class Agent:
                     self.ctl.goto(in_grass, caps=self.ctl.nav_caps(avoid_grass=0.0),
                                   desc=f"grass (L{self.lead().level} spots)")
                 except Stuck:
-                    fallback = True
-                    if not spots:
-                        raise
-                    # Unreachable with today's HMs: never search for them again.
+                    # Unreachable with today's HMs: never search for them
+                    # again, and try the next-best tier instead.
                     caps = self.ctl.nav_caps()
                     key = (caps.surf, caps.waterfall, caps.dive, caps.strength)
                     if not hasattr(self, "_grind_blocked"):
                         self._grind_blocked = {}
                     self._grind_blocked.setdefault(key, set()).update(spots)
                     log.info("GRIND spots unreachable for now: %s", sorted(spots))
-                    spots.clear()      # take any encounter tile
-                    in_grass.maps = None
-                    self.ctl.goto(in_grass, caps=self.ctl.nav_caps(avoid_grass=0.0),
-                                  desc="grass")
+                    dry += 1
+                    if dry > 8:
+                        raise Stuck("grinding: nowhere reachable produces encounters")
+                    continue
                 grid = MapGrid.from_ram(self.game)
                 x, y = self.game.pos()
                 dirs = [d for d, (dx, dy) in (("left", (-1, 0)), ("right", (1, 0)),
@@ -738,7 +763,7 @@ class Agent:
                 dry = 0
         log.info("GRIND done: %s after %d battles", self.lead(), battles)
 
-    def train(self, level: int, members: int = 2) -> None:
+    def train(self, level: int, members: int = 2) -> bool:
         """Bring `members` Pokemon (the route's TEAM_PREF first, then the
         strongest) up to `level`, one at a time.
 
@@ -752,10 +777,12 @@ class Agent:
         ranked = sorted(party, key=lambda m: (pref.get(m.species_name, len(pref)),
                                               -m.level))[:members]
         order = [m.personality for m in party]
+        trained = False
         for mon in ranked:
             cur = next((m for m in self.game.party() if m.personality == mon.personality), None)
             if cur is None or cur.level >= level:
                 continue
+            trained = True
             slot = [m.personality for m in self.game.party()].index(mon.personality)
             self.party_swap(0, slot)
             try:
@@ -765,6 +792,7 @@ class Agent:
                 now = [m.personality for m in self.game.party()]
                 if now != order:
                     self.party_swap(0, slot)
+        return trained
 
     def fortree_gym(self) -> None:
         from .puzzles import fortree_gym

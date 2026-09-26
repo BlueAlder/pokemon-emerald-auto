@@ -59,6 +59,7 @@ class Battle:
         self._shift_tries: dict[int, int] = {}
         self.turns = 0
         self.log: list[str] = []
+        self.trainer_losses = 0                  # whiteouts to trainers (targets go up)
 
     # -- state helpers ----------------------------------------------------------------
     def is_trainer(self) -> bool:
@@ -96,9 +97,16 @@ class Battle:
         self._log_start = len(self.log)
         idle = 0
         start = self.emu.frame
+        trainer = self.is_trainer()
+        seen = False
         while True:
             if self.battle_over():
+                # gBattleOutcome outlives the battle: only count one we saw.
+                if seen and trainer and self.game.battle_outcome() & 0x7F in (2, 3):
+                    self.trainer_losses += 1
+                    log.info("BATTLE lost to a trainer (%d so far)", self.trainer_losses)
                 return
+            seen = True
             if self.emu.frame - start > 60 * 60 * 30:
                 from .controller import Stuck
                 self.ctl.snapshot("battle_timeout")
