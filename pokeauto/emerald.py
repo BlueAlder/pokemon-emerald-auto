@@ -389,8 +389,11 @@ ROUTE: list[Milestone] = [
               hint="talk to Maxie and Archie in Sootopolis"),
     # After it wakes, the Sky Pillar's floors crack: only the Mach Bike crosses
     # them, so without one this is skipped (and the team trains as before).
-    Milestone("catch_rayquaza", any_of(has_species("RAYQUAZA"), flag("FLAG_DEFEATED_RAYQUAZA"),
-                                       lambda a: not a.game.has_item("ITEM_MACH_BIKE")),
+    # (Only once Rayquaza has calmed Sootopolis: the runner resumes after the
+    # latest done milestone, so "no Mach Bike" alone made a new game skip here.)
+    Milestone("catch_rayquaza", all_of(var_ge("VAR_SKY_PILLAR_STATE", 2), any_of(
+                  has_species("RAYQUAZA"), flag("FLAG_DEFEATED_RAYQUAZA"),
+                  lambda a: not a.game.has_item("ITEM_MACH_BIKE"))),
               [goto("MAP_SKY_PILLAR_OUTSIDE"), goto("MAP_SKY_PILLAR_TOP"),
                call("catch_static", "SPECIES_RAYQUAZA", "MAP_SKY_PILLAR_TOP",
                     "SkyPillar_Top_EventScript_Rayquaza")],
