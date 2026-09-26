@@ -40,6 +40,8 @@ class Agent:
         self.battle.move_learner = self.choose_move_to_forget
         self.ctl.health_check = self._health_check
         self.ctl.fly_hook = self._fly
+        self.grinding: dict | None = None      # who/what level while grind_to runs (TUI)
+        self.training: dict | None = None      # team target while train() runs (TUI)
         self.started = time.time()
 
     # -- conveniences --------------------------------------------------------------
@@ -676,7 +678,11 @@ class Agent:
         if m.min_level:
             self._ace_to_front()       # the lead target is the ace's, whoever led last
             trained |= self.lead().level < m.min_level + boost
-            self.grind_to(m.min_level + boost)
+            self._grind_why = "lead target"
+            try:
+                self.grind_to(m.min_level + boost)
+            finally:
+                self._grind_why = ""
         if m.team_level:
             trained |= self.train(m.team_level + boost, members=m.team_size)
         # Grinding spends PP and HP: a boss fight starts fresh.
@@ -770,6 +776,21 @@ class Agent:
         return False
 
     def grind_to(self, level: int, max_battles: int = 400) -> None:
+        """Fight wild Pokemon until the lead reaches `level` (see _grind_to).
+        While it runs, self.grinding says who, to what level and why, for the
+        TUI's goal pane."""
+        lead = self.lead()
+        if lead is None or lead.level >= level:
+            return
+        self.grinding = {"species": lead.species_name, "personality": lead.personality,
+                         "start": lead.level, "target": level, "battles": 0, "map": "",
+                         "why": getattr(self, "_grind_why", "")}
+        try:
+            self._grind_to(level, max_battles)
+        finally:
+            self.grinding = None
+
+    def _grind_to(self, level: int, max_battles: int = 400) -> None:
         """Fight wild Pokemon until the lead reaches `level`.
 
         Picks the nearest encounter tiles whose wild levels suit the lead
@@ -861,6 +882,7 @@ class Agent:
                 d = dirs[0] if dirs else "left"
                 back = {"left": "right", "right": "left", "up": "down", "down": "up"}[d]
                 spot = (self.game.map_id(), x, y, d, back)
+                self.grinding["map"] = spot[0]
                 log.info("GRIND spot %s (%d,%d) pacing %s/%s", spot[0], x, y, d, back)
             # pace back and forth until a battle starts
             fought, moved = False, 0
@@ -869,6 +891,7 @@ class Agent:
                 self.ctl._hold_until_moved(spot[3] if i % 2 == 0 else spot[4])
                 if self.game.mode().kind != "overworld":
                     battles += 1
+                    self.grinding["battles"] = battles
                     self.pump()
                     fought = True
                     break
@@ -902,6 +925,15 @@ class Agent:
         ranked = sorted(party, key=lambda m: (pref.get(m.species_name, len(pref)),
                                               -m.level))[:members]
         order = [m.personality for m in party]
+        self.training = {"target": level, "members": [m.personality for m in ranked]}
+        self._grind_why = "team target"
+        try:
+            return self._train(ranked, level, order)
+        finally:
+            self.training = None
+            self._grind_why = ""
+
+    def _train(self, ranked, level: int, order: list) -> bool:
         trained = False
         for mon in ranked:
             cur = next((m for m in self.game.party() if m.personality == mon.personality), None)

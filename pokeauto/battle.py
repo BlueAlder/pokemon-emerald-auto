@@ -60,6 +60,8 @@ class Battle:
         self.turns = 0
         self.log: list[str] = []
         self.trainer_losses = 0                  # whiteouts to trainers (targets go up)
+        self.whiteouts = 0                       # every battle lost (TUI)
+        self.faints = 0                          # our Pokemon knocked out (TUI)
 
     # -- state helpers ----------------------------------------------------------------
     def is_trainer(self) -> bool:
@@ -100,9 +102,15 @@ class Battle:
         start = self.emu.frame
         trainer = self.is_trainer()
         seen = False
+        alive = {m.personality for m in self.game.party() if not m.fainted and not m.is_egg}
         while True:
             if self.battle_over():
                 # gBattleOutcome outlives the battle: only count one we saw.
+                if seen:
+                    self.faints += sum(1 for m in self.game.party()
+                                       if m.personality in alive and m.fainted)
+                if seen and self.game.battle_outcome() & 0x7F == 2:
+                    self.whiteouts += 1
                 if seen and trainer and self.game.battle_outcome() & 0x7F in (2, 3):
                     self.trainer_losses += 1
                     log.info("BATTLE lost to a trainer (%d so far)", self.trainer_losses)

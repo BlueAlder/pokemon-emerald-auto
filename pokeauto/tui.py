@@ -140,10 +140,53 @@ def render_goal(s: Snapshot) -> Text:
     if targets:
         t.append("targets ", style="dim")
         t.append(" · ".join(targets) + "\n", style=YELLOW)
+    render_now(t, s)
     if s.activity:
         t.append("▸ ", style="bold")
         t.append(s.activity, style=line_style(logging.INFO, s.activity) or "white")
     return t
+
+
+def pretty_desc(desc: str) -> str:
+    """'MAP_PETALBURG_CITY_GYM(7,15)' -> 'Petalburg City Gym (7,15)'."""
+    return re.sub(r"MAP_[A-Z0-9_]+", lambda m: map_name(m.group(0)), desc).replace("(", " (")
+
+
+def render_now(t: Text, s: Snapshot) -> None:
+    """What the run is doing for this milestone right now."""
+    g = s.grind
+    if g is not None:
+        t.append(" GRINDING ", style=f"bold black on {YELLOW}")
+        t.append(f" {g.species.capitalize()} ", style="bold")
+        t.append(f"L{g.level}", style=f"bold {CYAN}")
+        t.append(" → ", style="dim")
+        t.append(f"L{g.target}", style=f"bold {YELLOW}")
+        if g.why:
+            t.append(f"  ({g.why})", style="dim")
+        t.append("\n")
+        t.append_text(bar(g.progress, 20, YELLOW))
+        t.append(f" {g.progress:.0%}", style=YELLOW)
+        t.append(f"  {g.battles} battles\n", style="dim")
+        if g.map_id:
+            t.append("at ", style="dim")
+            t.append(map_name(g.map_id), style="dodger_blue1")
+            t.append(f"  (started L{g.start})\n", style="dim")
+    if s.team and s.team_target:
+        t.append("Team → ", style="bold")
+        t.append(f"L{s.team_target}  ", style=f"bold {YELLOW}")
+        for i, (species, level) in enumerate(s.team):
+            ready = level >= s.team_target
+            current = g is not None and g.species == species and not ready
+            t.append(("▸" if current else "") + species.capitalize(),
+                     style=f"bold {YELLOW}" if current else ("" if ready else "dim"))
+            t.append(f" {level}" + (" ✓" if ready else ""),
+                     style=GREEN if ready else CYAN)
+            if i < len(s.team) - 1:
+                t.append(" · ", style="dim")
+        t.append("\n")
+    if g is None and s.goal_desc:
+        t.append("➜ ", style=f"bold {BLUE}")
+        t.append(pretty_desc(s.goal_desc) + "\n", style=BLUE)
 
 
 def render_run(s: Snapshot, pending: str = "") -> Text:
@@ -170,8 +213,12 @@ def render_run(s: Snapshot, pending: str = "") -> Text:
     t.append(f"{s.stats.get('battles', 0):,}", style=CYAN)
     t.append("   Steps ", style="bold")
     t.append(f"{s.stats.get('steps', 0):,}", style=BLUE)
-    t.append("   Done ", style="bold")
-    t.append(str(len(s.done)), style=GREEN)
+    t.append("\nDeaths ", style="bold")
+    t.append(f"{s.whiteouts} whiteout{'s' if s.whiteouts != 1 else ''}",
+             style=f"bold {RED}" if s.whiteouts else GREEN)
+    t.append(" · ", style="dim")
+    t.append(f"{s.faints} faint{'s' if s.faints != 1 else ''}",
+             style=RED if s.faints else GREEN)
     if s.message:
         t.append("\n" + s.message, style="italic bright_white")
     return t

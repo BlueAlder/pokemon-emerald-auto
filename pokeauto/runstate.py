@@ -40,6 +40,19 @@ class MoveView:
 
 
 @dataclass(frozen=True)
+class GrindView:
+    """Who is grinding, to what level, and how far along."""
+    species: str
+    level: int
+    start: int
+    target: int
+    why: str               # "lead target L74", "team target L66"
+    battles: int
+    map_id: str
+    progress: float        # 0..1 of the experience from start to target level
+
+
+@dataclass(frozen=True)
 class MonView:
     species: str
     level: int
@@ -85,6 +98,33 @@ class Snapshot:
     stats: dict = field(default_factory=dict)
     party: tuple[MonView, ...] = ()
     message: str = ""
+    goal_desc: str = ""            # where the current walk is headed
+    grind: GrindView | None = None
+    team: tuple[tuple[str, int], ...] = ()   # (species, level) being trained to team_target
+    team_target: int = 0
+    whiteouts: int = 0             # battles lost (the whole party fainted)
+    faints: int = 0                # our Pokemon knocked out
+
+
+def grind_view(agent, party) -> GrindView | None:
+    """agent.grinding (set while grind_to runs) plus experience progress."""
+    g = getattr(agent, "grinding", None)
+    if not g:
+        return None
+    mon = next((m for m in party if m.personality == g["personality"]), None)
+    if mon is None:
+        return None
+    progress = 0.0
+    try:
+        growth = agent.data.species(mon.species).growth
+        lo = agent.data.exp_for_level(growth, g["start"])
+        hi = agent.data.exp_for_level(growth, g["target"])
+        progress = min(1.0, max(0.0, (mon.exp - lo) / max(1, hi - lo)))
+    except Exception:
+        pass
+    return GrindView(species=g["species"], level=mon.level, start=g["start"],
+                     target=g["target"], why=g.get("why", ""), battles=g.get("battles", 0),
+                     map_id=g.get("map", ""), progress=progress)
 
 
 def status_name(status1: int) -> str:
@@ -286,9 +326,22 @@ class RunControl:
         if a is not None:
             try:
                 g = a.game
-                kw.update(party=tuple(mon_view(m) for m in g.party()), badges=g.badges(),
+                party = g.party()
+                kw.update(party=tuple(mon_view(m) for m in party), badges=g.badges(),
                           money=g.money(), play_time=g.play_time(), map_id=g.map_id(),
-                          pos=tuple(g.pos()), stats=dict(a.ctl.stats))
+                          pos=tuple(g.pos()), stats=dict(a.ctl.stats),
+                          goal_desc=getattr(a.ctl, "goal_desc", ""),
+                          whiteouts=getattr(getattr(a, "battle", None), "whiteouts", 0),
+                          faints=getattr(getattr(a, "battle", None), "faints", 0),
+                          grind=grind_view(a, party))
+                t = getattr(a, "training", None)
+                if t:
+                    by_id = {m.personality: m for m in party}
+                    kw.update(team_target=t["target"], team=tuple(
+                        (by_id[pid].species_name, by_id[pid].level)
+                        for pid in t["members"] if pid in by_id))
+                else:
+                    kw.update(team_target=0, team=())
             except Exception:              # save blocks are garbage before a game is loaded
                 pass
         snap = replace(prev, **kw)

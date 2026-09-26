@@ -21,7 +21,8 @@ ROM = ROOT / "roms" / "emerald.gba"
 
 from pokeauto.runstate import (QueueLogHandler, RunControl, StopRun, map_name,  # noqa: E402
                                pretty_const, status_name)
-from pokeauto.tui import LogView, PlayApp, is_routine, style_line  # noqa: E402
+from pokeauto.tui import (LogView, PlayApp, is_routine, render_goal, render_run,  # noqa: E402
+                          style_line)
 
 log = logging.getLogger("pokeauto")
 
@@ -126,6 +127,26 @@ async def wait_for(pilot, cond, timeout: float = 10.0) -> bool:
 
 
 # -- tests ---------------------------------------------------------------------------------
+
+def test_goal_and_deaths():
+    """The goal pane says who is grinding to what; the run pane counts deaths."""
+    from pokeauto.runstate import GrindView, Snapshot
+    s = Snapshot(milestone="enter_league", total=80, index=74, min_level=74, team_level=66,
+                 grind=GrindView(species="AZUMARILL", level=52, start=51, target=66,
+                                 why="team target", battles=15, map_id="MAP_VICTORY_ROAD_1F",
+                                 progress=0.1),
+                 team=(("SWAMPERT", 74), ("AZUMARILL", 52), ("HARIYAMA", 40)), team_target=66,
+                 whiteouts=2, faints=5)
+    goal = render_goal(s).plain
+    assert "GRINDING" in goal and "Azumarill L52 → L66" in goal and "team target" in goal
+    assert "Victory Road 1F" in goal and "15 battles" in goal and "10%" in goal
+    assert "Swampert 74 ✓" in goal and "▸Azumarill 52" in goal
+    walking = render_goal(Snapshot(milestone="badge_balance",
+                                   goal_desc="MAP_PETALBURG_CITY_GYM(7,15)")).plain
+    assert "➜ Petalburg City Gym (7,15)" in walking
+    run = render_run(s).plain
+    assert "Deaths 2 whiteouts · 5 faints" in run and "Done" not in run
+
 
 def test_helpers():
     assert map_name("MAP_ROUTE110_TRICK_HOUSE_ENTRANCE") == "Route 110 Trick House Entrance"

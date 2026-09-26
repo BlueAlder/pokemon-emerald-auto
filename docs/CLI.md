@@ -98,20 +98,27 @@ The TUI prints it again after it closes.
 ╰───────────────────────────────────────────────────────────────────────────────── following ──╯
  ⏸  PAUSED: the emulator is frozen. Press space to resume.
 ╭─ Current goal ─────────────────────╮╭─ Party ────────────────────────────────────────────────╮
-│ GOAL  waterfall                    ││Pokémon       HP                     Moves (PP)         │
-│get HM07 Waterfall from Wallace in  ││Swampert L58  ██████████ 201/201     Muddy Water 10 · E…│
-│Sootopolis                          ││Azumarill L43 ████████░░ 144/173 PAR Waterfall 15 · Str…│
-│58/80 ██████████████░░░░░░ 71%      ││Crobat L40     FAINTED               Bite 24 · Wing Att…│
-│  attempt 1/4                       ││Wingull L25   ██████████ 55/55       Water Gun 25 · Fly…│
-│▸ FLEW to MAP_SOOTOPOLIS_CITY ok    │╰────────────────────────────────────────────────────────╯
+│ GOAL  enter_league  ★ boss         ││Pokémon       HP                     Moves (PP)         │
+│cross Victory Road and show the     ││Azumarill L52 ███░░░░░░░ 64/177      Facade 14 · Streng…│
+│guards all eight badges             ││Swampert L74  ██████████ 266/266     Water Pulse 20 · E…│
+│75/80 ████████████████░░ 92%        ││Hariyama L40  ██████████ 174/174     Rock Tomb 10 · Kno…│
+│targets lead L74 · team L66         ││Golbat L40    ██████████ 110/110     Bite 25 · Wing Att…│
+│ GRINDING  Azumarill L52 → L66      │╰────────────────────────────────────────────────────────╯
+│  (team target)                     │
+│██░░░░░░░░░░░░░░░░░░ 10%  15 battles│
+│at Victory Road 1F  (started L51)   │
+│Team → L66  Swampert 74 ✓ ·         │
+│  ▸Azumarill 52 · Hariyama 40 · …   │
+│▸ BATTLE T341 AZUMARILL 64/177 vs … │
 ╰────────────────────────────────────╯
 ╭─ Run ──────────────────────────────╮
-│ PAUSED   headless  frame 1,234,567 │
-│Badges ● ● ● ● ● ● ● ○ 7/8          │
-│Money ₽58,693  Game 7:51            │
-│Wall 0:32:10                        │
-│Map Sootopolis City (31,34)         │
-│Battles 1,194  Steps 23,456  Done 58│
+│ PAUSED   headless  frame 444,606   │
+│Badges ● ● ● ● ● ● ● ● 8/8          │
+│Money ₽89,214  Game 11:37           │
+│Wall 0:03:09                        │
+│Map Victory Road 1F (14,39)         │
+│Battles 267  Steps 470              │
+│Deaths 0 whiteouts · 0 faints       │
 ╰────────────────────────────────────╯
  space Pause/Resume  q Quit  b Battle turns  f Follow log  s Save state  c Clear log
 ```
@@ -143,16 +150,31 @@ End, or scroll back to the bottom, to follow again. The pane keeps the last
 
 **Current goal.** The milestone being worked on and its plain-English goal,
 its place in the route (`58/80` with a progress bar), the attempt number
-(red after a failed attempt), a `★ boss` mark for important fights, level
-targets (`lead L30 · team L45`) when the milestone grinds first, and the
-latest activity (the last GOTO, BATTLE, GRIND, FLEW, HEALED, ... line).
+(red after a failed attempt), a `★ boss` mark for important fights, and level
+targets (`lead L74 · team L66`) when the milestone trains first. Below that,
+what the run is doing for it right now:
+
+* **Grinding:** who is training, current level → target level and whether
+  it is the lead's or the team's target. A bar shows the experience gained
+  towards the target level, followed by the battle count and the map, with
+  the level it started from.
+* **Training the team:** every member with its level against the target, `✓`
+  once reached, and `▸` on the one training now.
+* **Anything else:** where the current walk is headed (`➜ Petalburg City Gym
+  (7,15)`, `➜ nearest Pokemon Center`, ...).
+
+The last line is the latest activity (the last GOTO, BATTLE, GRIND, FLEW,
+HEALED, ... log line).
 
 **Run.** The run state (`STARTING` cyan, `RUNNING` green, `PAUSED`
 yellow, `FINISHED` bright green, `FAILED` red, `STOPPED` orange; `PAUSING` and
 `STOPPING` while a request is on its way), the backend and emulator frame,
 the eight badges in their colours (earned ones filled), money, in-game play
-time, wall-clock time, the map and position, and the battle, step and
-completed-milestone counters.
+time, wall-clock time, the map and position, and the battle and step
+counters. **Deaths** counts whiteouts (battles lost: the whole party fainted,
+and the game sends you back to a Pokémon Center) and faints (any of your
+Pokémon knocked out). Both are red once non-zero, and both cover this session
+only.
 
 **Party.** One row per Pokémon: species and level, an HP bar (green above
 50%, yellow above 20%, red below) with the numbers, a status badge (`SLP`,

@@ -625,6 +625,13 @@ class Controller:
     def goto(self, goal, caps: NavCaps | None = None, max_replans: int = 30,
              desc: str = "") -> None:
         """Walk until goal(State) holds, replanning around surprises."""
+        outer, self.goal_desc = getattr(self, "goal_desc", ""), desc or goal.__name__
+        try:
+            self._goto(goal, caps, max_replans, desc)
+        finally:
+            self.goal_desc = outer
+
+    def _goto(self, goal, caps: NavCaps | None, max_replans: int, desc: str) -> None:
         failures = 0
         last_state = None
         tried_triggers: set = set()
