@@ -17,6 +17,7 @@ from .data import GameData
 from .emu import Emu
 from .game import Game
 from .nav import adjacent, at
+from .mapgrid import MapGrid
 from .symbols import const, const_names, maps, symbols
 
 log = logging.getLogger("pokeauto")
@@ -656,6 +657,26 @@ class Agent:
         best = max(easy.values())
         return {m for m, v in easy.items() if v >= best - self.GRIND_TIER}
 
+    def _at_center(self):
+        centers = set(self.CENTERS)
+
+        def at_center(s):
+            return s.map in centers
+        at_center.maps = centers
+        return at_center
+
+    def _plannable(self, goal) -> bool:
+        """One bounded search, story triggers relaxed the way goto relaxes
+        them (the rotating-tile gyms are all triggers)."""
+        from .nav import NavCaps
+        caps = self.ctl.nav_caps(avoid_grass=0.0)
+        live, objs = MapGrid.from_ram(self.game), self.game.objects()
+        for c in (caps, NavCaps(**{**caps.__dict__, "active_triggers_block": False})):
+            if self.ctl.planner.plan(self.ctl.state(), goal, c, live=live,
+                                     live_objects=objs) is not None:
+                return True
+        return False
+
     def grind_to(self, level: int, max_battles: int = 400) -> None:
         """Fight wild Pokemon until the lead reaches `level`.
 
@@ -703,13 +724,17 @@ class Agent:
                     return g.inside(s.x, s.y) and has_encounters(g.behavior(s.x, s.y)) \
                         and not s.surfing
                 in_grass.maps = spots
+                # One bounded search first: a failing goto runs the whole
+                # fallback chain, which is far too slow to learn "no".
+                reachable = self._plannable(in_grass)
+                if not reachable and not self._plannable(self._at_center()):
+                    # Nothing plans from here (a puzzle room such as the
+                    # Mossdeep Gym): it is where we stand, not the grass.
+                    # Walk out properly, then choose again.
+                    self.ctl.goto(self._at_center(), desc="out to a Pokemon Center")
+                    continue
                 try:
-                    # One bounded search first: a failing goto runs the whole
-                    # fallback chain, which is far too slow to learn "no".
-                    if self.ctl.planner.plan(
-                            self.ctl.state(), in_grass, self.ctl.nav_caps(avoid_grass=0.0),
-                            live=MapGrid.from_ram(self.game),
-                            live_objects=self.game.objects()) is None:
+                    if not reachable:
                         raise Stuck("no grinding spot in range")
                     self.ctl.goto(in_grass, caps=self.ctl.nav_caps(avoid_grass=0.0),
                                   desc=f"grass (L{self.lead().level} spots)")
