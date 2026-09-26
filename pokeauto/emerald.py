@@ -392,15 +392,16 @@ ROUTE: list[Milestone] = [
     Milestone("enter_league", flag("FLAG_ENTERED_ELITE_FOUR"),
               [goto(LEAGUE), call("league_supplies"),
                talk_s(LEAGUE, "PokemonLeague_1F_EventScript_DoorGuard")],
-              min_level=66, team_level=58, team_size=4, important=True,
+              min_level=70, team_level=66, team_size=4, important=True,
               hint="cross Victory Road and show the guards all eight badges"),
     Milestone("sidney", flag("FLAG_DEFEATED_ELITE_4_SIDNEY"),
               [call("heal_with_items"), call("rotate_lead"), e4_room("MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM"),
                talk_s("MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM", "EventScript_Sidney")],
-              # The Elite Four tops out at L58. Losing restarts the challenge
-              # here, and each loss raises these targets (Agent.LOSS_BOOST).
-              # Start it with full HP and PP: the League 1F has a nurse.
-              min_level=66, team_level=58, team_size=4, important=True,
+              # Wallace (L56-58, Full Restores) beat a L58-62 team twice even
+              # with a rotating lead; L66 wins. Train once, before the League,
+              # and start with full HP and PP (the League 1F has a nurse).
+              # Each loss still raises these targets (Agent.LOSS_BOOST).
+              min_level=70, team_level=66, team_size=4, important=True,
               hint="beat Sidney of the Elite Four"),
     Milestone("phoebe", flag("FLAG_DEFEATED_ELITE_4_PHOEBE"),
               [call("heal_with_items"), call("rotate_lead"), e4_room("MAP_EVER_GRANDE_CITY_PHOEBES_ROOM"),
