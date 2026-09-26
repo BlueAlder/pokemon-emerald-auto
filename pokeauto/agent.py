@@ -273,6 +273,12 @@ class Agent:
             if self.game.map_id().startswith(self.NO_CENTER_MAPS):
                 self.heal_with_items()
                 return False
+            if "_GYM" in self.game.map_id():
+                # Leaving a gym midway loses its progress: Norman's rooms are
+                # re-entered by another door, Sootopolis's ice floors reset.
+                self.heal_with_items()
+                if not self.needs_heal(0.4):
+                    return False
             log.info("HEALTH low (party %.0f%%) - detouring to heal", 100 * self.party_hp())
             self.heal()
             return True
@@ -307,8 +313,12 @@ class Agent:
                      budget(best), budget(party[0]))
             self.party_swap(0, best.slot)
 
+    POTION_HEAL = [("ITEM_POTION", 20), ("ITEM_SUPER_POTION", 50), ("ITEM_HYPER_POTION", 200),
+                   ("ITEM_MAX_POTION", 999), ("ITEM_FULL_RESTORE", 999)]
+
     def heal_with_items(self, min_frac: float = 0.8) -> None:
-        """Revive and top up the party from the bag (inside the Elite Four)."""
+        """Revive and top up the party from the bag (inside the Elite Four,
+        and inside gyms, where walking out breaks the puzzle's progress)."""
         for mon in self.game.party():
             if mon.is_egg:
                 continue
@@ -323,15 +333,25 @@ class Agent:
             if mon.fainted:
                 continue
             status = mon.status & 0xFF
-            if mon.hp_frac < min_frac or status:
+            if status:
+                cure = next((n for n in ("ITEM_FULL_HEAL", "ITEM_FULL_RESTORE")
+                             if self.game.has_item(n)), None)
+                if cure:
+                    self.use_item(cure, slot)
+                    mon = self.game.party()[slot]
+            for _ in range(4):             # small potions may take a few
+                if mon.hp_frac >= min_frac:
+                    break
                 missing = mon.max_hp - mon.hp
-                choices = (["ITEM_FULL_RESTORE", "ITEM_FULL_HEAL"] if status else []) + (
-                    ["ITEM_HYPER_POTION"] if missing <= 200 else []) + [
-                    "ITEM_MAX_POTION", "ITEM_FULL_RESTORE", "ITEM_HYPER_POTION"]
-                item = next((n for n in choices if self.game.has_item(n)), None)
-                if item and (mon.hp_frac < min_frac or item in ("ITEM_FULL_HEAL",
-                                                                "ITEM_FULL_RESTORE")):
-                    self.use_item(item, slot)
+                have = [(n, amt) for n, amt in self.POTION_HEAL if self.game.has_item(n)]
+                if not have:
+                    break
+                # The smallest potion that covers most of the gap, else the biggest.
+                enough = [h for h in have if h[1] >= missing * 0.7]
+                item = min(enough, key=lambda h: h[1])[0] if enough else \
+                    max(have, key=lambda h: h[1])[0]
+                self.use_item(item, slot)
+                mon = self.game.party()[slot]
         log.info("ITEM HEAL done: %s", self.status_line())
 
     def heal(self) -> None:
