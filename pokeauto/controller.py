@@ -322,24 +322,46 @@ class Controller:
         self.idle(6)
 
     def _pokenav_step(self) -> None:
-        """Leave the PokeNav. The Rustboro tutorial insists on calling Mr. Stone
-        first: MATCH CALL (3rd item) -> first contact -> CALL -> dismiss."""
-        self._pokenav_tries = getattr(self, "_pokenav_tries", 0) + 1
-        for _ in range(4):
-            self.press("B", release=12)
-        if "Pokenav" not in S.name_at(self.game.callback2()):
-            self._pokenav_tries = 0
+        """Leave the PokeNav. The Rustboro tutorial only lets you out after
+        calling Mr. Stone (HandleMainMenuInputTutorial ignores B): MATCH CALL
+        (3rd item) -> first contact -> CALL; then B, B.
+
+        One small action per call, by state: while a call animates or prints
+        (Task_RunLoopedTask / a text printer), read it with A; once a call
+        has happened, only B. Blind A presses after the call used to land on
+        the contact list and call Mr. Stone again, over and over."""
+        st = self.__dict__.setdefault("_nav", {"called": False, "navigated": -1, "seen": -1})
+        if self.emu.frame - st["seen"] > 600:          # a new visit to the PokeNav
+            st.update(called=False, navigated=-1)
+        st["seen"] = self.emu.frame
+        tasks = self.game.active_tasks()
+        printing = self.game.text_printing()
+        if printing or any("RunLoopedTask" in t for t in tasks):
+            if printing:
+                st["called"] = True
+                self.press("A", release=10)          # next line of the call
+            else:
+                self.idle(4)                         # the call screen animating
             return
-        if self._pokenav_tries % 2 == 0:
-            for _ in range(4):
+        if st["called"]:
+            self.press("B", release=12)              # list -> main menu -> out
+            return
+        main_menu = any("CurrentMenuOptionGlow" in t for t in tasks) and not self.game.fading()
+        stale = st["navigated"] >= 0 and self.emu.frame - st["navigated"] > 600
+        if main_menu and (st["navigated"] < 0 or stale):
+            for _ in range(4):                       # 4 items in this menu: back to the top
                 self.press("UP", release=8)
-            for key in ("DOWN", "DOWN", "A"):
+            for key in ("DOWN", "DOWN", "A"):         # MATCH CALL
                 self.press(key, release=20)
-            self.idle(40)
-            for key in ("A", "A"):             # contact -> CALL
+            self.idle(60)
+            for key in ("A", "A"):                   # first contact -> CALL
                 self.press(key, release=30)
-            for _ in range(8):                 # dismiss the conversation
-                self.press("A", release=20)
+            st["navigated"] = self.emu.frame
+        elif stale and not main_menu:
+            self.press("B", release=20)              # the call never started: back out, retry
+            st["navigated"] = self.emu.frame - 500
+        else:
+            self.idle(4)                             # fading in, or a screen loading
 
     # -- field abilities ------------------------------------------------------
     def nav_caps(self, avoid_grass: float = 0.5) -> NavCaps:
