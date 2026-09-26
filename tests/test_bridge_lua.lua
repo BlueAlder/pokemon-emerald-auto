@@ -150,5 +150,56 @@ frames(2)
 B.handle("PRESS 1 2 1")
 check("PRESS takes over from a carried hold", frames(4), "1,1,0,0")
 
+print("\n-- LOCK: lockstep --")
+-- A client with an inbox: select() reports pending lines, receive() hands
+-- them over, and an empty inbox with `gone` set reads as a disconnect.
+local inbox, replies, selects, gone = {}, {}, 0, false
+local lc = {
+  send = function(_, d) replies[#replies+1] = d:gsub("\n$", ""); return #d end,
+  add = function() end,
+  receive = function()
+    if #inbox > 0 then return table.remove(inbox, 1) .. "\n" end
+    if gone then return nil, "disconnected" end
+    return nil, "again"
+  end,
+  _s = { select = function()
+    selects = selects + 1
+    if #inbox > 0 or gone then return 1 end
+    if selects > 50 then gone = true end   -- a stuck test ends as a disconnect
+    return 0
+  end },
+}
+B.set_client(lc)
+check("LOCK 1 accepted", (B.handle("LOCK 1") or true) and replies[#replies], "OK")
+check("CAPS lists LOCK", (function() B.handle("CAPS"); return replies[#replies]:match("LOCK") ~= nil end)(), true)
+
+-- Python reads twice, then asks for a frame of UP: the frame waits for it.
+inbox = { "READ 02000000 2", "READ 02000002 2", "RUN 64 1" }
+local nrep = #replies
+frame = frame + 1; tick()
+check("reads answered while the game waited", replies[nrep + 1], "0001")
+check("second read answered too", replies[nrep + 2], "0203")
+check("the frame then used the RUN's buttons", keys_history[#keys_history], 64)
+check("inbox drained", #inbox, 0)
+
+-- Next frame: the RUN is done -> reply, then wait again; RUN 0 releases.
+inbox = { "RUN 0 1" }
+frame = frame + 1; tick()
+check("RUN reply sent before waiting", replies[#replies]:match("^OK %d+$") ~= nil, true)
+check("released frame", keys_history[#keys_history], 0)
+
+-- A client that goes away frees the game instead of hanging it.
+gone = true
+frame = frame + 1; tick()
+frame = frame + 1; tick()
+check("disconnect ends the wait", keys_history[#keys_history], 0)
+
+-- LOCK 0: no waiting at all.
+gone, inbox, selects = false, {}, 0
+B.set_client(lc)
+B.handle("LOCK 0")
+frame = frame + 1; tick()
+check("LOCK 0 does not wait", selects, 0)
+
 print(("\n%d check(s) failed"):format(fails))
 os.exit(fails == 0 and 0 or 1)

@@ -52,6 +52,15 @@ local STICKY_FRAMES = 12
 local sticky_mask = 0
 local sticky_left = 0
 
+-- Lockstep (LOCK 1, sent by pokeauto on connect): the game does not advance
+-- between commands at all. With no input queued, the keysRead callback waits
+-- for the next command, answering READs meanwhile, so emulated time passes
+-- only inside RUN -- as in the headless backend, whatever mGBA's speed
+-- (fast-forward ran ~3 frames per round trip and threw walks off course).
+-- Disconnecting releases the game.
+local lockstep = false
+local WAIT_MS = 5
+
 local function tohex(s)
   return (s:gsub(".", function(c) return string.format("%02x", c:byte()) end))
 end
@@ -183,8 +192,14 @@ local function handle(line)
     run_mask = tonumber(m)
     run_pending = true          -- replied to from the frame callback
 
+  elseif cmd == "LOCK" then
+    local on = rest:match("^([01])$")
+    if not on then reply("ERR bad_args"); return end
+    lockstep = (on == "1")
+    reply("OK")
+
   elseif cmd == "CAPS" then
-    reply("PING INFO FRAME READ READM PRESS HOLD IDLE RUN STATE LOAD SHOT CAPS")
+    reply("PING INFO FRAME READ READM PRESS HOLD IDLE RUN LOCK STATE LOAD SHOT CAPS")
 
   elseif cmd == "STATE" then
     local s = tonumber(rest)
@@ -252,9 +267,22 @@ local function on_accept()
   rxbuf = ""
   queue = {}; cur = nil; phase = "idle"; left = 0; mask_now = 0
   run_pending = false; sticky_left = 0
+  lockstep = false            -- each client opts in
   client:add("received", on_client_data)
   client:add("error", function() client = nil end)
   console:log("poke_auto: agent connected")
+end
+
+local function wait_for_input()
+  while lockstep and client and cur == nil and #queue == 0 do
+    local ok, ready = pcall(function() return client._s:select(WAIT_MS) end)
+    if not ok or ready == nil or ready < 0 then
+      console:log("poke_auto: client lost while waiting; resuming")
+      client = nil
+      break
+    end
+    if ready > 0 then on_client_data() end
+  end
 end
 
 -- Wiring -------------------------------------------------------------------
@@ -268,6 +296,7 @@ callbacks:add("keysRead", function()
       sticky_mask, sticky_left = run_mask, STICKY_FRAMES
       reply("OK " .. tostring(f))
     end
+    wait_for_input()
     advance_input()
   end
   emu:setKeys(mask_now)

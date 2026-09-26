@@ -197,8 +197,13 @@ class MgbaEmu(Emu):
         info = self._cmd("INFO").split(" ", 3)
         self.game_code = info[0]
         self.frame = int(info[2])
-        if "RUN" not in self._cmd("CAPS"):
-            raise BridgeError("lua/bridge.lua is outdated; reload it in mGBA")
+        caps = self._cmd("CAPS").split()
+        if "RUN" not in caps or "LOCK" not in caps:
+            raise BridgeError("lua/bridge.lua is outdated: restart mGBA and load it again")
+        # Lockstep: mGBA only advances inside RUN, as the headless core does.
+        # Without it the game keeps running (fast-forward: several frames per
+        # round trip) while we read RAM and decide, and walks go off course.
+        self._cmd("LOCK 1")
 
     def _cmd(self, line: str) -> str:
         self.sock.sendall(line.encode() + b"\n")
@@ -232,4 +237,8 @@ class MgbaEmu(Emu):
         self._cmd(f"SHOT {path}")
 
     def close(self) -> None:
+        try:
+            self._cmd("LOCK 0")          # let the game run freely again
+        except (OSError, BridgeError):
+            pass
         self.sock.close()
