@@ -623,6 +623,7 @@ class Agent:
             log.info("LOST a trainer battle: %s targets now +%d levels",
                      m.name, self._level_boost[m.name])
         boost = self._level_boost.get(m.name, 0)
+        self._grind_blocked = {}       # reachability changes with the story
         trained = False
         if m.min_level:
             self._ace_to_front()       # the lead target is the ace's, whoever led last
@@ -676,18 +677,29 @@ class Agent:
     def grind_maps(self, level: int) -> set[str]:
         """The best tier of maps for a L`level` trainee: the highest wild
         levels up to level+2 (and those within GRIND_TIER of them) among maps
-        not yet found unreachable with today's abilities."""
-        caps = self.ctl.nav_caps()
-        key = (caps.surf, caps.waterfall, caps.dive, caps.strength)
-        blocked = getattr(self, "_grind_blocked", {}).get(key, set())
-        usable = self._grind_usable_maps()
-        tops = {m: max(hi for _, hi, _ in mons) for m, mons in self.data.wild_land().items()
-                if m in usable and m not in blocked}
-        easy = {m: v for m, v in tops.items() if v <= level + 2}
+        not yet found unreachable from here with today's abilities."""
+        blocked = getattr(self, "_grind_blocked", {}).get(self._reach_key(), set())
+        easy = {m: v for m, v in self._easy_maps(level).items() if m not in blocked}
         if not easy:
             return set()
         best = max(easy.values())
         return {m for m, v in easy.items() if v >= best - self.GRIND_TIER}
+
+    def _easy_maps(self, level: int) -> dict[str, int]:
+        """Every usable map whose strongest wild Pokemon the trainee outlevels
+        (or nearly): map -> that top level."""
+        usable = self._grind_usable_maps()
+        tops = {m: max(hi for _, hi, _ in mons) for m, mons in self.data.wild_land().items()
+                if m in usable}
+        return {m: v for m, v in tops.items() if v <= level + 2}
+
+    def _reach_key(self) -> tuple:
+        """Field abilities: what "unreachable" depends on within a milestone.
+        Story moves change it too (Granite Cave is out of reach from the
+        mainland until Mr. Briney sails us to Dewford), so before_milestone
+        forgets these findings."""
+        caps = self.ctl.nav_caps()
+        return (caps.surf, caps.waterfall, caps.dive, caps.strength)
 
     def _at_center(self):
         centers = set(self.CENTERS)
@@ -741,8 +753,16 @@ class Agent:
                 except Stuck:
                     spot = None
             if spot is None:
-                if not want:
-                    raise Stuck(f"grinding: no reachable map suits L{self.lead().level}")
+                last_resort = not want
+                if last_resort:
+                    # Nothing in the good tiers is reachable from here: grind
+                    # in the nearest grass the trainee outlevels rather than
+                    # fail the milestone.
+                    want = set(self._easy_maps(self.lead().level))
+                    log.info("GRIND no good tier reachable from %s; nearest grass instead",
+                             self.game.map_id())
+                    if not want:
+                        raise Stuck(f"grinding: no map suits L{self.lead().level}")
                 spots = set(want)
 
                 usable = self._grind_usable_maps()
@@ -771,13 +791,13 @@ class Agent:
                     self.ctl.goto(in_grass, caps=self.ctl.nav_caps(avoid_grass=0.0),
                                   desc=f"grass (L{self.lead().level} spots)")
                 except Stuck:
-                    # Unreachable with today's HMs: never search for them
-                    # again, and try the next-best tier instead.
-                    caps = self.ctl.nav_caps()
-                    key = (caps.surf, caps.waterfall, caps.dive, caps.strength)
+                    if last_resort:
+                        raise Stuck(f"grinding: no grass reachable from {self.game.map_id()}")
+                    # Unreachable from here with today's HMs: never search for
+                    # them again from here, and try the next-best tier instead.
                     if not hasattr(self, "_grind_blocked"):
                         self._grind_blocked = {}
-                    self._grind_blocked.setdefault(key, set()).update(spots)
+                    self._grind_blocked.setdefault(self._reach_key(), set()).update(spots)
                     log.info("GRIND spots unreachable for now: %s", sorted(spots))
                     dry += 1
                     if dry > 8:
