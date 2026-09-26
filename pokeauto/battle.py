@@ -33,6 +33,7 @@ class Choice:
     target: int = 1            # battler id for targeted moves
     score: float = 0.0
     why: str = ""
+    pid: int | None = None     # switch: the Pokemon's personality (slots reorder)
 
 
 @dataclass
@@ -56,8 +57,8 @@ class Battle:
         self._pending: dict[int, Choice] = {}
         self._submitted: dict[int, int] = {}     # battler -> move slot just confirmed
         self._refused: dict[int, set] = {}       # battler -> slots the game bounced back
-        self._bad_switch: set = set()            # party slots the game would not send out
-        self._shift_tries: dict[int, int] = {}
+        self._bad_switch: set = set()            # personalities the game would not send out
+        self._shift_tries: dict[tuple, int] = {}
         self.turns = 0
         self.log: list[str] = []
         self.trainer_losses = 0                  # whiteouts to trainers (targets go up)
@@ -235,6 +236,10 @@ class Battle:
             choice = self._no_item_fallback(battler)
         if choice.kind == "item":
             self._item_count_before = self.game.has_item(choice.slot)
+        if choice.kind == "switch" and choice.pid is None:
+            party = self.game.party()
+            if 0 <= choice.slot < len(party):
+                choice.pid = party[choice.slot].personality
         self._pending[battler] = choice
         self.turns += 1
         me = self.game.battle_mons()[battler]
@@ -406,10 +411,13 @@ class Battle:
                 return
             # Confirming the same Pokemon again and again means the game keeps
             # refusing it ("already in battle", fainted...): try another.
-            self._shift_tries[target] = self._shift_tries.get(target, 0) + 1
-            if self._shift_tries[target] > 3:
+            key = (self.turns, target)     # per turn: earlier successful switches to this row do not count
+            self._shift_tries[key] = self._shift_tries.get(key, 0) + 1
+            if self._shift_tries[key] > 3:
                 log.info("BATTLE party slot %d refused; picking another", target)
-                self._bad_switch.add(target)
+                party = self.game.party()
+                if 0 <= target < len(party):
+                    self._bad_switch.add(party[target].personality)
                 self._pending.pop(0, None)
                 self._pending.pop(2, None)
                 self.ctl.press("B", release=10)
@@ -430,8 +438,10 @@ class Battle:
 
     def _switch_target(self) -> int:
         choice = self._pending.get(0)
-        if choice and choice.kind == "switch" and choice.slot not in self._bad_switch:
-            return choice.slot
+        if choice and choice.kind == "switch" and choice.pid not in self._bad_switch:
+            # Find our Pokemon's row in the reordered menu by identity.
+            row = next((m.slot for m in self.game.party() if m.personality == choice.pid), None)
+            return row if row is not None else choice.slot
         if choice and choice.kind == "item":
             # The battle party menu shows the party reordered (active first):
             # find our Pokemon by identity, not by its original index.
@@ -443,7 +453,14 @@ class Battle:
         out = {bm.personality for i, bm in enumerate(self.game.battle_mons()[:4])
                if i in ((0, 2) if self.is_double() else (0,)) and bm.hp > 0}
         rows = [m for m in self.game.party() if not m.fainted and not m.is_egg
-                and m.personality not in out and m.slot not in self._bad_switch]
+                and m.personality not in out and m.personality not in self._bad_switch]
+        if not rows:
+            # A forced replacement cannot be cancelled: rather than back out
+            # forever, forget the refusals and send whoever is left.
+            rows = [m for m in self.game.party() if not m.fainted and not m.is_egg
+                    and m.personality not in out]
+            if rows:
+                self._bad_switch.clear()
         if not rows:
             return self.best_switch(exclude_active=True)   # None: nobody left to send
         foes = self._foes()
@@ -500,7 +517,7 @@ class Battle:
                 and not self._trapped():
             slot = next((m.slot for m in self.game.party()
                          if m.personality == carry[1] and not m.fainted), None)
-            if slot is not None and slot not in self._bad_switch:
+            if slot is not None and carry[1] not in self._bad_switch:
                 return Choice("switch", slot, why="carry: the trainee shares the experience")
 
         # Wild battles: run unless we want the XP (or to catch).
@@ -524,7 +541,7 @@ class Battle:
             if not self.is_double() and not self._trapped():
                 active = self.game.battler_party_index(0)
                 able = [m.slot for m in self.game.party()
-                        if m.slot != active and m.slot not in self._bad_switch
+                        if m.slot != active and m.personality not in self._bad_switch
                         and self._can_hurt(m.slot, foe0)]
                 if able:
                     sw = max(able, key=lambda sl: self._switch_value(sl, foe0))
@@ -548,7 +565,7 @@ class Battle:
         if best.score < 0.005 and not self.is_double() and not self._trapped():
             active = self.game.battler_party_index(0)
             able = [m.slot for m in self.game.party()
-                    if m.slot != active and m.slot not in self._bad_switch
+                    if m.slot != active and m.personality not in self._bad_switch
                     and self._can_hurt(m.slot, foe)]
             if able:
                 sw = max(able, key=lambda sl: self._switch_value(sl, foe))
@@ -722,7 +739,7 @@ class Battle:
         best, best_v = None, -1e9
         for m in party:
             if m.fainted or m.is_egg or m.slot == active or m.slot in on_field \
-                    or m.slot in self._bad_switch:
+                    or m.personality in self._bad_switch:
                 continue
             v = self._switch_value(m.slot, against) if against else m.hp_frac
             if v > best_v:

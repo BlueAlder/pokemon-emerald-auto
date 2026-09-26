@@ -500,7 +500,7 @@ ROUTE: list[Milestone] = [
                talk_s("MAP_EVER_GRANDE_CITY_PHOEBES_ROOM", "EventScript_Phoebe")],
               heal_first=False, important=True, hint="beat Phoebe of the Elite Four"),
     Milestone("glacia", flag("FLAG_DEFEATED_ELITE_4_GLACIA"),
-              [call("heal_with_items"), call("rotate_lead"), e4_room("MAP_EVER_GRANDE_CITY_GLACIAS_ROOM"),
+              [call("heal_with_items"), call("rotate_lead", "TYPE_ICE"), e4_room("MAP_EVER_GRANDE_CITY_GLACIAS_ROOM"),
                talk_s("MAP_EVER_GRANDE_CITY_GLACIAS_ROOM", "EventScript_Glacia")],
               heal_first=False, important=True, hint="beat Glacia of the Elite Four"),
     Milestone("drake", flag("FLAG_DEFEATED_ELITE_4_DRAKE"),

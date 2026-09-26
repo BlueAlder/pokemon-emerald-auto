@@ -297,19 +297,25 @@ class Agent:
         if ace.slot != 0 and ace.species_name in TEAM_PREF:
             self.party_swap(0, ace.slot)
 
-    def rotate_lead(self) -> None:
+    def rotate_lead(self, foe_type: str | None = None) -> None:
         """Before each Elite Four fight: lead with the trained member that has
         the most attacking power left (level x power x PP). PP is what runs
         out over five fights; leading with the same Pokemon every time sent
-        Swampert to Wallace with 0 PP."""
+        Swampert to Wallace with 0 PP. `foe_type` (the room's main attacking
+        type) discounts whoever it hits hard: Rayquaza led into Glacia's Ice,
+        fainted, and went on to Drake with its Outrage spent."""
         from .emerald import team_pref
         team = team_pref(self)
 
         def budget(m) -> float:
             if m.fainted or m.is_egg or m.species_name not in team:
                 return 0.0
-            return m.level * sum(self.data.move(mv.id).power * min(mv.pp, 15)
-                                 for mv in m.moves if mv.id)
+            power = m.level * sum(self.data.move(mv.id).power * min(mv.pp, 15)
+                                  for mv in m.moves if mv.id)
+            if foe_type:
+                power /= max(0.5, self.data.effectiveness(
+                    const(foe_type), self.data.species(m.species).types))
+            return power
         party = self.game.party()
         best = max(party, key=budget)
         if best.slot != 0 and budget(best) > budget(party[0]):
