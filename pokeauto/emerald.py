@@ -124,8 +124,12 @@ ROUTE: list[Milestone] = [
         lambda a: a.ctl.goto(lambda s: s.map != "MAP_INSIDE_OF_TRUCK", desc="out of the truck"),
     ], heal_first=False),
     Milestone("set_clock", flag("FLAG_SET_WALL_CLOCK"), [home(2), set_clock], heal_first=False),
-    Milestone("options", lambda a: a.game.options()["text_speed"] == 2
-              and a.game.options()["battle_scene_off"], [call("set_options")], heal_first=False),
+    # Options survive NEW GAME (they live in the save), so on their own they
+    # would look done at the start of a new game and the runner -- which
+    # resumes after the latest done milestone -- would skip the truck.
+    Milestone("options", lambda a: a.game.flag("FLAG_SET_WALL_CLOCK")
+              and a.game.options()["text_speed"] == 2 and a.game.options()["battle_scene_off"],
+              [call("set_options")], heal_first=False),
     Milestone("watch_tv", var_ge("VAR_LITTLEROOT_INTRO_STATE", 7), [home(1)], heal_first=False),
     Milestone("meet_rival_mom", flag("FLAG_MET_RIVAL_MOM"), [rival_house(1)], heal_first=False),
     Milestone("meet_rival", var_ge("VAR_LITTLEROOT_RIVAL_STATE", 3),
