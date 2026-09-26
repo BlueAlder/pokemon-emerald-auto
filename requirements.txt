@@ -2,3 +2,4 @@
 stable-retro>=1.0
 pillow>=10
 numpy>=1.26
+textual>=8

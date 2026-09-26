@@ -201,6 +201,11 @@ class RouteRunner:
         self.milestones = milestones
         self.checkpoint = checkpoint      # callable(name) -> None (save a state)
         self.history: list[tuple[str, float]] = []
+        # Read-only progress for status displays (never call current() from a UI).
+        self.active: Milestone | None = None
+        self.active_index = -1
+        self.attempt = 0
+        self.state = "idle"               # idle/running/finished/failed
 
     def current(self) -> Milestone | None:
         """The first unfinished milestone after the latest finished one.
@@ -222,19 +227,25 @@ class RouteRunner:
     def run(self, stop_after: str | None = None, max_seconds: float | None = None) -> bool:
         a = self.agent
         t0 = time.time()
+        self.state = "running"
         while True:
             m = self.current()
             if m is None:
+                self.state = "finished"
                 log.info("ROUTE complete")
                 if self.checkpoint:
                     self.checkpoint("hall_of_fame")
                 return True
+            self.active = m
+            self.active_index = next(i for i, x in enumerate(self.milestones) if x is m)
             if max_seconds and time.time() - t0 > max_seconds:
+                self.state = "failed"
                 log.info("ROUTE time budget exhausted at %s", m.name)
                 return False
             log.info("=== MILESTONE %s === %s", m.name, a.status_line())
             ok = False
             for attempt in range(m.attempts):
+                self.attempt = attempt + 1
                 try:
                     a.before_milestone(m)
                     m.run(a)
@@ -258,6 +269,7 @@ class RouteRunner:
             if not ok and self.current() is not m:
                 continue
             if not ok:
+                self.state = "failed"
                 log.error("ROUTE failed at %s", m.name)
                 return False
             self.history.append((m.name, time.time() - t0))
@@ -267,4 +279,5 @@ class RouteRunner:
             if self.checkpoint:
                 self.checkpoint(m.name)
             if stop_after and m.name == stop_after:
+                self.state = "finished"
                 return True

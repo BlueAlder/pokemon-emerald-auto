@@ -193,6 +193,7 @@ class MgbaEmu(Emu):
             ) from exc
         self.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         self._buf = b""
+        self.on_frames = None     # optional hook(emu) called after each run()
         self.rom = Path(rom_path).read_bytes() if rom_path else None
         info = self._cmd("INFO").split(" ", 3)
         self.game_code = info[0]
@@ -221,6 +222,8 @@ class MgbaEmu(Emu):
     def run(self, keys: int, frames: int) -> None:
         reply = self._cmd(f"RUN {keys} {frames}")
         self.frame = int(reply.split()[1])
+        if self.on_frames:
+            self.on_frames(self)
 
     def _read_ram(self, addr: int, n: int) -> bytes:
         return bytes.fromhex(self._cmd(f"READ {addr:08x} {n}"))

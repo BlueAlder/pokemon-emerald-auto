@@ -88,7 +88,14 @@ python3.12 -m venv .venv && ./.venv/bin/pip install -r requirements.txt
 ./.venv/bin/python scripts/play.py --resume badge_mind           # from a checkpoint
 ./.venv/bin/python scripts/play.py --stop-after badge_rain       # stop at a milestone
 ./.venv/bin/python scripts/play.py --backend mgba                # drive the mGBA app (watchable)
+./.venv/bin/python scripts/play.py --no-tui                      # plain log lines (pipes, CI)
 ```
+
+In a terminal the player opens a colourful TUI: the log scrolls at the top,
+and the current goal, the run (badges, money, time, map) and the party are
+shown below. `space` pauses and resumes the game at any moment, `q` quits,
+`s` saves a checkpoint. Every flag, key and file is described in
+[docs/CLI.md](docs/CLI.md).
 
 * On macOS, run long jobs under `caffeinate -dimsu`. Without it, background
   processes can be throttled to a few percent of a CPU while the machine
@@ -122,10 +129,13 @@ python3.12 -m venv .venv && ./.venv/bin/pip install -r requirements.txt
 | `pokeauto/puzzles.py` | Gate, boulder, rotating-tile and ice solvers |
 | `pokeauto/agent.py` | Healing, shopping, teaching, training, item use |
 | `pokeauto/route.py`, `emerald.py` | Milestone runner and the Emerald route |
-| `scripts/play.py` | CLI |
+| `scripts/play.py` | CLI (see [docs/CLI.md](docs/CLI.md)) |
+| `pokeauto/runstate.py` | Run control between the game thread and the UI: status snapshots, pause, stop |
+| `pokeauto/tui.py` | The Textual TUI: log, current goal, run stats, party |
 | `scripts/gen_data.py` | Regenerates `data/*.json` from a pokeemerald checkout |
 | `lua/bridge.lua` | mGBA-side TCP bridge |
 | `tests/test_offline.py` | Solver checks against the ROM (`python tests/test_offline.py`) |
+| `tests/test_tui.py` | TUI and pause/quit checks, plus a short headless run (`python tests/test_tui.py`) |
 
 ## Status
 
