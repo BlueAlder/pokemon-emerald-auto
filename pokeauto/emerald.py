@@ -246,7 +246,7 @@ ROUTE: list[Milestone] = [
     Milestone("mach_bike", has_item("ITEM_MACH_BIKE"),
               [prefer("MACH"), goto("MAP_MAUVILLE_CITY_BIKE_SHOP"),
                talk_s("MAP_MAUVILLE_CITY_BIKE_SHOP", "EventScript_Rydel"), prefer()],
-              hint="get the Mach Bike from Rydel in Mauville"),
+              hint="get the Mach Bike from Rydel in Mauville", optional=True),
     Milestone("rock_smash", flag("FLAG_RECEIVED_HM_ROCK_SMASH"),
               [goto("MAP_MAUVILLE_CITY_HOUSE1"),
                talk_s("MAP_MAUVILLE_CITY_HOUSE1", "EventScript_RockSmashDude")]),
@@ -325,7 +325,7 @@ ROUTE: list[Milestone] = [
     Milestone("exp_share", flag("FLAG_RECEIVED_EXP_SHARE"),
               [goto("MAP_RUSTBORO_CITY_DEVON_CORP_3F"),
                talk_s("MAP_RUSTBORO_CITY_DEVON_CORP_3F", "EventScript_MrStone")],
-              hint="collect the Exp. Share from Mr. Stone at Devon Corp"),
+              hint="collect the Exp. Share from Mr. Stone at Devon Corp", optional=True),
 
     # -- Lilycove, Mt. Pyre, the Magma Hideout, the harbor, the Aqua Hideout -------------
     Milestone("reach_lilycove", flag("FLAG_VISITED_LILYCOVE_CITY"), [goto("MAP_LILYCOVE_CITY")]),
@@ -356,7 +356,7 @@ ROUTE: list[Milestone] = [
                                     has_item("ITEM_MASTER_BALL")),
               [goto("MAP_AQUA_HIDEOUT_B1F"),
                talk_s("MAP_AQUA_HIDEOUT_B1F", "ItemMasterBall")],
-              hint="pick up the Master Ball in the Aqua Hideout (for Rayquaza)"),
+              hint="pick up the Master Ball in the Aqua Hideout (for Rayquaza)", optional=True),
     Milestone("reach_mossdeep", flag("FLAG_VISITED_MOSSDEEP_CITY"),
               [goto("MAP_MOSSDEEP_CITY"), trigger("MAP_MOSSDEEP_CITY", "VisitedMossdeep")]),
 
@@ -416,7 +416,7 @@ ROUTE: list[Milestone] = [
               [goto("MAP_SKY_PILLAR_OUTSIDE"), goto("MAP_SKY_PILLAR_TOP"),
                call("catch_static", "SPECIES_RAYQUAZA", "MAP_SKY_PILLAR_TOP",
                     "SkyPillar_Top_EventScript_Rayquaza")],
-              hint="catch Rayquaza (L70) at the top of the Sky Pillar with the Master Ball"),
+              hint="catch Rayquaza (L70) at the top of the Sky Pillar with the Master Ball", optional=True),
     Milestone("waterfall", flag("FLAG_RECEIVED_HM_WATERFALL"),
               [goto(SOOTOPOLIS), talk_s(SOOTOPOLIS, "SootopolisCity_EventScript_Wallace")],
               hint="get HM07 Waterfall from Wallace in Sootopolis"),

@@ -34,6 +34,7 @@ class Milestone:
     important: bool = False       # boss fight inside: spend items freely
     attempts: int = 4
     hint: str = ""                # plain-English goal, for logs and readers
+    optional: bool = False        # a side quest: never where the runner resumes from
 
     def targets(self, agent) -> tuple[int, int]:
         """(min_level, team_level); either may be a callable(agent) -> int."""
@@ -225,11 +226,22 @@ class RouteRunner:
         earlier ones are -- even if the game later clears one of their flags
         (the rival's Rayquaza call clears FLAG_DEFEATED_MAGMA_SPACE_CENTER).
         """
+        # Optional milestones (side quests, some of which count as done when
+        # they are skipped) never set the resume point: a game played without
+        # the Mach Bike had catch_rayquaza "done" and skipped the Maxie and
+        # Archie scene before it, so Wallace would never hand over Waterfall.
         last = -1
         for i in range(len(self.milestones) - 1, -1, -1):
-            if self.milestones[i].done(self.agent):
+            m = self.milestones[i]
+            if not m.optional and m.done(self.agent):
                 last = i
                 break
+        # Side quests left behind (a game played on older code has no Mach
+        # Bike) are fetched now, unless one already failed this session.
+        skipped = getattr(self, "skipped", set())
+        for m in self.milestones[:last + 1]:
+            if m.optional and m.name not in skipped and not m.done(self.agent):
+                return m
         for m in self.milestones[last + 1:]:
             if not m.done(self.agent):
                 return m
@@ -284,6 +296,11 @@ class RouteRunner:
                              m.name, getattr(self.current(), "name", None))
                     break
             if not ok and self.current() is not m:
+                continue
+            if not ok and m.optional:
+                # A side quest that will not work out is not worth the run.
+                self.__dict__.setdefault("skipped", set()).add(m.name)
+                log.warning("ROUTE skipping optional %s", m.name)
                 continue
             if not ok:
                 self.state = "failed"
