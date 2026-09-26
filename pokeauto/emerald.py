@@ -313,7 +313,11 @@ ROUTE: list[Milestone] = [
     # -- Mossdeep, the Space Center, Dive, Seafloor Cavern ---------------------------------
     Milestone("badge_mind", badges(7),
               [call("rotating_tile_gym", "MAP_MOSSDEEP_CITY_GYM", "EventScript_TateAndLiza", 7)],
-              min_level=52, team_level=40, important=True,
+              # Claydol, Xatu, Lunatone, Solrock (L41-42): Surf and Muddy Water
+              # hit both and are super effective on three. Swampert carries the
+              # double battle; the Space Center needs it at 55 next anyway, while
+              # training a partner here costs ~110 battles in L27 grass.
+              min_level=55, important=True,
               hint="beat Tate and Liza at the Mossdeep Gym"),
     Milestone("space_center", flag("FLAG_DEFEATED_MAGMA_SPACE_CENTER"),
               [goto("MAP_MOSSDEEP_CITY_SPACE_CENTER_2F"),
