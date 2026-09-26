@@ -668,8 +668,10 @@ class Agent:
 
     # Experience per battle grows with the foe's level, and walking there is
     # cheap (Fly), so grind among the strongest wild levels a trainee still
-    # outlevels -- never in whatever grass happens to be nearest.
-    GRIND_TIER = 3
+    # outlevels -- never in whatever grass happens to be nearest. The tier is
+    # 5 levels wide and the nearest spot in it wins: a few levels of XP are
+    # not worth doubling every heal trip (Victory Road B1F vs 1F: 87 heals).
+    GRIND_TIER = 5
 
     def grind_maps(self, level: int) -> set[str]:
         """The best tier of maps for a L`level` trainee: the highest wild

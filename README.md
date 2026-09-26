@@ -53,8 +53,9 @@ models the game instead:
   The same code handles switching, potions, status cures, refused moves
   (Disable, Taunt…), double and multi battles, and learning moves.
   Before double battles and the Elite Four the team is trained
-  (`team_level`): the trainee is moved to the front and grinds on the nearest
-  map whose wild levels suit it, read from the ROM's encounter tables.
+  (`team_level`): the trainee is moved to the front and grinds among the
+  strongest wild levels it still outlevels, read from the ROM's encounter
+  tables.
 * **Speed is measured in frames.** The emulator tops out at about 2,500
   frames a second, so the work is spent where frames go:
   * After the Feather Badge the route catches a Wingull and teaches it Fly.
@@ -65,8 +66,20 @@ models the game instead:
   * Planner expansions are cached per map across searches, keyed by
     everything that can change them (obstacles, abilities, layout vars).
     Repeated trips such as grinding heal detours reuse them.
-  * Battles hold B while text prints, which skips the per-letter delay.
-    Fake Out is only chosen on a Pokémon's first turn out.
+  * Battles hold B while a battle message prints, which skips the
+    per-letter delay. Fake Out is only chosen on a Pokémon's first turn out.
+  * Grinding is most of a run's time, so each level is bought cheaply:
+    * The spot is the strongest reachable tier of wild levels; when a tier
+      is out of reach, the next one down. It is never just the nearest grass.
+    * Targets are what the fights need. Tate & Liza train the partner to 40
+      and Juan to 46. The Elite Four needs Swampert 70 and three more at 66:
+      a team of 58–62 lost to Wallace's Full Restores in testing.
+    * Each lost trainer battle adds 4 levels to the retried milestone's
+      targets.
+    * Bosses start healed, with full PP. In the Elite Four the lead rotates
+      to whoever has the most attacking PP left. A move doing under 15% is
+      swapped for a teammate that hits three times harder, and spare money
+      buys up to 25 Full Restores.
 
 ## You need to supply
 
