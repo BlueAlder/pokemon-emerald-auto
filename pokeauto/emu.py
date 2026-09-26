@@ -191,11 +191,20 @@ class MgbaEmu(Emu):
                 f"could not reach the mGBA bridge on {host}:{port}. Open the ROM in "
                 "mGBA and load lua/bridge.lua (Tools > Scripting > File > Load script)"
             ) from exc
-        self.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        try:
+            self.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        except OSError:
+            pass        # macOS: EINVAL when the peer already hung up; INFO says why
         self._buf = b""
         self.on_frames = None     # optional hook(emu) called after each run()
         self.rom = Path(rom_path).read_bytes() if rom_path else None
-        info = self._cmd("INFO").split(" ", 3)
+        try:
+            info = self._cmd("INFO").split(" ", 3)
+        except (OSError, BridgeError) as exc:
+            raise BridgeError(
+                f"the mGBA bridge on {host}:{port} dropped the connection ({exc}). Is a ROM "
+                "running in mGBA, and lua/bridge.lua loaded? If mGBA was restarted, load the "
+                "script again (Tools > Scripting > File > Load script)") from exc
         self.game_code = info[0]
         self.frame = int(info[2])
         caps = self._cmd("CAPS").split()

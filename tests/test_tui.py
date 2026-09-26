@@ -245,7 +245,8 @@ def test_end_to_end_headless():
     (runs / "checkpoints").mkdir(parents=True, exist_ok=True)
     control = RunControl("headless", save_manual=lambda e: "unused")
     h = install_handler(control)
-    args = Namespace(backend="headless", resume=None, live=5.0, stop_after=None, port=8888)
+    args = Namespace(backend="headless", resume=None, live=5.0, stop_after=None, port=8888,
+                     new_game=False)
     worker = threading.Thread(target=play.run_game, args=(args, ROM, runs, control, True),
                               name="game", daemon=True)
 

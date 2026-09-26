@@ -84,6 +84,28 @@ class Agent:
             self.ctl.press("A", hold=3, release=20)
         raise Stuck("could not get through the title screen")
 
+    def new_game(self) -> None:
+        """Start over even if the cartridge holds a save (mGBA keeps the .sav
+        next to the ROM, and beating the Elite Four saves the game): soft
+        reset with A+B+SELECT+START, pick NEW GAME, then boot as usual."""
+        log.info("NEW GAME: soft reset to the title screen")
+        self.ctl.press("A", "B", "SELECT", "START", hold=12, release=60)
+        for _ in range(3000):
+            if "Task_HandleMainMenuInput" in self.game.active_tasks():
+                break
+            self.ctl.press("A", hold=3, release=20)     # through the intro and title
+        else:
+            raise Stuck("new game: never reached the title menu")
+        # CONTINUE is listed first when a save exists; NEW GAME is next.
+        want = 1 if self.emu.u16(S["gSaveFileStatus"]) == 1 else 0
+        for _ in range(6):
+            data = self.game.task_data("Task_HandleMainMenuInput")
+            if data is None or data[1] == want:
+                break
+            self.ctl.press("DOWN", release=10)
+        self.ctl.press("A", release=30)
+        self.boot()
+
     # -- start menu ---------------------------------------------------------------------
     def _fly(self, dest_map: str) -> bool:
         """Planner step 'fly'. A town the game refuses is never planned again."""

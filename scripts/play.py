@@ -46,7 +46,7 @@ def run_game(args, rom: Path, runs: Path, control, hook: bool) -> None:
     """Build the emulator and play. Every emulator/game call happens in this thread."""
     from pokeauto.agent import Agent
     from pokeauto.emerald import ROUTE
-    from pokeauto.emu import HeadlessEmu, MgbaEmu
+    from pokeauto.emu import BridgeError, HeadlessEmu, MgbaEmu
     from pokeauto.route import RouteRunner
     from pokeauto.runstate import StopRun
 
@@ -77,14 +77,22 @@ def run_game(args, rom: Path, runs: Path, control, hook: bool) -> None:
             if args.backend == "headless":
                 (runs / "checkpoints" / f"{name}.state").write_bytes(emu.save_state())
 
+        if args.new_game:
+            agent.new_game()
         runner = RouteRunner(agent, ROUTE, checkpoint=checkpoint)
         control.attach(agent, runner)
         control.set_state("running")
+        if not args.new_game and runner.current() is None:
+            logging.warning("This game has already reached the Hall of Fame (game time %s): "
+                            "the cartridge save mGBA loads is a finished game. "
+                            "Start over with --new-game.", agent.game.play_time())
         ok = runner.run(stop_after=args.stop_after)
         state = "finished" if ok else "failed"
     except (StopRun, KeyboardInterrupt):
         state = "stopped"
         logging.info("STOPPED by the user")
+    except BridgeError as exc:
+        logging.error("mGBA: %s", exc)
     except Exception:
         logging.error("run crashed:\n%s", traceback.format_exc())
     finally:
@@ -113,8 +121,13 @@ def main() -> int:
     p.add_argument("--no-tui", action="store_true",
                    help="plain streaming log instead of the TUI (automatic when stdout is not a TTY)")
     p.add_argument("--start-paused", action="store_true", help="TUI: start paused (space resumes)")
+    p.add_argument("--new-game", action="store_true",
+                   help="start a new game even if the cartridge has a save (mGBA loads the .sav "
+                        "next to the ROM; beating the Elite Four saves). Not with --resume")
     args = p.parse_args()
     use_tui = not args.no_tui and sys.stdout.isatty() and sys.stdin.isatty()
+    if args.new_game and args.resume:
+        sys.exit("--new-game and --resume contradict each other")
 
     runs = ROOT / "runs"
     (runs / "checkpoints").mkdir(parents=True, exist_ok=True)

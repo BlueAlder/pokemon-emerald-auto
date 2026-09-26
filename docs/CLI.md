@@ -30,6 +30,7 @@ Put the US Emerald ROM at `roms/emerald.gba`, or point `--rom` or
 ./.venv/bin/python scripts/play.py --resume badge_mind      # continue from a checkpoint
 ./.venv/bin/python scripts/play.py --stop-after badge_rain  # stop after that milestone
 ./.venv/bin/python scripts/play.py --backend mgba           # drive the mGBA app (watchable)
+./.venv/bin/python scripts/play.py --backend mgba --new-game  # ...starting over, whatever mGBA saved
 ./.venv/bin/python scripts/play.py --no-tui | tee out.log   # plain log lines
 ```
 
@@ -53,6 +54,7 @@ caffeinate -dimsu ./.venv/bin/python scripts/play.py
 | `--live SECONDS` | `5` | How often the headless backend writes the current frame to `runs/live.png`. |
 | `--no-tui` | off | Print plain log lines instead of starting the TUI. This is automatic when stdout or stdin is not a terminal. |
 | `--start-paused` | off | TUI only: start paused, so you can look around first. Press space to start. |
+| `--new-game` | off | Start a new game even if the cartridge holds a save: soft reset (A+B+SELECT+START), choose NEW GAME at the title menu, then play from the truck. Without it, mGBA continues whatever game its `.sav` holds. Can't be combined with `--resume`. |
 
 Milestone names are the first argument of each `Milestone(...)` in
 `pokeauto/emerald.py`, for example `set_clock`, `starter`, `badge_stone`,
@@ -253,6 +255,18 @@ in this mode.
 * **`another run (pid N) is using runs/`.** Another player is running in this
   checkout. Stop it first (or delete a stale `runs/play.lock` if that pid is
   gone; the check does this by itself when the pid no longer exists).
+* **With `--backend mgba` it "loads the last run" and says the route is
+  complete.** mGBA keeps an in-game save (`<rom name>.sav`) next to the ROM
+  you opened and loads it every time. Beating the Elite Four saves the game,
+  so after one finished run the title menu's first option, CONTINUE, is a
+  finished game; the player continues it and has nothing left to do (it logs
+  a warning saying so). Pass `--new-game` to start over. Your `.sav` is only
+  overwritten when the new game saves too (at its own Hall of Fame). To keep
+  the finished one, copy the `.sav` first.
+* **`the mGBA bridge ... dropped the connection`** (was a crash:
+  `OSError: [Errno 22] Invalid argument`). mGBA accepted the connection and
+  closed it: no ROM running, the script not loaded after a restart, or mGBA
+  shutting down. Open the ROM, load `lua/bridge.lua` again, and retry.
 * **`could not reach the mGBA bridge`.** Open the ROM in mGBA and load
   `lua/bridge.lua` via *Tools ▸ Scripting… ▸ File ▸ Load script*. It listens on
   127.0.0.1:8888 (`--port` to change).
