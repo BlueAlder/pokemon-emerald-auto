@@ -111,12 +111,32 @@ LEAGUE = "MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F"
 VICTORY_ROAD = ["MAP_VICTORY_ROAD_1F", "MAP_VICTORY_ROAD_B1F"]
 
 
+# (TM, move, who it is for, the move it replaces). Skipped when that Pokemon
+# is not on the team (with Rayquaza, Hariyama and Golbat never join).
+E4_TMS_FULL = [("ITEM_TM03", "MOVE_WATER_PULSE", ("SWAMPERT",), "MOVE_TAKE_DOWN"),
+               ("ITEM_TM42", "MOVE_FACADE", ("AZUMARILL",), "MOVE_HYDRO_PUMP"),
+               ("ITEM_TM39", "MOVE_ROCK_TOMB", ("HARIYAMA",), "MOVE_WHIRLWIND"),
+               ("ITEM_TM40", "MOVE_AERIAL_ACE", ("GOLBAT", "CROBAT"), None)]
+E4_TMS = [(tm, mv, who) for tm, mv, who, _ in E4_TMS_FULL]
+
+
 def has_species(*names: str):
     return lambda a: any(p.species_name in names for p in a.game.party())
 # Who gets trained for doubles and the Elite Four, best first (by evolution
 # line); anyone else only by level. Castform and the Fly carrier are passengers.
 TEAM_PREF = ("SWAMPERT", "MARSHTOMP", "MUDKIP", "AZUMARILL", "MARILL", "HARIYAMA",
              "MAKUHITA", "CROBAT", "GOLBAT", "ZUBAT")
+# Rayquaza (L70 at the Sky Pillar, before the eighth gym) outlevels every
+# fight left, so with it the team to train is just Swampert and Rayquaza:
+# no partner for Juan, no Hariyama/Golbat for the Elite Four.
+TEAM_WITH_RAYQUAZA = ("SWAMPERT", "MARSHTOMP", "MUDKIP", "RAYQUAZA")
+
+
+def team_pref(a) -> tuple:
+    """The Pokemon the route trains, best first (by evolution line)."""
+    if any(p.species_name == "RAYQUAZA" for p in a.game.party()):
+        return TEAM_WITH_RAYQUAZA
+    return TEAM_PREF
 
 ROUTE: list[Milestone] = [
     Milestone("leave_truck", var_ge("VAR_LITTLEROOT_INTRO_STATE", 3), [
@@ -281,6 +301,12 @@ ROUTE: list[Milestone] = [
               hint="catch a Wingull to carry HM02 Fly"),
     Milestone("teach_fly", lambda a: any(p.knows("MOVE_FLY") for p in a.game.party()),
               [call("teach", "ITEM_HM02", ["WINGULL", "PELIPPER"])]),
+    # Mr. Stone's thanks for Steven's letter; one flight away now. Team training
+    # uses it: the trainee holds it and is switched out for the ace at once.
+    Milestone("exp_share", flag("FLAG_RECEIVED_EXP_SHARE"),
+              [goto("MAP_RUSTBORO_CITY_DEVON_CORP_3F"),
+               talk_s("MAP_RUSTBORO_CITY_DEVON_CORP_3F", "EventScript_MrStone")],
+              hint="collect the Exp. Share from Mr. Stone at Devon Corp"),
 
     # -- Lilycove, Mt. Pyre, the Magma Hideout, the harbor, the Aqua Hideout -------------
     Milestone("reach_lilycove", flag("FLAG_VISITED_LILYCOVE_CITY"), [goto("MAP_LILYCOVE_CITY")]),
@@ -307,6 +333,11 @@ ROUTE: list[Milestone] = [
               [goto("MAP_AQUA_HIDEOUT_B2F"), goto("MAP_AQUA_HIDEOUT_B2F", 28, 17),
                talk_s("MAP_AQUA_HIDEOUT_B2F", "EventScript_Matt")],
               min_level=48, important=True, hint="clear the Team Aqua Hideout in Lilycove"),
+    Milestone("master_ball", any_of(flag("FLAG_ITEM_AQUA_HIDEOUT_B1F_MASTER_BALL"),
+                                    has_item("ITEM_MASTER_BALL")),
+              [goto("MAP_AQUA_HIDEOUT_B1F"),
+               talk_s("MAP_AQUA_HIDEOUT_B1F", "ItemMasterBall")],
+              hint="pick up the Master Ball in the Aqua Hideout (for Rayquaza)"),
     Milestone("reach_mossdeep", flag("FLAG_VISITED_MOSSDEEP_CITY"),
               [goto("MAP_MOSSDEEP_CITY"), trigger("MAP_MOSSDEEP_CITY", "VisitedMossdeep")]),
 
@@ -356,6 +387,14 @@ ROUTE: list[Milestone] = [
               [goto(SOOTOPOLIS), talk_s(SOOTOPOLIS, "SootopolisCity_EventScript_Maxie"),
                talk_s(SOOTOPOLIS, "SootopolisCity_EventScript_Archie")],
               hint="talk to Maxie and Archie in Sootopolis"),
+    # After it wakes, the Sky Pillar's floors crack: only the Mach Bike crosses
+    # them, so without one this is skipped (and the team trains as before).
+    Milestone("catch_rayquaza", any_of(has_species("RAYQUAZA"), flag("FLAG_DEFEATED_RAYQUAZA"),
+                                       lambda a: not a.game.has_item("ITEM_MACH_BIKE")),
+              [goto("MAP_SKY_PILLAR_OUTSIDE"), goto("MAP_SKY_PILLAR_TOP"),
+               call("catch_static", "SPECIES_RAYQUAZA", "MAP_SKY_PILLAR_TOP",
+                    "SkyPillar_Top_EventScript_Rayquaza")],
+              hint="catch Rayquaza (L70) at the top of the Sky Pillar with the Master Ball"),
     Milestone("waterfall", flag("FLAG_RECEIVED_HM_WATERFALL"),
               [goto(SOOTOPOLIS), talk_s(SOOTOPOLIS, "SootopolisCity_EventScript_Wallace")],
               hint="get HM07 Waterfall from Wallace in Sootopolis"),
@@ -379,8 +418,9 @@ ROUTE: list[Milestone] = [
     # Five fights with no Pokemon Center: two Pokemon run out of PP. Recruit
     # two more from Victory Road (Hariyama catches easily) and train them.
     # (By species, not party size: the Fly carrier takes a slot too.)
-    Milestone("e4_team", all_of(has_species("HARIYAMA", "MAKUHITA"),
-                                has_species("GOLBAT", "CROBAT", "ZUBAT")),
+    Milestone("e4_team", any_of(has_species("RAYQUAZA"),
+                                all_of(has_species("HARIYAMA", "MAKUHITA"),
+                                       has_species("GOLBAT", "CROBAT", "ZUBAT"))),
               [call("shop", {"ITEM_ULTRA_BALL": 15}),
                unless(has_species("HARIYAMA", "MAKUHITA"),
                       call("catch", "SPECIES_HARIYAMA", VICTORY_ROAD)),
@@ -391,12 +431,11 @@ ROUTE: list[Milestone] = [
     # Facade (Huge Power) over Hydro Pump's 5 PP.
     Milestone("e4_moves", lambda a: a.game.flag("FLAG_DEFEATED_WALLY_VICTORY_ROAD") and all(
         not a.game.has_item(tm) or any(p.knows(mv) for p in a.game.party())
-        for tm, mv in (("ITEM_TM03", "MOVE_WATER_PULSE"), ("ITEM_TM42", "MOVE_FACADE"),
-                       ("ITEM_TM39", "MOVE_ROCK_TOMB"), ("ITEM_TM40", "MOVE_AERIAL_ACE"))),
-              [call("teach", "ITEM_TM03", ["SWAMPERT"], "MOVE_TAKE_DOWN"),
-               call("teach", "ITEM_TM42", ["AZUMARILL"], "MOVE_HYDRO_PUMP"),
-               call("teach", "ITEM_TM39", ["HARIYAMA"], "MOVE_WHIRLWIND"),
-               call("teach", "ITEM_TM40", ["GOLBAT"])]),
+        or not any(p.species_name in who for p in a.game.party())
+        for tm, mv, who in E4_TMS),
+              [unless(lambda a, who=who: not any(p.species_name in who for p in a.game.party()),
+                      call("teach", tm, list(who), *([old] if old else [])))
+               for tm, mv, who, old in E4_TMS_FULL]),
     Milestone("enter_league", flag("FLAG_ENTERED_ELITE_FOUR"),
               [goto(LEAGUE), call("league_supplies"),
                talk_s(LEAGUE, "PokemonLeague_1F_EventScript_DoorGuard")],

@@ -251,10 +251,10 @@ class Agent:
         return (self.party_hp() < threshold or lead.hp_frac < 0.35 or lead.fainted
                 or low_pp)
 
-    def low_attack_pp(self, frac: float = 0.5) -> bool:
-        """The lead has under half its attacking PP left (a boss fight ahead
-        should not start with Surf at 0 -- that cost a whiteout once)."""
-        lead = self.lead()
+    def low_attack_pp(self, frac: float = 0.5, mon=None) -> bool:
+        """The lead (or `mon`) has under half its attacking PP left (a boss
+        fight ahead should not start with Surf at 0 -- that cost a whiteout)."""
+        lead = mon or self.lead()
         if lead is None:
             return False
         moves = [(mv, self.data.move(mv.id)) for mv in lead.moves if mv.id]
@@ -301,10 +301,11 @@ class Agent:
         the most attacking power left (level x power x PP). PP is what runs
         out over five fights; leading with the same Pokemon every time sent
         Swampert to Wallace with 0 PP."""
-        from .emerald import TEAM_PREF
+        from .emerald import team_pref
+        team = team_pref(self)
 
         def budget(m) -> float:
-            if m.fainted or m.is_egg or m.species_name not in TEAM_PREF:
+            if m.fainted or m.is_egg or m.species_name not in team:
                 return 0.0
             return m.level * sum(self.data.move(mv.id).power * min(mv.pp, 15)
                                  for mv in m.moves if mv.id)
@@ -519,7 +520,7 @@ class Agent:
         raise Stuck(f"item {item_id} is not in the bag")
 
     def use_item(self, item: str, target_slot: int = 0, forget_slot: int | None = None,
-                 teach_ok: bool = True) -> None:
+                 teach_ok: bool = True, give: bool = False) -> None:
         """Use an item from the bag on a party member (TMs/HMs, potions, ...).
 
         forget_slot: which known move a TM/HM replaces when the mon already
@@ -547,8 +548,81 @@ class Agent:
                 break
             self.ctl.press("DOWN" if cur < want else "UP", release=6)
         self.ctl.press("A", release=16)                  # context menu
-        self.ctl._menu_select(0)                         # USE
+        if give:
+            # The Items pocket's context menu is a grid: USE GIVE / TOSS CANCEL.
+            # Its cursor variable is stale until moved (a second GIVE read "1"
+            # and pressed A on USE), so walk from the known corner instead.
+            self.ctl.idle(8)
+            for key in ("UP", "LEFT", "RIGHT"):
+                self.ctl.press(key, release=6)
+            self.ctl.press("A", release=16)
+        else:
+            self.ctl._menu_select(0)                     # USE
         self._drive_item_flow(target_slot, forget_slot, teach_ok)
+
+    def give_item(self, item: str, slot: int) -> None:
+        """Have party member `slot` hold `item` from the bag (swapping out
+        whatever it held)."""
+        self.use_item(item, slot, give=True)
+        mon = self.game.party()[slot]
+        if mon.item != const(item):
+            raise Stuck(f"giving {item} to {mon.species_name} did not take")
+        log.info("GAVE %s to %s", item, mon.species_name)
+
+    def take_item(self, slot: int) -> None:
+        """Take party member `slot`'s held item back into the bag:
+        POKEMON -> the mon -> ITEM -> TAKE."""
+        MENU_ITEM, MENU_TAKE_ITEM = 3, 5
+        mon = self.game.party()[slot]
+        self.open_start_menu("POKEMON")
+
+        def wait(task: str, frames: int = 240) -> None:
+            for _ in range(frames // 4):
+                if any(task in t for t in self.game.active_tasks()) and not self.game.fading():
+                    return
+                self.ctl.idle(4)
+            raise Stuck(f"party menu: never reached {task}")
+
+        def choose(action: int) -> None:
+            internal = self.emu.u32(S["sPartyMenuInternal"])
+            actions = list(self.emu.read(internal + 15, self.emu.u8(internal + 23)))
+            if action not in actions:
+                raise Stuck(f"party menu: no action {action} in {actions}")
+            self.ctl._menu_select(actions.index(action))
+
+        wait("Task_HandleChooseMonInput")
+        for _ in range(10):
+            if struct.unpack("b", self.emu.read(S["gPartyMenu"] + 9, 1))[0] == slot:
+                break
+            self.ctl.press("DOWN", release=5)
+        self.ctl.press("A", release=16)
+        wait("Task_HandleSelectionMenuInput")
+        choose(MENU_ITEM)
+        self.ctl.idle(10)
+        wait("Task_HandleSelectionMenuInput")
+        choose(MENU_TAKE_ITEM)
+        for _ in range(40):                  # "Received the X from Y." -> back out
+            if self.game.mode().kind == "overworld" and self.ctl.free():
+                break
+            if self.game.text_printing() or self.game.text_waiting():
+                self.ctl.press("A", release=12)
+            else:
+                self.ctl.press("B", release=12)
+        log.info("TOOK %s's held item", mon.species_name)
+
+    def hold(self, item: str, slot: int) -> bool:
+        """Make party member `slot` hold `item`, fetching it from whoever holds it."""
+        iid = const(item)
+        party = self.game.party()
+        if party[slot].item == iid:
+            return True
+        holder = next((m for m in party if m.item == iid), None)
+        if holder is not None:
+            self.take_item(holder.slot)
+        if not self.game.has_item(item):
+            return False
+        self.give_item(item, slot)
+        return self.game.party()[slot].item == iid
 
     def _drive_item_flow(self, target_slot: int, forget_slot: int | None, teach_ok: bool,
                          max_iters: int = 300) -> None:
@@ -790,6 +864,18 @@ class Agent:
         finally:
             self.grinding = None
 
+    _carrier: int | None = None        # personality of the switch-training carrier
+
+    def _fighter(self):
+        """Who does the fighting while grinding: the carrier when switch-
+        training, else the lead."""
+        if self._carrier is not None:
+            mon = next((m for m in self.game.party()
+                        if m.personality == self._carrier and not m.fainted), None)
+            if mon is not None:
+                return mon
+        return self.lead()
+
     def _grind_to(self, level: int, max_battles: int = 400) -> None:
         """Fight wild Pokemon until the lead reaches `level`.
 
@@ -802,7 +888,8 @@ class Agent:
         lead = self.lead()
         if lead is None or lead.level >= level:
             return
-        log.info("GRIND %s L%d -> L%d", lead.species_name, lead.level, level)
+        log.info("GRIND %s L%d -> L%d%s", lead.species_name, lead.level, level,
+                 f" carried by {self._fighter().species_name}" if self._carrier else "")
         self.battle.policy.fight_wild = True
         planner = self.ctl.planner
         battles = 0
@@ -810,10 +897,12 @@ class Agent:
         dry = 0                # consecutive spots without an encounter
         spots: set[str] = set()
         while self.lead().level < level and battles < max_battles:
-            if self.needs_heal(0.55) or self.low_attack_pp(0.1):
+            fighter = self._fighter()
+            if self.needs_heal(0.55) or self.low_attack_pp(0.1, fighter) or \
+                    (self._carrier and fighter.hp_frac < 0.45):
                 self.heal()            # a trainee out of PP only switches and struggles
                 spot = None
-            want = self.grind_maps(self.lead().level)
+            want = self.grind_maps(self._fighter().level)
             if spot is not None and want and spot[0] not in want:
                 spot = None    # outgrew this area
             if spot is not None and (self.game.map_id(), *self.game.pos()) != spot[:3]:
@@ -827,7 +916,7 @@ class Agent:
                     # Nothing in the good tiers is reachable from here: grind
                     # in the nearest grass the trainee outlevels rather than
                     # fail the milestone.
-                    want = set(self._easy_maps(self.lead().level))
+                    want = set(self._easy_maps(self._fighter().level))
                     log.info("GRIND no good tier reachable from %s; nearest grass instead",
                              self.game.map_id())
                     if not want:
@@ -919,11 +1008,13 @@ class Agent:
         team. Each trainee is moved to the front so it earns the whole share
         of experience, then the original order is restored.
         """
-        from .emerald import TEAM_PREF
+        from .emerald import team_pref
         party = [m for m in self.game.party() if not m.is_egg]
-        pref = {name: i for i, name in enumerate(TEAM_PREF)}
-        ranked = sorted(party, key=lambda m: (pref.get(m.species_name, len(pref)),
-                                              -m.level))[:members]
+        pref = {name: i for i, name in enumerate(team_pref(self))}
+        # Only the route's team is ever trained (never Castform or the Fly
+        # carrier); with Rayquaza that team is small.
+        ranked = sorted((m for m in party if m.species_name in pref),
+                        key=lambda m: (pref[m.species_name], -m.level))[:members]
         order = [m.personality for m in party]
         self.training = {"target": level, "members": [m.personality for m in ranked]}
         self._grind_why = "team target"
@@ -942,14 +1033,56 @@ class Agent:
             trained = True
             slot = [m.personality for m in self.game.party()].index(mon.personality)
             self.party_swap(0, slot)
+            trainee = self.game.party()[0]               # now in front
+            carrier = self._carrier_for(trainee)
+            if carrier is not None:
+                log.info("CARRY %s L%d holds the Exp. Share; %s L%d fights",
+                         trainee.species_name, trainee.level, carrier.species_name, carrier.level)
+                self._carrier = carrier.personality
+                self.battle.policy.carry = (trainee.personality, carrier.personality)
             try:
                 self.grind_to(level)
             finally:
+                self._carrier = None
+                self.battle.policy.carry = None
                 self.pump()
                 now = [m.personality for m in self.game.party()]
                 if now != order:
                     self.party_swap(0, slot)
         return trained
+
+    CARRY_GAP = 8          # the carrier must outlevel the trainee by this much
+
+    def _carrier_for(self, trainee):
+        """The ace carries a trainee it clearly outlevels, once the trainee
+        holds the Exp. Share (participant + holder = 3/4 of the experience,
+        from wild Pokemon far stronger than the trainee could fight, with no
+        damage taken and so no heal trips)."""
+        from .emerald import TEAM_PREF
+        party = self.game.party()
+        team = [m for m in party if m.species_name in TEAM_PREF and not m.fainted
+                and m.personality != trainee.personality]
+        if not team or not (self.game.has_item("ITEM_EXP_SHARE") or any(
+                m.item == const("ITEM_EXP_SHARE") for m in party)):
+            return None
+        ace = min(team, key=lambda m: (TEAM_PREF.index(m.species_name), -m.level))
+        if ace.level < trainee.level + self.CARRY_GAP:
+            return None
+        # 3/4 of a strong foe's experience only beats all of a weak foe's when
+        # the trainee's own grass is much weaker: carrying an Azumarill that
+        # already handles Victory Road was no faster than letting it fight.
+        own = max(self._easy_maps(trainee.level).values(), default=0)
+        carried = max(self._easy_maps(ace.level).values(), default=0)
+        if own >= 0.8 * carried:
+            return None
+        try:
+            if not self.hold("ITEM_EXP_SHARE", trainee.slot):
+                return None
+        except Stuck as exc:
+            log.info("CARRY: could not give the Exp. Share: %s", exc)
+            self.pump()
+            return None
+        return next(m for m in self.game.party() if m.personality == ace.personality)
 
     def fortree_gym(self) -> None:
         from .puzzles import fortree_gym
@@ -964,6 +1097,18 @@ class Agent:
         rotating_tile_gym(self, map_id, leader_pattern, badge_count)
 
     # -- catching -------------------------------------------------------------------------
+    def catch_static(self, species: str, map_id: str, pattern: str) -> None:
+        """Walk up to a one-off encounter (a legendary standing on the map),
+        talk to start the battle, and catch it."""
+        from .route import object_id
+        self.battle.policy.catch_species = {const(species)}
+        try:
+            self.talk(map_id, object_id(map_id, pattern))
+            self.pump()
+        finally:
+            self.battle.policy.catch_species = set()
+        log.info("CATCH %s: party %s", species, [m.species_name for m in self.game.party()])
+
     def catch(self, species: str, maps_to_search: list[str], max_battles: int = 150) -> bool:
         """Walk the grass of `maps_to_search` until a `species` is caught."""
         from .mapgrid import MapGrid, has_encounters

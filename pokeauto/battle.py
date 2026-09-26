@@ -42,6 +42,7 @@ class BattlePolicy:
     catch_species: set = field(default_factory=set)   # species ids to catch
     min_hp_to_fight_wild: float = 0.35
     important: bool = False          # gym/rival/E4: spend items, cure status
+    carry: tuple | None = None       # (trainee, carrier) personalities: switch-training
 
 
 class Battle:
@@ -484,6 +485,17 @@ class Battle:
             return Choice("move", 0, why="no foe visible")
         wild = not self.is_trainer()
 
+        # Switch-training: the trainee (holding the Exp. Share) is sent out and
+        # swapped for the carrier at once. It never takes a hit, and as a
+        # participant and the holder it earns 3/4 of the experience.
+        carry = self.policy.carry
+        if wild and carry and me_bm.personality == carry[0] and not self.is_double() \
+                and not self._trapped():
+            slot = next((m.slot for m in self.game.party()
+                         if m.personality == carry[1] and not m.fainted), None)
+            if slot is not None and slot not in self._bad_switch:
+                return Choice("switch", slot, why="carry: the trainee shares the experience")
+
         # Wild battles: run unless we want the XP (or to catch).
         if wild and foes:
             fid, fbm = foes[0]
@@ -635,6 +647,10 @@ class Battle:
         return min(enough, key=lambda h: h[1]) if enough else max(have, key=lambda h: h[1])
 
     def catcher(self, battle, fbm):
+        # A legendary's catch rate is 3: that is what the Master Ball is for.
+        if self.game.has_item("ITEM_MASTER_BALL") and \
+                self.data.species(fbm.species).catch_rate <= 3:
+            return Choice("item", C("ITEM_MASTER_BALL"), why=f"catch {fbm.species_name}")
         for n in self.BALLS:
             if self.game.has_item(n):
                 return Choice("item", C(n), why=f"catch {fbm.species_name}")
