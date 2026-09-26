@@ -105,6 +105,14 @@ def run_game(args, rom: Path, runs: Path, control, hook: bool) -> None:
                 emu.screenshot(str(runs / "final.png"))
         except Exception:
             logging.error("could not finish cleanly:\n%s", traceback.format_exc())
+        try:
+            if emu:
+                # mGBA runs in lockstep while we are connected (the game only
+                # advances when asked): let go at once, or the app stays
+                # frozen for as long as the TUI shows the result.
+                emu.close()
+        except Exception:
+            pass
         control.finish(state, ok, summary)
 
 
