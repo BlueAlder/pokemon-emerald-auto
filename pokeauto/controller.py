@@ -90,6 +90,7 @@ class Controller:
         self.health_check = None              # callable() -> True if it detoured to heal
         self.fly_hook = None                  # callable(dest_map) -> True once there
         self.bike_hook = None                 # callable(on) -> True once on/off the Mach Bike
+        self.halt = None                      # callable() -> True: stop pumping and walking now
         self.fly_banned: set[str] = set()     # landing maps Fly failed to reach
         self._last_map, self._map_visit = "", 0
         self._in_health_check = False
@@ -137,7 +138,7 @@ class Controller:
         idle_streak = 0
         last_kind = None
         while True:
-            if stop and stop():
+            if (stop and stop()) or (self.halt and self.halt()):
                 return
             m = self.game.mode()
             if m.kind != last_kind:
@@ -297,6 +298,10 @@ class Controller:
         if "HallOfFame" in m.callback2 or "Credits" in m.callback2 \
                 or any(t.startswith(("Task_Hof", "Task_Credits")) for t in tasks):
             self.press("A", release=20)               # Hall of Fame / credits: press on
+            return
+        if self.battle and any("ReplaceMoveInput" in t or "HandleInput_MoveSelect" in t
+                               for t in tasks):
+            self.battle._forget_move_screen(tasks)   # a move offered on evolving
             return
         if "BagMenu" in m.callback2 and "Task_BagMenu_HandleInput" in tasks:
             self.press("B", release=12)               # a bag nobody is using: close it
@@ -679,6 +684,8 @@ class Controller:
         started = time.process_time()
         while True:
             self.pump()
+            if self.halt and self.halt():
+                return
             s = self.state()
             if time.process_time() - started > 300:
                 # Searches that keep failing across the whole world are what
@@ -859,16 +866,21 @@ class Controller:
                     # floor to get there: coming back respawns every rock.
                     done.add(key)
                     continue
+                # Only real smash attempts count: the walk there is often cut
+                # short by wild battles, and giving up after two of those left
+                # Seafloor Cavern's rock behind the boulder it has to clear.
                 tries = self.__dict__.setdefault("_smash_tries", {})
-                tries[key] = tries.get(key, 0) + 1
-                if tries[key] > 2:
+                walks = self.__dict__.setdefault("_smash_walks", {})
+                if tries.get(key, 0) >= 2 or walks.get(key, 0) >= 12:
                     done.add(key)              # smashing it keeps failing: route around
                     continue
                 log.info("BOULDERS smashing rock at (%d,%d) on %s first", rx, ry, s.map)
                 if near and not self._run_steps(near, s):
+                    walks[key] = walks.get(key, 0) + 1
                     return True                # interrupted: try again next time
                 here = self.state()
                 if abs(here.x - rx) + abs(here.y - ry) == 1:
+                    tries[key] = tries.get(key, 0) + 1
                     d = facing_dir(here.x, here.y, rx, ry)
                     self._execute(Step("smash", d, State(s.map, rx, ry, here.elev)))
                 if not any((o.x, o.y) == (rx, ry) for o in self.game.objects()

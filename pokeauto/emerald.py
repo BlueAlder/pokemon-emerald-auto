@@ -99,14 +99,25 @@ def e4_room(target: str):
     def act(a):
         here = a.game.map_id()
         start = E4_ROOMS.index(here) + 1 if here in E4_ROOMS else 0
-        for room in E4_ROOMS[start:E4_ROOMS.index(target) + 1]:
-            a.goto(room)
-            a.pump()
+        # Beating Wallace is the finish: the Hall of Fame and the credits after
+        # it take minutes on mGBA, and the step would only have ended (with an
+        # error) once they were over and the player woke up in Littleroot.
+        if target == "MAP_EVER_GRANDE_CITY_CHAMPIONS_ROOM":
+            a.ctl.halt = lambda: champion_beaten(a)
+        try:
+            for room in E4_ROOMS[start:E4_ROOMS.index(target) + 1]:
+                a.goto(room)
+                a.pump()
+        finally:
+            a.ctl.halt = None
     act.__name__ = f"e4_room {target}"
     return act
 
 
 SOOTOPOLIS = "MAP_SOOTOPOLIS_CITY"
+# The run is won the moment Wallace falls; the Hall of Fame only sets
+# FLAG_SYS_GAME_CLEAR after its walk, record and fade.
+champion_beaten = any_of(flag("FLAG_SYS_GAME_CLEAR"), trainer_beaten("TRAINER_WALLACE"))
 LEAGUE = "MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F"
 VICTORY_ROAD = ["MAP_VICTORY_ROAD_1F", "MAP_VICTORY_ROAD_B1F"]
 
@@ -122,6 +133,13 @@ E4_TMS_FULL = [("ITEM_TM40", "MOVE_AERIAL_ACE", ("RAYQUAZA",), "MOVE_EXTREME_SPE
                ("ITEM_TM39", "MOVE_ROCK_TOMB", ("HARIYAMA",), "MOVE_WHIRLWIND"),
                ("ITEM_TM40", "MOVE_AERIAL_ACE", ("GOLBAT", "CROBAT"), None)]
 E4_TMS = [(tm, mv, who) for tm, mv, who, _ in E4_TMS_FULL]
+
+
+def e4_team_level(a) -> int:
+    """The Elite Four team target: with Rayquaza (L70) carrying the fights,
+    Swampert as it arrives from Victory Road (~60; grinding it to 66 cost
+    57 minutes); without it, 66."""
+    return 58 if any(p.species_name == "RAYQUAZA" for p in a.game.party()) else 66
 
 
 def e4_lead(a) -> int:
@@ -365,14 +383,15 @@ ROUTE: list[Milestone] = [
               [call("rotating_tile_gym", "MAP_MOSSDEEP_CITY_GYM", "EventScript_TateAndLiza", 7)],
               # Claydol, Xatu, Lunatone, Solrock (L41-42): Surf and Muddy Water
               # hit both and are super effective on three. Swampert carries the
-              # double battle; the Space Center needs it at 55 next anyway, while
-              # training a partner here costs ~110 battles in L27 grass.
-              min_level=55, important=True,
+              # double battle at 53 (it arrives at ~52), while training a
+              # partner here costs ~110 battles in L27 grass. (55 cost 38 min;
+              # at 52 Solrock's Solar Beam in sun once blacked it out.)
+              min_level=53, important=True,
               hint="beat Tate and Liza at the Mossdeep Gym"),
     Milestone("space_center", flag("FLAG_DEFEATED_MAGMA_SPACE_CENTER"),
               [goto("MAP_MOSSDEEP_CITY_SPACE_CENTER_2F"),
                talk_s("MAP_MOSSDEEP_CITY_SPACE_CENTER_2F", "SpaceCenter_2F_EventScript_Steven")],
-              min_level=55, important=True, hint="stop Team Magma at the Mossdeep Space Center"),
+              min_level=52, important=True, hint="stop Team Magma at the Mossdeep Space Center"),
     Milestone("dive", flag("FLAG_RECEIVED_HM_DIVE"),
               [goto("MAP_MOSSDEEP_CITY_STEVENS_HOUSE"),
                talk_s("MAP_MOSSDEEP_CITY_STEVENS_HOUSE", "StevensHouse_EventScript_Steven")],
@@ -382,7 +401,7 @@ ROUTE: list[Milestone] = [
     Milestone("seafloor_cavern", var_ge("VAR_SEAFLOOR_CAVERN_STATE", 1),
               [goto("MAP_SEAFLOOR_CAVERN_ROOM9"),
                trigger("MAP_SEAFLOOR_CAVERN_ROOM9", "SeafloorCavern_Room9_EventScript_ArchieAwakenKyogre")],
-              min_level=56, important=True, hint="stop Archie in the Seafloor Cavern"),
+              min_level=53, important=True, hint="stop Archie in the Seafloor Cavern"),
 
     # -- Sootopolis, the Cave of Origin, Sky Pillar, Rayquaza ------------------------------
     Milestone("sootopolis", var_ge("VAR_SOOTOPOLIS_CITY_STATE", 2), [goto(SOOTOPOLIS)],
@@ -399,7 +418,7 @@ ROUTE: list[Milestone] = [
     Milestone("rayquaza", var_ge("VAR_SKY_PILLAR_STATE", 1),
               [goto("MAP_SKY_PILLAR_OUTSIDE"), goto("MAP_SKY_PILLAR_TOP"),
                trigger("MAP_SKY_PILLAR_TOP", "AwakenRayquaza")],
-              min_level=56, hint="climb the Sky Pillar and wake Rayquaza"),
+              min_level=53, hint="climb the Sky Pillar and wake Rayquaza"),
     Milestone("rayquaza_calms", var_ge("VAR_SKY_PILLAR_STATE", 2), [goto(SOOTOPOLIS)],
               hint="return to Sootopolis where Rayquaza stops the fight"),
     Milestone("maxie_archie", flag("FLAG_SOOTOPOLIS_ARCHIE_MAXIE_LEAVE"),
@@ -425,7 +444,7 @@ ROUTE: list[Milestone] = [
     Milestone("badge_rain", badges(8),
               [goto("MAP_SOOTOPOLIS_CITY_GYM_1F"),
                call("ice_gym", "MAP_SOOTOPOLIS_CITY_GYM_1F", "EventScript_Juan", 8)],
-              min_level=56, team_level=46, important=True,
+              min_level=53, team_level=46, important=True,
               hint="crack the ice floors of the Sootopolis Gym and beat Juan"),
 
     # -- Ever Grande, Victory Road, the Elite Four ------------------------------------------
@@ -465,7 +484,7 @@ ROUTE: list[Milestone] = [
     Milestone("enter_league", flag("FLAG_ENTERED_ELITE_FOUR"),
               [goto(LEAGUE), call("league_supplies"),
                talk_s(LEAGUE, "PokemonLeague_1F_EventScript_DoorGuard")],
-              min_level=e4_lead, team_level=66, team_size=4, important=True,
+              min_level=e4_lead, team_level=e4_team_level, team_size=4, important=True,
               hint="cross Victory Road and show the guards all eight badges"),
     Milestone("sidney", flag("FLAG_DEFEATED_ELITE_4_SIDNEY"),
               [call("heal_with_items"), call("rotate_lead"), e4_room("MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM"),
@@ -474,7 +493,7 @@ ROUTE: list[Milestone] = [
               # with a rotating lead; L66 wins. Train once, before the League,
               # and start with full HP and PP (the League 1F has a nurse).
               # Each loss still raises these targets (Agent.LOSS_BOOST).
-              min_level=e4_lead, team_level=66, team_size=4, important=True,
+              min_level=e4_lead, team_level=e4_team_level, team_size=4, important=True,
               hint="beat Sidney of the Elite Four"),
     Milestone("phoebe", flag("FLAG_DEFEATED_ELITE_4_PHOEBE"),
               [call("heal_with_items"), call("rotate_lead"), e4_room("MAP_EVER_GRANDE_CITY_PHOEBES_ROOM"),
@@ -488,7 +507,7 @@ ROUTE: list[Milestone] = [
               [call("heal_with_items"), call("rotate_lead"), e4_room("MAP_EVER_GRANDE_CITY_DRAKES_ROOM"),
                talk_s("MAP_EVER_GRANDE_CITY_DRAKES_ROOM", "EventScript_Drake")],
               heal_first=False, important=True, hint="beat Drake of the Elite Four"),
-    Milestone("champion", flag("FLAG_SYS_GAME_CLEAR"),
+    Milestone("champion", champion_beaten,
               [call("heal_with_items"), call("rotate_lead"), e4_room("MAP_EVER_GRANDE_CITY_CHAMPIONS_ROOM")],
               heal_first=False, important=True, hint="beat Champion Wallace"),
 ]

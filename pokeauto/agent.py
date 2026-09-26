@@ -367,9 +367,23 @@ class Agent:
         def at_center(s):
             return s.map in goal_maps
 
+        # Every Fly costs the same, so "nearest" alone once flew from the Sky
+        # Pillar to Oldale and the way back failed. Aim for the Centers
+        # closest by map first; any Center if none of those can be reached.
+        hops = self.ctl.planner.map_distances({start.map})
+        near = sorted((hops.get(c, 999), c) for c in goal_maps)
+        close = {c for d, c in near if d <= near[0][0] + 2} if near else goal_maps
         self._healing = True
         try:
-            self.ctl.goto(at_center, desc="nearest Pokemon Center")
+            if close != goal_maps:
+                try:
+                    goal_maps = close
+                    self.ctl.goto(at_center, desc="nearest Pokemon Center")
+                except Stuck as exc:
+                    log.info("HEAL no way to a nearby Center (%s); any Center then", exc)
+                    goal_maps = set(self.CENTERS)
+            if not at_center(self.ctl.state()):
+                self.ctl.goto(at_center, desc="nearest Pokemon Center")
             center = self.game.map_id()
             nurse = next(o for o in maps()[center]["objects"] if "NURSE" in o["gfx"])
             # The nurse stands behind the counter: talk from two tiles below.
@@ -755,6 +769,12 @@ class Agent:
     LOSS_BOOST = 4             # levels added to a boss milestone's targets per loss
     LOSS_BOOST_MAX = 12
 
+    # A loss anywhere in the League sends the run back to Sidney.
+    LEAGUE_FIGHTS = frozenset({"sidney", "phoebe", "glacia", "drake", "champion"})
+
+    def _same_fight(self, lost_in: str | None, name: str) -> bool:
+        return lost_in == name or {lost_in, name} <= self.LEAGUE_FIGHTS
+
     def before_milestone(self, m) -> None:
         if not hasattr(self, "_level_boost"):
             self._level_boost: dict[str, int] = {}
@@ -762,7 +782,8 @@ class Agent:
         self.battle.policy.important = m.important
         self.pump()
         if self.game.party() and m.heal_first and (
-                self.needs_heal() or (m.important and self.low_attack_pp())):
+                self.needs_heal() or self.low_attack_pp(0.35)
+                or (m.important and self.low_attack_pp())):
             self.heal()
         if self.game.badges() >= 2 and self.game.money() > 3000 \
                 and not self.game.map_id().startswith(self.NO_CENTER_MAPS):
@@ -776,15 +797,19 @@ class Agent:
         # Only boss milestones are boosted: a rival lost to on the way (the
         # Route 110 Grovyle beats a Marshtomp that only has Tackle) must not
         # inflate whatever milestone happens to start next. Capped.
+        # (And only on a retry of the milestone lost in: a loss that the same
+        # milestone then made up for, like Tate & Liza won on the second try,
+        # must not make the next boss grind.)
         losses = self.battle.trainer_losses
         if losses > self._losses_seen:
-            if m.important:
+            if m.important and self._same_fight(getattr(self, "_started", None), m.name):
                 self._level_boost[m.name] = min(
                     self.LOSS_BOOST_MAX, self._level_boost.get(m.name, 0) +
                     self.LOSS_BOOST * (losses - self._losses_seen))
                 log.info("LOST a trainer battle: %s targets now +%d levels",
                          m.name, self._level_boost[m.name])
             self._losses_seen = losses
+        self._started = m.name
         boost = self._level_boost.get(m.name, 0)
         self._grind_blocked = {}       # reachability changes with the story
         trained = False

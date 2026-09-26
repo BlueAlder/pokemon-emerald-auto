@@ -371,6 +371,13 @@ class Battle:
     def _forget_move_screen(self, tasks) -> None:
         from .menus import summary_select_move
         slot = getattr(self, "_forget_slot", None)
+        if slot is None:
+            # Reached without a decision: the evolution scene asks "delete a
+            # move?" in its own menu (A says yes), so decide here. Declining
+            # there lost Marshtomp's Mud Shot and then the Brawly fight.
+            learn = self._learning(self.game.battle_text().replace("\n", " "))
+            if learn and self.move_learner:
+                slot = self.move_learner(*learn)
         slot = 4 if slot is None else slot
         summary_select_move(self.ctl, slot)
         self._forget_slot = None
