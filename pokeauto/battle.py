@@ -169,6 +169,10 @@ class Battle:
                     return
                 elif cb != "BattleMainCB2" and self.game.text_waiting():
                     self.ctl.press("A", release=4)
+                elif any("ModifyHP" in t or "HPRestored" in t for t in tasks):
+                    # A big heal fills the HP bar a point a frame: several
+                    # seconds on a nearly fainted Pokemon. Not a stuck menu.
+                    self.ctl.idle(3)
                 elif cb != "BattleMainCB2" and idle > 100:
                     # Stuck in a menu transition (bag/party) nobody drives:
                     # back out, and stop using items this battle.
@@ -532,6 +536,18 @@ class Battle:
             sw = self.best_switch(exclude_active=True, against=foe)
             if sw is not None and self._switch_value(sw, foe) > 0.35 and not self._trapped():
                 return Choice("switch", sw, why=f"threat {threat:.0f} >= hp {me_bm.hp}")
+        # Feeble: chipping 6 HP a turn off a foe the trainer keeps healing
+        # loses fights (Hariyama's Knock Off vs Wallace's Gyarados). Bring in
+        # a teammate who hits several times harder, if it survives the switch.
+        if not wild and best.score < 0.15 and not self.is_double() and not self._trapped():
+            sw = self.best_switch(exclude_active=True, against=foe)
+            if sw is not None and self._switch_value(sw, foe) > 0.35:
+                mon = next(m for m in self.game.party() if m.slot == sw)
+                them = combatant_from_party(self.data, mon)
+                dealt = max((estimate_damage(self.data, them, foe, self.data.move(mv.id))
+                             for mv in mon.moves if mv.pp), default=0.0)
+                if dealt / max(1, fbm.hp) >= max(0.3, 3 * best.score):
+                    return Choice("switch", sw, why=f"{best.why} is feeble vs {fbm.species_name}")
         return best
 
     def first_turn(self, battler: int) -> bool:

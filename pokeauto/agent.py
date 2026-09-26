@@ -256,6 +256,35 @@ class Agent:
             return True
         return False
 
+    def _ace_to_front(self) -> None:
+        """Put the route's first TEAM_PREF member back in front (rotate_lead
+        moves others there for single fights)."""
+        from .emerald import TEAM_PREF
+        party = self.game.party()
+        ace = min(party, key=lambda m: TEAM_PREF.index(m.species_name)
+                  if m.species_name in TEAM_PREF else len(TEAM_PREF))
+        if ace.slot != 0 and ace.species_name in TEAM_PREF:
+            self.party_swap(0, ace.slot)
+
+    def rotate_lead(self) -> None:
+        """Before each Elite Four fight: lead with the trained member that has
+        the most attacking power left (level x power x PP). PP is what runs
+        out over five fights; leading with the same Pokemon every time sent
+        Swampert to Wallace with 0 PP."""
+        from .emerald import TEAM_PREF
+
+        def budget(m) -> float:
+            if m.fainted or m.is_egg or m.species_name not in TEAM_PREF:
+                return 0.0
+            return m.level * sum(self.data.move(mv.id).power * min(mv.pp, 15)
+                                 for mv in m.moves if mv.id)
+        party = self.game.party()
+        best = max(party, key=budget)
+        if best.slot != 0 and budget(best) > budget(party[0]):
+            log.info("E4 lead: %s (attacking budget %.0f vs %.0f)", best.species_name,
+                     budget(best), budget(party[0]))
+            self.party_swap(0, best.slot)
+
     def heal_with_items(self, min_frac: float = 0.8) -> None:
         """Revive and top up the party from the bag (inside the Elite Four)."""
         for mon in self.game.party():
@@ -596,6 +625,7 @@ class Agent:
         boost = self._level_boost.get(m.name, 0)
         trained = False
         if m.min_level:
+            self._ace_to_front()       # the lead target is the ace's, whoever led last
             trained |= self.lead().level < m.min_level + boost
             self.grind_to(m.min_level + boost)
         if m.team_level:
