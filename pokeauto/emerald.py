@@ -9,6 +9,7 @@ Assumes the default player (Brendan); rival house maps are chosen by gender.
 """
 from __future__ import annotations
 
+from .controller import Stuck
 from .route import (Milestone, all_of, any_of, badges, call, flag, goto, has_item, interact,
                     prefer, reachable, answer, trigger, talk, talk_s, trainer_beaten, unless,
                     var_ge)
@@ -102,12 +103,29 @@ def e4_room(target: str):
         # Beating Wallace is the finish: the Hall of Fame and the credits after
         # it take minutes on mGBA, and the step would only have ended (with an
         # error) once they were over and the player woke up in Littleroot.
-        if target == "MAP_EVER_GRANDE_CITY_CHAMPIONS_ROOM":
-            a.ctl.halt = lambda: champion_beaten(a)
+        # Losing in here whites out to the League lobby and resets the Elite
+        # Four (EventScript_WhiteOut): stop walking at once. Wallace's room
+        # cannot be reached from there, and goto went on trying -- a story
+        # trigger, a Fly to Pacifidlog, dozens of failed searches -- for 1.5
+        # minutes after each loss, before the route restarted at Sidney.
+        inside = [here in E4_ROOMS]
+
+        def whited_out() -> bool:
+            m = a.game.map_id()
+            if m in E4_ROOMS or m.startswith("MAP_EVER_GRANDE_CITY_HALL"):   # rooms and halls
+                inside[0] = True
+                return False
+            return inside[0]
+
+        beaten = (lambda: champion_beaten(a)) \
+            if target == "MAP_EVER_GRANDE_CITY_CHAMPIONS_ROOM" else (lambda: False)
+        a.ctl.halt = lambda: beaten() or whited_out()
         try:
             for room in E4_ROOMS[start:E4_ROOMS.index(target) + 1]:
                 a.goto(room)
                 a.pump()
+                if whited_out():
+                    raise Stuck("whited out in the Elite Four: it starts again at Sidney")
         finally:
             a.ctl.halt = None
     act.__name__ = f"e4_room {target}"
@@ -319,7 +337,9 @@ ROUTE: list[Milestone] = [
               [goto("MAP_ROUTE119_WEATHER_INSTITUTE_2F"),
                talk_s("MAP_ROUTE119_WEATHER_INSTITUTE_2F", "EventScript_Shelly")],
               min_level=42, important=True, hint="drive Team Aqua out of the Weather Institute"),
-    Milestone("reach_fortree", flag("FLAG_VISITED_FORTREE_CITY"), [goto("MAP_FORTREE_CITY")]),
+    # The rival waits on Route 119 (Grovyle): go in healed, like a boss.
+    Milestone("reach_fortree", flag("FLAG_VISITED_FORTREE_CITY"), [goto("MAP_FORTREE_CITY")],
+              important=True),
     Milestone("devon_scope", flag("FLAG_RECEIVED_DEVON_SCOPE"),
               [goto("MAP_ROUTE120"), talk_s("MAP_ROUTE120", "Route120_EventScript_Steven")],
               hint="meet Steven on the Route 120 bridge and get the Devon Scope"),
