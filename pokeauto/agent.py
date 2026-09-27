@@ -914,6 +914,9 @@ class Agent:
         from .nav import NavCaps
         caps = self.ctl.nav_caps(avoid_grass=0.0)
         live, objs = MapGrid.from_ram(self.game), self.game.objects()
+        # Never the world-wide search: a grind spot beyond a 6-map detour is
+        # too far to be worth it, and each failed check cost seconds.
+        self.ctl.planner.narrow = True
         for c in (caps, NavCaps(**{**caps.__dict__, "active_triggers_block": False})):
             if self.ctl.planner.plan(self.ctl.state(), goal, c, live=live,
                                      live_objects=objs) is not None:

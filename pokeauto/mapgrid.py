@@ -285,6 +285,36 @@ def layout_grid(emu, layout_id: int, map_id: str) -> MapGrid:
     return _STATIC[key]
 
 
+def map_layout_ptr(emu, map_id: str, layout_id: int | None = None) -> int:
+    """The layout a map is drawn with: its own, or gMapLayouts[layout_id - 1]."""
+    if layout_id:
+        return emu.u32(S["gMapLayouts"] + (layout_id - 1) * 4)
+    info = maps()[map_id]
+    group_ptr = emu.u32(S["gMapGroups"] + info["group"] * 4)
+    return emu.u32(emu.u32(group_ptr + info["num"] * 4))
+
+
+def patched_grid(emu, base: MapGrid, layout_ptr: int, patches: list[dict], key: str) -> MapGrid:
+    """`base` with the tiles a load script sets (setmetatile x, y, id,
+    impassable): like MapGridSetMetatileIdAt, the elevation bits stay."""
+    if key in _STATIC:
+        return _STATIC[key]
+    prim, sec = MapGrid._attrs(emu.read, layout_ptr)
+    tiles, beh = list(base.tiles), list(base.beh)
+    for p in patches:
+        x, y = p["x"], p["y"]
+        if not base.inside(x, y):
+            continue
+        i = y * base.w + x
+        mid = p["metatile"] & 0x3FF
+        tiles[i] = (tiles[i] & 0xF000) | mid | (0x0C00 if p["impassable"] else 0)
+        beh[i] = (prim[mid] if mid < NUM_PRIMARY_METATILES
+                  else sec[mid - NUM_PRIMARY_METATILES]
+                  if mid - NUM_PRIMARY_METATILES < len(sec) else 0)
+    grid = _STATIC[key] = MapGrid(base.w, base.h, tiles, beh, base.map_id)
+    return grid
+
+
 def _static_grid(emu, map_id: str) -> MapGrid:
     if map_id in _STATIC:
         return _STATIC[map_id]

@@ -454,9 +454,13 @@ class Battle:
                if i in ((0, 2) if self.is_double() else (0,)) and bm.hp > 0}
         rows = [m for m in self.game.party() if not m.fainted and not m.is_egg
                 and m.personality not in out and m.personality not in self._bad_switch]
-        if not rows:
+        forced = any(bm.hp == 0 for i, bm in enumerate(self.game.battle_mons()[:4])
+                     if i in ((0, 2) if self.is_double() else (0,)))
+        if not rows and forced:
             # A forced replacement cannot be cancelled: rather than back out
-            # forever, forget the refusals and send whoever is left.
+            # forever, forget the refusals and send whoever is left. (Only
+            # then: a voluntary switch that is refused -- Mean Look -- backs
+            # out to Struggle, or it cycled through every slot for good.)
             rows = [m for m in self.game.party() if not m.fainted and not m.is_egg
                     and m.personality not in out]
             if rows:

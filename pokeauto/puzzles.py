@@ -332,12 +332,19 @@ def rotating_tile_gym(agent, map_id: str, leader_pattern: str, badge_count: int)
     agent.goto(map_id)
     ctl = agent.ctl
     caps = NavCaps(**{**ctl.nav_caps().__dict__, "avoid_triggers": True})
-    for attempt in range(40):
+    # 40 presses per visit: a whiteout sends us back to solve it all again,
+    # and one shared budget ran out mid-way the second time.
+    budget = 40
+    for attempt in range(160):
+        budget -= 1
+        if budget < 0:
+            break
         agent.pump()
         if agent.game.badges() >= badge_count:
             return
         if agent.game.map_id() != map_id:
             agent.goto(map_id)            # e.g. after a whiteout
+            budget = 40
             continue
         # Pushback "lessons" about switch tiles are wrong here: the model knows.
         ctl.planner.learned_blocks = {b for b in ctl.planner.learned_blocks if b[0] != map_id}
@@ -410,7 +417,10 @@ def ice_path(start: tuple[int, int] | None, tiles: set, ends: set,
         if not connected(rem):
             return None
         # Tiles with one way in must be the end of the path: at most one.
-        dead = [t for t in rem if sum(1 for n in nb[t] if n in rem or n == cur) <= 1]
+        # (Adjacency to cur counts even when cur is not one of the tiles: from
+        # a cracked tile mid-room, the tile next to us looked like a dead end.)
+        dead = [t for t in rem if sum(1 for n in nb[t] if n in rem)
+                + (abs(t[0] - cur[0]) + abs(t[1] - cur[1]) == 1) <= 1]
         if len(dead) > 1 or (dead and dead[0] not in ends):
             return None
         options = [n for n in nb.get(cur, ()) if n in rem] if cur in nb else \
@@ -464,6 +474,8 @@ def ice_gym(agent, map_id: str, leader_pattern: str, badge_count: int) -> None:
                 (s.x + dx, s.y + dy) in thin for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)))
             if not mid_room:
                 goal = lambda st: st.map == map_id and abs(st.x - lx) + abs(st.y - ly) == 1
+                goal.maps = {map_id}    # untagged, each failed check searched the world
+                ctl.planner.narrow = True   # and only this gym matters: never widen
                 if ctl.planner.plan(s, goal, ctl.nav_caps(), live=g,
                                     live_objects=agent.game.objects()) is not None:
                     agent.talk(map_id, leader["local_id"])

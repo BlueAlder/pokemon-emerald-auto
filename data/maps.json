@@ -241,6 +241,34 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 563,
+"when": [
+[
+"flag",
+"FLAG_USED_STORAGE_KEY",
+false
+]
+],
+"x": 11,
+"y": 4
+},
+{
+"impassable": true,
+"metatile": 555,
+"when": [
+[
+"flag",
+"FLAG_USED_STORAGE_KEY",
+true
+]
+],
+"x": 11,
+"y": 4
+}
+],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -412,6 +440,112 @@
 "objects": [],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 563,
+"when": [
+[
+"flag",
+"FLAG_USED_ROOM_1_KEY",
+false
+]
+],
+"x": 3,
+"y": 8
+},
+{
+"impassable": true,
+"metatile": 563,
+"when": [
+[
+"flag",
+"FLAG_USED_ROOM_2_KEY",
+false
+]
+],
+"x": 6,
+"y": 8
+},
+{
+"impassable": false,
+"metatile": 564,
+"when": [
+[
+"flag",
+"FLAG_USED_ROOM_4_KEY",
+false
+]
+],
+"x": 3,
+"y": 3
+},
+{
+"impassable": false,
+"metatile": 564,
+"when": [
+[
+"flag",
+"FLAG_USED_ROOM_6_KEY",
+false
+]
+],
+"x": 9,
+"y": 3
+},
+{
+"impassable": true,
+"metatile": 555,
+"when": [
+[
+"flag",
+"FLAG_USED_ROOM_1_KEY",
+true
+]
+],
+"x": 3,
+"y": 8
+},
+{
+"impassable": true,
+"metatile": 555,
+"when": [
+[
+"flag",
+"FLAG_USED_ROOM_2_KEY",
+true
+]
+],
+"x": 6,
+"y": 8
+},
+{
+"impassable": false,
+"metatile": 538,
+"when": [
+[
+"flag",
+"FLAG_USED_ROOM_4_KEY",
+true
+]
+],
+"x": 3,
+"y": 3
+},
+{
+"impassable": false,
+"metatile": 538,
+"when": [
+[
+"flag",
+"FLAG_USED_ROOM_6_KEY",
+true
+]
+],
+"x": 9,
+"y": 3
+}
+],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -1242,6 +1376,86 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 553,
+"when": [
+[
+"flag",
+"FLAG_SYS_REGISTEEL_PUZZLE_COMPLETED",
+false
+]
+],
+"x": 7,
+"y": 19
+},
+{
+"impassable": true,
+"metatile": 553,
+"when": [
+[
+"flag",
+"FLAG_SYS_REGISTEEL_PUZZLE_COMPLETED",
+false
+]
+],
+"x": 8,
+"y": 19
+},
+{
+"impassable": true,
+"metatile": 553,
+"when": [
+[
+"flag",
+"FLAG_SYS_REGISTEEL_PUZZLE_COMPLETED",
+false
+]
+],
+"x": 9,
+"y": 19
+},
+{
+"impassable": true,
+"metatile": 565,
+"when": [
+[
+"flag",
+"FLAG_SYS_REGISTEEL_PUZZLE_COMPLETED",
+false
+]
+],
+"x": 7,
+"y": 20
+},
+{
+"impassable": true,
+"metatile": 565,
+"when": [
+[
+"flag",
+"FLAG_SYS_REGISTEEL_PUZZLE_COMPLETED",
+false
+]
+],
+"x": 8,
+"y": 20
+},
+{
+"impassable": true,
+"metatile": 565,
+"when": [
+[
+"flag",
+"FLAG_SYS_REGISTEEL_PUZZLE_COMPLETED",
+false
+]
+],
+"x": 9,
+"y": 20
+}
+],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -9833,6 +10047,86 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 553,
+"when": [
+[
+"flag",
+"FLAG_SYS_REGIROCK_PUZZLE_COMPLETED",
+false
+]
+],
+"x": 7,
+"y": 19
+},
+{
+"impassable": true,
+"metatile": 553,
+"when": [
+[
+"flag",
+"FLAG_SYS_REGIROCK_PUZZLE_COMPLETED",
+false
+]
+],
+"x": 8,
+"y": 19
+},
+{
+"impassable": true,
+"metatile": 553,
+"when": [
+[
+"flag",
+"FLAG_SYS_REGIROCK_PUZZLE_COMPLETED",
+false
+]
+],
+"x": 9,
+"y": 19
+},
+{
+"impassable": true,
+"metatile": 565,
+"when": [
+[
+"flag",
+"FLAG_SYS_REGIROCK_PUZZLE_COMPLETED",
+false
+]
+],
+"x": 7,
+"y": 20
+},
+{
+"impassable": true,
+"metatile": 565,
+"when": [
+[
+"flag",
+"FLAG_SYS_REGIROCK_PUZZLE_COMPLETED",
+false
+]
+],
+"x": 8,
+"y": 20
+},
+{
+"impassable": true,
+"metatile": 565,
+"when": [
+[
+"flag",
+"FLAG_SYS_REGIROCK_PUZZLE_COMPLETED",
+false
+]
+],
+"x": 9,
+"y": 20
+}
+],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -14496,6 +14790,29 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": false,
+"metatile": 520,
+"when": [],
+"x": 4,
+"y": 1
+},
+{
+"impassable": false,
+"metatile": 528,
+"when": [],
+"x": 4,
+"y": 2
+},
+{
+"impassable": false,
+"metatile": 536,
+"when": [],
+"x": 4,
+"y": 3
+}
+],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -14579,6 +14896,86 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 553,
+"when": [
+[
+"flag",
+"FLAG_SYS_BRAILLE_REGICE_COMPLETED",
+false
+]
+],
+"x": 7,
+"y": 19
+},
+{
+"impassable": true,
+"metatile": 553,
+"when": [
+[
+"flag",
+"FLAG_SYS_BRAILLE_REGICE_COMPLETED",
+false
+]
+],
+"x": 8,
+"y": 19
+},
+{
+"impassable": true,
+"metatile": 553,
+"when": [
+[
+"flag",
+"FLAG_SYS_BRAILLE_REGICE_COMPLETED",
+false
+]
+],
+"x": 9,
+"y": 19
+},
+{
+"impassable": true,
+"metatile": 565,
+"when": [
+[
+"flag",
+"FLAG_SYS_BRAILLE_REGICE_COMPLETED",
+false
+]
+],
+"x": 7,
+"y": 20
+},
+{
+"impassable": true,
+"metatile": 565,
+"when": [
+[
+"flag",
+"FLAG_SYS_BRAILLE_REGICE_COMPLETED",
+false
+]
+],
+"x": 8,
+"y": 20
+},
+{
+"impassable": true,
+"metatile": 565,
+"when": [
+[
+"flag",
+"FLAG_SYS_BRAILLE_REGICE_COMPLETED",
+false
+]
+],
+"x": 9,
+"y": 20
+}
+],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -14821,6 +15218,36 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 628,
+"when": [
+[
+"var",
+"VAR_JAGGED_PASS_STATE",
+"le",
+1
+]
+],
+"x": 16,
+"y": 17
+},
+{
+"impassable": true,
+"metatile": 628,
+"when": [
+[
+"var",
+"VAR_JAGGED_PASS_STATE",
+"le",
+1
+]
+],
+"x": 16,
+"y": 18
+}
+],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -16542,6 +16969,164 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 656,
+"when": [
+[
+"flag",
+"FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE",
+false
+]
+],
+"x": 76,
+"y": 12
+},
+{
+"impassable": true,
+"metatile": 657,
+"when": [
+[
+"flag",
+"FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE",
+false
+]
+],
+"x": 77,
+"y": 12
+},
+{
+"impassable": true,
+"metatile": 672,
+"when": [
+[
+"flag",
+"FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE",
+false
+]
+],
+"x": 76,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 673,
+"when": [
+[
+"flag",
+"FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE",
+false
+]
+],
+"x": 77,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 664,
+"when": [
+[
+"flag",
+"FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE",
+false
+]
+],
+"x": 76,
+"y": 14
+},
+{
+"impassable": true,
+"metatile": 665,
+"when": [
+[
+"flag",
+"FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE",
+false
+]
+],
+"x": 77,
+"y": 14
+},
+{
+"impassable": true,
+"metatile": 672,
+"when": [
+[
+"flag",
+"FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE",
+false
+]
+],
+"x": 76,
+"y": 15
+},
+{
+"impassable": true,
+"metatile": 673,
+"when": [
+[
+"flag",
+"FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE",
+false
+]
+],
+"x": 77,
+"y": 15
+},
+{
+"impassable": true,
+"metatile": 664,
+"when": [
+[
+"flag",
+"FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE",
+false
+]
+],
+"x": 77,
+"y": 16
+},
+{
+"impassable": true,
+"metatile": 665,
+"when": [
+[
+"flag",
+"FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE",
+false
+]
+],
+"x": 78,
+"y": 16
+},
+{
+"impassable": true,
+"metatile": 672,
+"when": [
+[
+"flag",
+"FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE",
+false
+]
+],
+"x": 77,
+"y": 17
+},
+{
+"impassable": true,
+"metatile": 673,
+"when": [
+[
+"flag",
+"FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE",
+false
+]
+],
+"x": 78,
+"y": 17
+}
+],
 "type": "MAP_TYPE_CITY",
 "warps": [
 {
@@ -19520,6 +20105,1728 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 606,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+]
+],
+"x": 10,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 607,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+]
+],
+"x": 11,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 604,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+]
+],
+"x": 18,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 605,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+]
+],
+"x": 19,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 608,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+]
+],
+"x": 14,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 609,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+]
+],
+"x": 15,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 602,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+]
+],
+"x": 6,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 603,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+]
+],
+"x": 7,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 2,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 611,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 3,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 602,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+]
+],
+"x": 6,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 603,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+]
+],
+"x": 7,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 2,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 611,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 3,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 2,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 611,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 3,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 608,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+]
+],
+"x": 14,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 609,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+]
+],
+"x": 15,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 602,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+]
+],
+"x": 6,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 603,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+]
+],
+"x": 7,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 2,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 611,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 3,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 2,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 611,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 3,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 602,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+]
+],
+"x": 6,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 603,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+]
+],
+"x": 7,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 2,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 611,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 3,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 2,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 611,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 3,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 604,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+]
+],
+"x": 18,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 605,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+]
+],
+"x": 19,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 608,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+]
+],
+"x": 14,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 609,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+]
+],
+"x": 15,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 602,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+]
+],
+"x": 6,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 603,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+]
+],
+"x": 7,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 2,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 611,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 3,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 2,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 611,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 3,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 602,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+]
+],
+"x": 6,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 603,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+]
+],
+"x": 7,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 2,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 611,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 3,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 2,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 611,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 3,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 608,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+]
+],
+"x": 14,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 609,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+]
+],
+"x": 15,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 602,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+]
+],
+"x": 6,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 603,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+]
+],
+"x": 7,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 2,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 611,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 3,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 2,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 611,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 3,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 602,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+]
+],
+"x": 6,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 603,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+]
+],
+"x": 7,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 2,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 611,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+true
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 3,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 2,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 611,
+"when": [
+[
+"flag",
+"FLAG_COOL_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_BEAUTY_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_CUTE_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_SMART_PAINTING_MADE",
+false
+],
+[
+"flag",
+"FLAG_TOUGH_PAINTING_MADE",
+true
+]
+],
+"x": 3,
+"y": 6
+}
+],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -20365,6 +22672,36 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 624,
+"when": [
+[
+"var",
+"VAR_LITTLEROOT_INTRO_STATE",
+"lt",
+6
+]
+],
+"x": 5,
+"y": 4
+},
+{
+"impassable": true,
+"metatile": 616,
+"when": [
+[
+"var",
+"VAR_LITTLEROOT_INTRO_STATE",
+"lt",
+6
+]
+],
+"x": 5,
+"y": 2
+}
+],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -20806,6 +23143,36 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 624,
+"when": [
+[
+"var",
+"VAR_LITTLEROOT_INTRO_STATE",
+"lt",
+6
+]
+],
+"x": 5,
+"y": 4
+},
+{
+"impassable": true,
+"metatile": 616,
+"when": [
+[
+"var",
+"VAR_LITTLEROOT_INTRO_STATE",
+"lt",
+6
+]
+],
+"x": 5,
+"y": 2
+}
+],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -23663,6 +26030,60 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 582,
+"when": [
+[
+"flag",
+"FLAG_SYS_GAME_CLEAR",
+true
+]
+],
+"x": 4,
+"y": 1
+},
+{
+"impassable": true,
+"metatile": 589,
+"when": [
+[
+"flag",
+"FLAG_SYS_GAME_CLEAR",
+true
+]
+],
+"x": 3,
+"y": 2
+},
+{
+"impassable": false,
+"metatile": 590,
+"when": [
+[
+"flag",
+"FLAG_SYS_GAME_CLEAR",
+true
+]
+],
+"x": 4,
+"y": 2
+},
+{
+"impassable": true,
+"metatile": 591,
+"when": [
+[
+"flag",
+"FLAG_SYS_GAME_CLEAR",
+true
+]
+],
+"x": 5,
+"y": 2
+}
+],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -25342,6 +27763,738 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": false,
+"metatile": 516,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+true
+]
+],
+"x": 5,
+"y": 5
+},
+{
+"impassable": true,
+"metatile": 569,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+true
+]
+],
+"x": 2,
+"y": 7
+},
+{
+"impassable": false,
+"metatile": 516,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+true
+]
+],
+"x": 8,
+"y": 14
+},
+{
+"impassable": true,
+"metatile": 569,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+true
+]
+],
+"x": 8,
+"y": 10
+},
+{
+"impassable": false,
+"metatile": 524,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+true
+]
+],
+"x": 15,
+"y": 17
+},
+{
+"impassable": true,
+"metatile": 569,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+true
+]
+],
+"x": 17,
+"y": 15
+},
+{
+"impassable": false,
+"metatile": 525,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_4",
+true
+]
+],
+"x": 1,
+"y": 23
+},
+{
+"impassable": true,
+"metatile": 569,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_4",
+true
+]
+],
+"x": 5,
+"y": 24
+},
+{
+"impassable": false,
+"metatile": 525,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_4",
+true
+]
+],
+"x": 1,
+"y": 23
+},
+{
+"impassable": true,
+"metatile": 569,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_4",
+true
+]
+],
+"x": 5,
+"y": 24
+},
+{
+"impassable": false,
+"metatile": 524,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+true
+]
+],
+"x": 15,
+"y": 17
+},
+{
+"impassable": true,
+"metatile": 569,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+true
+]
+],
+"x": 17,
+"y": 15
+},
+{
+"impassable": false,
+"metatile": 525,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_4",
+true
+]
+],
+"x": 1,
+"y": 23
+},
+{
+"impassable": true,
+"metatile": 569,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_4",
+true
+]
+],
+"x": 5,
+"y": 24
+},
+{
+"impassable": false,
+"metatile": 525,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_4",
+true
+]
+],
+"x": 1,
+"y": 23
+},
+{
+"impassable": true,
+"metatile": 569,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_4",
+true
+]
+],
+"x": 5,
+"y": 24
+},
+{
+"impassable": false,
+"metatile": 516,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+true
+]
+],
+"x": 8,
+"y": 14
+},
+{
+"impassable": true,
+"metatile": 569,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+true
+]
+],
+"x": 8,
+"y": 10
+},
+{
+"impassable": false,
+"metatile": 524,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+true
+]
+],
+"x": 15,
+"y": 17
+},
+{
+"impassable": true,
+"metatile": 569,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+true
+]
+],
+"x": 17,
+"y": 15
+},
+{
+"impassable": false,
+"metatile": 525,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_4",
+true
+]
+],
+"x": 1,
+"y": 23
+},
+{
+"impassable": true,
+"metatile": 569,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_4",
+true
+]
+],
+"x": 5,
+"y": 24
+},
+{
+"impassable": false,
+"metatile": 525,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_4",
+true
+]
+],
+"x": 1,
+"y": 23
+},
+{
+"impassable": true,
+"metatile": 569,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_4",
+true
+]
+],
+"x": 5,
+"y": 24
+},
+{
+"impassable": false,
+"metatile": 524,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+true
+]
+],
+"x": 15,
+"y": 17
+},
+{
+"impassable": true,
+"metatile": 569,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+true
+]
+],
+"x": 17,
+"y": 15
+},
+{
+"impassable": false,
+"metatile": 525,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_4",
+true
+]
+],
+"x": 1,
+"y": 23
+},
+{
+"impassable": true,
+"metatile": 569,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+true
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_4",
+true
+]
+],
+"x": 5,
+"y": 24
+},
+{
+"impassable": false,
+"metatile": 525,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_4",
+true
+]
+],
+"x": 1,
+"y": 23
+},
+{
+"impassable": true,
+"metatile": 569,
+"when": [
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_1",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_2",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_3",
+false
+],
+[
+"flag",
+"FLAG_MOSSDEEP_GYM_SWITCH_4",
+true
+]
+],
+"x": 5,
+"y": 24
+}
+],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -26128,6 +29281,22 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 996,
+"when": [
+[
+"var",
+"VAR_MOSSDEEP_CITY_STATE",
+"le",
+2
+]
+],
+"x": 2,
+"y": 5
+}
+],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -26389,6 +29558,21 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 753,
+"when": [
+[
+"flag",
+"FLAG_SYS_GAME_CLEAR",
+false
+]
+],
+"x": 6,
+"y": 4
+}
+],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -28645,6 +31829,92 @@
 "objects": [],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 788,
+"when": [
+[
+"var",
+"VAR_NEW_MAUVILLE_STATE",
+"eq",
+0
+]
+],
+"x": 3,
+"y": 0
+},
+{
+"impassable": true,
+"metatile": 789,
+"when": [
+[
+"var",
+"VAR_NEW_MAUVILLE_STATE",
+"eq",
+0
+]
+],
+"x": 4,
+"y": 0
+},
+{
+"impassable": true,
+"metatile": 790,
+"when": [
+[
+"var",
+"VAR_NEW_MAUVILLE_STATE",
+"eq",
+0
+]
+],
+"x": 5,
+"y": 0
+},
+{
+"impassable": true,
+"metatile": 796,
+"when": [
+[
+"var",
+"VAR_NEW_MAUVILLE_STATE",
+"eq",
+0
+]
+],
+"x": 3,
+"y": 1
+},
+{
+"impassable": true,
+"metatile": 797,
+"when": [
+[
+"var",
+"VAR_NEW_MAUVILLE_STATE",
+"eq",
+0
+]
+],
+"x": 4,
+"y": 1
+},
+{
+"impassable": true,
+"metatile": 798,
+"when": [
+[
+"var",
+"VAR_NEW_MAUVILLE_STATE",
+"eq",
+0
+]
+],
+"x": 5,
+"y": 1
+}
+],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -28953,6 +32223,134 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": false,
+"metatile": 591,
+"when": [
+[
+"var",
+"VAR_NEW_MAUVILLE_STATE",
+"eq",
+2
+]
+],
+"x": 33,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 752,
+"when": [
+[
+"var",
+"VAR_NEW_MAUVILLE_STATE",
+"eq",
+2
+]
+],
+"x": 32,
+"y": 2
+},
+{
+"impassable": true,
+"metatile": 753,
+"when": [
+[
+"var",
+"VAR_NEW_MAUVILLE_STATE",
+"eq",
+2
+]
+],
+"x": 33,
+"y": 2
+},
+{
+"impassable": true,
+"metatile": 754,
+"when": [
+[
+"var",
+"VAR_NEW_MAUVILLE_STATE",
+"eq",
+2
+]
+],
+"x": 34,
+"y": 2
+},
+{
+"impassable": true,
+"metatile": 755,
+"when": [
+[
+"var",
+"VAR_NEW_MAUVILLE_STATE",
+"eq",
+2
+]
+],
+"x": 35,
+"y": 2
+},
+{
+"impassable": true,
+"metatile": 756,
+"when": [
+[
+"var",
+"VAR_NEW_MAUVILLE_STATE",
+"eq",
+2
+]
+],
+"x": 32,
+"y": 3
+},
+{
+"impassable": true,
+"metatile": 757,
+"when": [
+[
+"var",
+"VAR_NEW_MAUVILLE_STATE",
+"eq",
+2
+]
+],
+"x": 33,
+"y": 3
+},
+{
+"impassable": true,
+"metatile": 758,
+"when": [
+[
+"var",
+"VAR_NEW_MAUVILLE_STATE",
+"eq",
+2
+]
+],
+"x": 34,
+"y": 3
+},
+{
+"impassable": true,
+"metatile": 759,
+"when": [
+[
+"var",
+"VAR_NEW_MAUVILLE_STATE",
+"eq",
+2
+]
+],
+"x": 35,
+"y": 3
+}
+],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -30920,6 +34318,544 @@
 "y": 7
 }
 ],
+"tile_patches": [
+{
+"impassable": false,
+"metatile": 528,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"eq",
+6
+]
+],
+"x": 6,
+"y": 85
+},
+{
+"impassable": false,
+"metatile": 529,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"eq",
+6
+]
+],
+"x": 7,
+"y": 85
+},
+{
+"impassable": false,
+"metatile": 528,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"eq",
+6
+]
+],
+"x": 1,
+"y": 98
+},
+{
+"impassable": false,
+"metatile": 529,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"eq",
+6
+]
+],
+"x": 2,
+"y": 98
+},
+{
+"impassable": false,
+"metatile": 528,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 6,
+"y": 85
+},
+{
+"impassable": false,
+"metatile": 529,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 7,
+"y": 85
+},
+{
+"impassable": false,
+"metatile": 528,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 1,
+"y": 98
+},
+{
+"impassable": false,
+"metatile": 529,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 2,
+"y": 98
+},
+{
+"impassable": false,
+"metatile": 528,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 6,
+"y": 46
+},
+{
+"impassable": false,
+"metatile": 529,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 7,
+"y": 46
+},
+{
+"impassable": false,
+"metatile": 528,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 1,
+"y": 59
+},
+{
+"impassable": false,
+"metatile": 529,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 2,
+"y": 59
+},
+{
+"impassable": false,
+"metatile": 528,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 6,
+"y": 59
+},
+{
+"impassable": false,
+"metatile": 529,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 7,
+"y": 59
+},
+{
+"impassable": false,
+"metatile": 528,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 1,
+"y": 72
+},
+{
+"impassable": false,
+"metatile": 529,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 2,
+"y": 72
+},
+{
+"impassable": false,
+"metatile": 528,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 1,
+"y": 20
+},
+{
+"impassable": false,
+"metatile": 529,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 2,
+"y": 20
+},
+{
+"impassable": false,
+"metatile": 528,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 6,
+"y": 20
+},
+{
+"impassable": false,
+"metatile": 529,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 7,
+"y": 20
+},
+{
+"impassable": false,
+"metatile": 528,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 1,
+"y": 33
+},
+{
+"impassable": false,
+"metatile": 529,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 2,
+"y": 33
+},
+{
+"impassable": false,
+"metatile": 528,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 6,
+"y": 33
+},
+{
+"impassable": false,
+"metatile": 529,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 7,
+"y": 33
+},
+{
+"impassable": false,
+"metatile": 528,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 1,
+"y": 7
+},
+{
+"impassable": false,
+"metatile": 529,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 2,
+"y": 7
+},
+{
+"impassable": false,
+"metatile": 528,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 6,
+"y": 7
+},
+{
+"impassable": false,
+"metatile": 529,
+"when": [
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ne",
+6
+],
+[
+"var",
+"VAR_PETALBURG_GYM_STATE",
+"ge",
+7
+]
+],
+"x": 7,
+"y": 7
+}
+],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -32745,6 +36681,34 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 159,
+"when": [
+[
+"flag",
+"FLAG_SYS_GAME_CLEAR",
+true
+]
+],
+"x": 45,
+"y": 5
+},
+{
+"impassable": false,
+"metatile": 167,
+"when": [
+[
+"flag",
+"FLAG_SYS_GAME_CLEAR",
+true
+]
+],
+"x": 45,
+"y": 6
+}
+],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -33715,6 +37679,34 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 124,
+"when": [
+[
+"flag",
+"FLAG_REGI_DOORS_OPENED",
+false
+]
+],
+"x": 9,
+"y": 19
+},
+{
+"impassable": true,
+"metatile": 145,
+"when": [
+[
+"flag",
+"FLAG_REGI_DOORS_OPENED",
+false
+]
+],
+"x": 9,
+"y": 20
+}
+],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -36022,6 +40014,22 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": false,
+"metatile": 523,
+"when": [
+[
+"var",
+"VAR_TRICK_HOUSE_PUZZLE_1_STATE",
+"eq",
+2
+]
+],
+"x": 13,
+"y": 1
+}
+],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -36352,6 +40360,36 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": false,
+"metatile": 600,
+"when": [],
+"x": 4,
+"y": 14
+},
+{
+"impassable": false,
+"metatile": 600,
+"when": [],
+"x": 3,
+"y": 11
+},
+{
+"impassable": false,
+"metatile": 600,
+"when": [],
+"x": 12,
+"y": 5
+},
+{
+"impassable": false,
+"metatile": 600,
+"when": [],
+"x": 8,
+"y": 2
+}
+],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -37204,6 +41242,328 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": false,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_1",
+true
+]
+],
+"x": 13,
+"y": 17
+},
+{
+"impassable": true,
+"metatile": 575,
+"when": [
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_1",
+true
+]
+],
+"x": 12,
+"y": 16
+},
+{
+"impassable": false,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_2",
+true
+]
+],
+"x": 12,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 575,
+"when": [
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_2",
+true
+]
+],
+"x": 12,
+"y": 11
+},
+{
+"impassable": false,
+"metatile": 610,
+"when": [
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_3",
+true
+]
+],
+"x": 7,
+"y": 12
+},
+{
+"impassable": true,
+"metatile": 575,
+"when": [
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_3",
+true
+]
+],
+"x": 5,
+"y": 10
+},
+{
+"impassable": false,
+"metatile": 636,
+"when": [
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_4",
+true
+]
+],
+"x": 6,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 575,
+"when": [
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_4",
+true
+]
+],
+"x": 4,
+"y": 4
+},
+{
+"impassable": false,
+"metatile": 609,
+"when": [
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_5",
+true
+]
+],
+"x": 8,
+"y": 4
+},
+{
+"impassable": true,
+"metatile": 575,
+"when": [
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_5",
+true
+]
+],
+"x": 7,
+"y": 5
+},
+{
+"impassable": false,
+"metatile": 610,
+"when": [
+[
+"var",
+"VAR_TRICK_HOUSE_PUZZLE_7_STATE_2",
+"eq",
+1
+],
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_1",
+true
+]
+],
+"x": 13,
+"y": 17
+},
+{
+"impassable": true,
+"metatile": 575,
+"when": [
+[
+"var",
+"VAR_TRICK_HOUSE_PUZZLE_7_STATE_2",
+"eq",
+1
+],
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_1",
+true
+]
+],
+"x": 12,
+"y": 16
+},
+{
+"impassable": false,
+"metatile": 610,
+"when": [
+[
+"var",
+"VAR_TRICK_HOUSE_PUZZLE_7_STATE_2",
+"eq",
+1
+],
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_2",
+true
+]
+],
+"x": 12,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 575,
+"when": [
+[
+"var",
+"VAR_TRICK_HOUSE_PUZZLE_7_STATE_2",
+"eq",
+1
+],
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_2",
+true
+]
+],
+"x": 12,
+"y": 11
+},
+{
+"impassable": false,
+"metatile": 610,
+"when": [
+[
+"var",
+"VAR_TRICK_HOUSE_PUZZLE_7_STATE_2",
+"eq",
+1
+],
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_3",
+true
+]
+],
+"x": 7,
+"y": 12
+},
+{
+"impassable": true,
+"metatile": 575,
+"when": [
+[
+"var",
+"VAR_TRICK_HOUSE_PUZZLE_7_STATE_2",
+"eq",
+1
+],
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_3",
+true
+]
+],
+"x": 5,
+"y": 10
+},
+{
+"impassable": false,
+"metatile": 636,
+"when": [
+[
+"var",
+"VAR_TRICK_HOUSE_PUZZLE_7_STATE_2",
+"eq",
+1
+],
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_4",
+true
+]
+],
+"x": 6,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 575,
+"when": [
+[
+"var",
+"VAR_TRICK_HOUSE_PUZZLE_7_STATE_2",
+"eq",
+1
+],
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_4",
+true
+]
+],
+"x": 4,
+"y": 4
+},
+{
+"impassable": false,
+"metatile": 609,
+"when": [
+[
+"var",
+"VAR_TRICK_HOUSE_PUZZLE_7_STATE_2",
+"eq",
+1
+],
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_5",
+true
+]
+],
+"x": 8,
+"y": 4
+},
+{
+"impassable": true,
+"metatile": 575,
+"when": [
+[
+"var",
+"VAR_TRICK_HOUSE_PUZZLE_7_STATE_2",
+"eq",
+1
+],
+[
+"flag",
+"FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_5",
+true
+]
+],
+"x": 7,
+"y": 5
+}
+],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -38517,6 +42877,286 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 124,
+"when": [
+[
+"flag",
+"FLAG_REGI_DOORS_OPENED",
+false
+]
+],
+"x": 29,
+"y": 86
+},
+{
+"impassable": true,
+"metatile": 145,
+"when": [
+[
+"flag",
+"FLAG_REGI_DOORS_OPENED",
+false
+]
+],
+"x": 29,
+"y": 87
+},
+{
+"impassable": false,
+"metatile": 984,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 18,
+"y": 53
+},
+{
+"impassable": false,
+"metatile": 985,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 19,
+"y": 53
+},
+{
+"impassable": false,
+"metatile": 986,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 20,
+"y": 53
+},
+{
+"impassable": false,
+"metatile": 992,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 18,
+"y": 54
+},
+{
+"impassable": false,
+"metatile": 993,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 19,
+"y": 54
+},
+{
+"impassable": false,
+"metatile": 994,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 20,
+"y": 54
+},
+{
+"impassable": false,
+"metatile": 1000,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 18,
+"y": 55
+},
+{
+"impassable": false,
+"metatile": 1001,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 19,
+"y": 55
+},
+{
+"impassable": false,
+"metatile": 1002,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 20,
+"y": 55
+},
+{
+"impassable": false,
+"metatile": 1008,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 18,
+"y": 56
+},
+{
+"impassable": false,
+"metatile": 1009,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 19,
+"y": 56
+},
+{
+"impassable": false,
+"metatile": 1010,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 20,
+"y": 56
+},
+{
+"impassable": false,
+"metatile": 987,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 18,
+"y": 57
+},
+{
+"impassable": false,
+"metatile": 988,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 19,
+"y": 57
+},
+{
+"impassable": false,
+"metatile": 989,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 20,
+"y": 57
+},
+{
+"impassable": false,
+"metatile": 995,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 18,
+"y": 58
+},
+{
+"impassable": false,
+"metatile": 996,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 19,
+"y": 58
+},
+{
+"impassable": false,
+"metatile": 997,
+"when": [
+[
+"var",
+"VAR_MIRAGE_TOWER_STATE",
+"eq",
+1
+]
+],
+"x": 20,
+"y": 58
+}
+],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -40281,6 +44921,34 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 617,
+"when": [
+[
+"flag",
+"FLAG_SYS_GAME_CLEAR",
+false
+]
+],
+"x": 6,
+"y": 1
+},
+{
+"impassable": true,
+"metatile": 617,
+"when": [
+[
+"flag",
+"FLAG_SYS_GAME_CLEAR",
+false
+]
+],
+"x": 6,
+"y": 2
+}
+],
 "type": "MAP_TYPE_INDOOR",
 "warps": [
 {
@@ -44684,6 +49352,86 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 124,
+"when": [
+[
+"flag",
+"FLAG_REGI_DOORS_OPENED",
+false
+]
+],
+"x": 7,
+"y": 54
+},
+{
+"impassable": true,
+"metatile": 145,
+"when": [
+[
+"flag",
+"FLAG_REGI_DOORS_OPENED",
+false
+]
+],
+"x": 7,
+"y": 55
+},
+{
+"impassable": false,
+"metatile": 663,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_DEVON_SCOPE",
+true
+]
+],
+"x": 13,
+"y": 15
+},
+{
+"impassable": false,
+"metatile": 671,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_DEVON_SCOPE",
+true
+]
+],
+"x": 12,
+"y": 16
+},
+{
+"impassable": false,
+"metatile": 161,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_DEVON_SCOPE",
+true
+]
+],
+"x": 12,
+"y": 17
+},
+{
+"impassable": false,
+"metatile": 161,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_DEVON_SCOPE",
+true
+]
+],
+"x": 13,
+"y": 17
+}
+],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -52819,6 +57567,86 @@
 "objects": [],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 553,
+"when": [
+[
+"flag",
+"FLAG_SYS_BRAILLE_DIG",
+false
+]
+],
+"x": 9,
+"y": 1
+},
+{
+"impassable": true,
+"metatile": 553,
+"when": [
+[
+"flag",
+"FLAG_SYS_BRAILLE_DIG",
+false
+]
+],
+"x": 10,
+"y": 1
+},
+{
+"impassable": true,
+"metatile": 553,
+"when": [
+[
+"flag",
+"FLAG_SYS_BRAILLE_DIG",
+false
+]
+],
+"x": 11,
+"y": 1
+},
+{
+"impassable": true,
+"metatile": 565,
+"when": [
+[
+"flag",
+"FLAG_SYS_BRAILLE_DIG",
+false
+]
+],
+"x": 9,
+"y": 2
+},
+{
+"impassable": true,
+"metatile": 565,
+"when": [
+[
+"flag",
+"FLAG_SYS_BRAILLE_DIG",
+false
+]
+],
+"x": 10,
+"y": 2
+},
+{
+"impassable": true,
+"metatile": 565,
+"when": [
+[
+"flag",
+"FLAG_SYS_BRAILLE_DIG",
+false
+]
+],
+"x": 11,
+"y": 2
+}
+],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -58329,6 +63157,5640 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+]
+],
+"x": 41,
+"y": 20
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+]
+],
+"x": 41,
+"y": 20
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 856,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+]
+],
+"x": 14,
+"y": 26
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+]
+],
+"x": 41,
+"y": 20
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+]
+],
+"x": 41,
+"y": 20
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+]
+],
+"x": 41,
+"y": 20
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 856,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+]
+],
+"x": 14,
+"y": 26
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+]
+],
+"x": 41,
+"y": 20
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 856,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+]
+],
+"x": 31,
+"y": 8
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+]
+],
+"x": 41,
+"y": 20
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+]
+],
+"x": 41,
+"y": 20
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 856,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+]
+],
+"x": 14,
+"y": 26
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+]
+],
+"x": 41,
+"y": 20
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+]
+],
+"x": 41,
+"y": 10
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+true
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+]
+],
+"x": 6,
+"y": 9
+},
+{
+"impassable": true,
+"metatile": 857,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_1",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_2",
+false
+],
+[
+"flag",
+"FLAG_SYS_SHOAL_TIDE",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_1",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_2",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_3",
+false
+],
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SHELL_4",
+false
+]
+],
+"x": 16,
+"y": 13
+}
+],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -58440,6 +68902,21 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 856,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_4",
+false
+]
+],
+"x": 18,
+"y": 2
+}
+],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -58510,6 +68987,21 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 856,
+"when": [
+[
+"flag",
+"FLAG_RECEIVED_SHOAL_SALT_3",
+false
+]
+],
+"x": 11,
+"y": 11
+}
+],
 "type": "MAP_TYPE_UNDERGROUND",
 "warps": [
 {
@@ -58804,6 +69296,34 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": false,
+"metatile": 682,
+"when": [
+[
+"flag",
+"FLAG_WALLACE_GOES_TO_SKY_PILLAR",
+true
+]
+],
+"x": 14,
+"y": 4
+},
+{
+"impassable": false,
+"metatile": 690,
+"when": [
+[
+"flag",
+"FLAG_WALLACE_GOES_TO_SKY_PILLAR",
+true
+]
+],
+"x": 14,
+"y": 5
+}
+],
 "type": "MAP_TYPE_ROUTE",
 "warps": [
 {
@@ -61674,6 +72194,183 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 592,
+"when": [
+[
+"flag",
+"FLAG_SOOTOPOLIS_ARCHIE_MAXIE_LEAVE",
+false
+]
+],
+"x": 31,
+"y": 32
+},
+{
+"impassable": true,
+"metatile": 584,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+],
+[
+"flag",
+"FLAG_SOOTOPOLIS_ARCHIE_MAXIE_LEAVE",
+false
+]
+],
+"x": 9,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 584,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+],
+[
+"flag",
+"FLAG_SOOTOPOLIS_ARCHIE_MAXIE_LEAVE",
+false
+]
+],
+"x": 9,
+"y": 17
+},
+{
+"impassable": true,
+"metatile": 584,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+],
+[
+"flag",
+"FLAG_SOOTOPOLIS_ARCHIE_MAXIE_LEAVE",
+false
+]
+],
+"x": 9,
+"y": 26
+},
+{
+"impassable": true,
+"metatile": 584,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+],
+[
+"flag",
+"FLAG_SOOTOPOLIS_ARCHIE_MAXIE_LEAVE",
+false
+]
+],
+"x": 44,
+"y": 17
+},
+{
+"impassable": true,
+"metatile": 584,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+],
+[
+"flag",
+"FLAG_SOOTOPOLIS_ARCHIE_MAXIE_LEAVE",
+false
+]
+],
+"x": 8,
+"y": 35
+},
+{
+"impassable": true,
+"metatile": 584,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+],
+[
+"flag",
+"FLAG_SOOTOPOLIS_ARCHIE_MAXIE_LEAVE",
+false
+]
+],
+"x": 53,
+"y": 28
+},
+{
+"impassable": true,
+"metatile": 584,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+],
+[
+"flag",
+"FLAG_SOOTOPOLIS_ARCHIE_MAXIE_LEAVE",
+false
+]
+],
+"x": 45,
+"y": 6
+},
+{
+"impassable": true,
+"metatile": 584,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+],
+[
+"flag",
+"FLAG_SOOTOPOLIS_ARCHIE_MAXIE_LEAVE",
+false
+]
+],
+"x": 48,
+"y": 25
+},
+{
+"impassable": true,
+"metatile": 584,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+],
+[
+"flag",
+"FLAG_SOOTOPOLIS_ARCHIE_MAXIE_LEAVE",
+false
+]
+],
+"x": 51,
+"y": 36
+}
+],
 "type": "MAP_TYPE_CITY",
 "warps": [
 {
@@ -64664,6 +75361,164 @@
 ],
 "requires_flash": false,
 "script_warps": [],
+"tile_patches": [
+{
+"impassable": true,
+"metatile": 542,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+]
+],
+"x": 5,
+"y": 3
+},
+{
+"impassable": true,
+"metatile": 542,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+]
+],
+"x": 6,
+"y": 3
+},
+{
+"impassable": true,
+"metatile": 542,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+]
+],
+"x": 7,
+"y": 3
+},
+{
+"impassable": true,
+"metatile": 542,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+]
+],
+"x": 8,
+"y": 3
+},
+{
+"impassable": false,
+"metatile": 552,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+]
+],
+"x": 5,
+"y": 4
+},
+{
+"impassable": false,
+"metatile": 552,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+]
+],
+"x": 6,
+"y": 4
+},
+{
+"impassable": false,
+"metatile": 552,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+]
+],
+"x": 7,
+"y": 4
+},
+{
+"impassable": false,
+"metatile": 552,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+]
+],
+"x": 8,
+"y": 4
+},
+{
+"impassable": false,
+"metatile": 552,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+]
+],
+"x": 5,
+"y": 5
+},
+{
+"impassable": false,
+"metatile": 552,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+]
+],
+"x": 6,
+"y": 5
+},
+{
+"impassable": false,
+"metatile": 552,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+]
+],
+"x": 7,
+"y": 5
+},
+{
+"impassable": false,
+"metatile": 552,
+"when": [
+[
+"flag",
+"FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN",
+true
+]
+],
+"x": 8,
+"y": 5
+}
+],
 "type": "MAP_TYPE_UNDERWATER",
 "warps": [
 {

@@ -725,13 +725,10 @@ class Controller:
             plan = self.planner.plan(s, goal, use, live=live, live_objects=self.game.objects())
             if plan is None and use.active_triggers_block:
                 # The only way (or the goal itself) is across a story trigger:
-                # relax triggers on this map first, then everywhere.
-                for relaxed in ({"trigger_exempt_map": s.map}, {"active_triggers_block": False}):
-                    soft = NavCaps(**{**use.__dict__, **relaxed})
-                    plan = self.planner.plan(s, goal, soft, live=live,
-                                             live_objects=self.game.objects())
-                    if plan is not None:
-                        break
+                # relax triggers on this map first.
+                soft = NavCaps(**{**use.__dict__, "trigger_exempt_map": s.map})
+                plan = self.planner.plan(s, goal, soft, live=live,
+                                         live_objects=self.game.objects())
             if plan is None:
                 before = (s, sorted((o.x, o.y) for o in self.game.objects()))
                 if self._try_boulders(s, goal, use):
@@ -740,15 +737,19 @@ class Controller:
                         if failures > max_replans:
                             raise Stuck(f"boulders on {s.map} would not move")
                     continue
-            if plan is None and use.strength:
-                # Boulders on a later map: head there; the push puzzle is
-                # solved on arrival (_try_boulders, current map only).
-                for extra in ({}, {"active_triggers_block": False}):
-                    shove = NavCaps(**{**use.__dict__, "ignore_boulders": True, **extra})
-                    plan = self.planner.plan(s, goal, shove, live=live,
-                                             live_objects=self.game.objects())
-                    if plan is not None:
-                        break
+            # Then boulders on a later map (head there; the push puzzle is
+            # solved on arrival), before walking onto story triggers anywhere:
+            # pushing boulders starts no events, and trying triggers first
+            # cost Seafloor Cavern two more failed searches every time.
+            relaxations = ([{"ignore_boulders": True}] if use.strength else []) + \
+                ([{"active_triggers_block": False}] if use.active_triggers_block else []) + \
+                ([{"ignore_boulders": True, "active_triggers_block": False}]
+                 if use.strength and use.active_triggers_block else [])
+            for extra in relaxations if plan is None else ():
+                plan = self.planner.plan(s, goal, NavCaps(**{**use.__dict__, **extra}),
+                                         live=live, live_objects=self.game.objects())
+                if plan is not None:
+                    break
             if plan is None and self._try_story_triggers(s, tried_triggers):
                 continue
             if plan is None:

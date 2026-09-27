@@ -104,6 +104,85 @@ def parse_enum(path: Path, prefix: str, known: dict[str, int] | None = None
     return out
 
 
+NEGATE = {"lt": "ge", "le": "gt", "eq": "ne", "ne": "eq", "ge": "lt", "gt": "le"}
+
+
+def walk_tile_patches(labels: dict, metatile_ids: dict, consts: dict) -> list:
+    """setmetatile lines reached from a map's ON_LOAD / ON_TRANSITION /
+    ON_RESUME scripts, each with the flag/var conditions on the way there.
+    Anything we cannot evaluate when planning (VAR_RESULT, temp vars/flags,
+    other kinds of branches) drops the patch rather than guess."""
+    entries = []
+    for body in labels.values():
+        for line in body:
+            m = re.match(r"map_script MAP_SCRIPT_ON_(?:LOAD|TRANSITION|RESUME), (\w+)", line)
+            if m:
+                entries.append(m.group(1))
+    out, seen = [], set()
+
+    def value(tok):
+        try:
+            return int(tok, 0)
+        except ValueError:
+            return consts.get(tok)
+
+    def knowable(name):
+        return not (name.startswith(("VAR_TEMP", "FLAG_TEMP", "VAR_0x8")) or name == "VAR_RESULT")
+
+    def walk(label, cond, depth=0):
+        key = (label, repr(cond))
+        if depth > 8 or key in seen:
+            return
+        seen.add(key)
+        for line in labels.get(label, []):
+            m = re.match(r"setmetatile (\d+), (\d+), (\w+), (TRUE|FALSE)$", line)
+            if m:
+                if m.group(3) in metatile_ids:
+                    out.append({"x": int(m.group(1)), "y": int(m.group(2)),
+                                "metatile": metatile_ids[m.group(3)],
+                                "impassable": m.group(4) == "TRUE", "when": list(cond)})
+                continue
+            m = re.match(r"call (\w+)$", line)
+            if m:
+                walk(m.group(1), cond, depth + 1)
+                continue
+            m = re.match(r"goto (\w+)$", line)
+            if m:
+                walk(m.group(1), cond, depth + 1)
+                return
+            m = re.match(r"(call|goto)_if_(set|unset) (FLAG_\w+), (\w+)$", line)
+            if m:
+                if not knowable(m.group(3)):
+                    if m.group(1) == "goto":
+                        return                 # the rest runs under a condition we cannot know
+                    continue
+                walk(m.group(4), cond + [["flag", m.group(3), m.group(2) == "set"]], depth + 1)
+                if m.group(1) == "goto":
+                    cond = cond + [["flag", m.group(3), m.group(2) != "set"]]
+                continue
+            m = re.match(r"(call|goto)_if_(lt|le|eq|ne|ge|gt) (VAR_\w+), (\w+), (\w+)$", line)
+            if m:
+                v = value(m.group(4))
+                if v is None or not knowable(m.group(3)):
+                    if m.group(1) == "goto":
+                        return
+                    continue
+                walk(m.group(5), cond + [["var", m.group(3), m.group(2), v]], depth + 1)
+                if m.group(1) == "goto":
+                    cond = cond + [["var", m.group(3), NEGATE[m.group(2)], v]]
+                continue
+            if line.startswith(("goto_if", "call_if", "switch", "case")):
+                if line.startswith(("goto_if", "switch", "case")):
+                    return                     # unmodelled branch: stop, do not guess
+                continue
+            if line in ("end", "return"):
+                return
+
+    for e in entries:
+        walk(e, [])
+    return out
+
+
 def main() -> int:
     decomp = Path(sys.argv[1] if len(sys.argv) > 1 else "pokeemerald")
     cdir = decomp / "include" / "constants"
@@ -168,6 +247,9 @@ def main() -> int:
 
     layouts = json.loads((decomp / "data/layouts/layouts.json").read_text())["layouts"]
     layout_ids = {l["id"]: i + 1 for i, l in enumerate(layouts) if l}   # gMapLayouts[id - 1]
+    metatile_ids = {name: int(v, 0) for name, v in re.findall(
+        r"#define (METATILE_\w+)\s+(0x[0-9A-Fa-f]+|\d+)",
+        (decomp / "include/constants/metatile_labels.h").read_text())}
 
     # Scripted warps: bg events (signs, doors) whose script ends in a warp,
     # e.g. the Petalburg Gym room doors ("Enter the SPEED room?" -> warpdoor).
@@ -242,6 +324,13 @@ def main() -> int:
                                           "layout": layout_ids[lm.group(1)]})
         if overrides:
             maps[mid]["layout_overrides"] = overrides
+
+        # Tiles a map script patches as the map loads (setmetatile), with the
+        # story conditions they run under: the static layout never shows them
+        # (the Sky Pillar door is shut in it for good, so no route inside).
+        patches = walk_tile_patches(labels, metatile_ids, consts)
+        if patches:
+            maps[mid]["tile_patches"] = patches
 
         # Marts: which clerk script sells which items (pokemart <list label>).
         marts = []

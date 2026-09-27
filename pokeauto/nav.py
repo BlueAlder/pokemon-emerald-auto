@@ -29,6 +29,8 @@ from .mapgrid import (ARROW_WARPS, DELTA, JUMP, STEP_WARPS, Caps, MapGrid, Pos,
                       has_encounters, surfable, MB)
 from .fly import FLY_COST, flyable_map
 from .symbols import const, constants, maps
+import logging
+log = logging.getLogger("pokeauto")
 
 _CONSTS = constants()
 STATIONARY = frozenset(v for k, v in _CONSTS.items()
@@ -150,19 +152,41 @@ class Planner:
     def grid(self, map_id: str, live: MapGrid | None = None) -> MapGrid:
         if live is not None and live.map_id == map_id:
             return live
+        from .mapgrid import layout_grid, map_layout_ptr, patched_grid
+        base, layout = None, None
         # Layouts a map script swaps in on entry (Sky Pillar's clean floors).
         for o in maps()[map_id].get("layout_overrides", ()):
             if o["var"] == "VAR_RESULT":
                 continue
-            if o["op"] == "always":
-                from .mapgrid import layout_grid
-                return layout_grid(self.emu, o["layout"], map_id)
-            v = self.game.var(o["var"])
-            if {"lt": v < o["value"], "le": v <= o["value"], "eq": v == o["value"],
-                    "ne": v != o["value"], "ge": v >= o["value"], "gt": v > o["value"]}[o["op"]]:
-                from .mapgrid import layout_grid
-                return layout_grid(self.emu, o["layout"], map_id)
-        return MapGrid.from_rom(self.emu, map_id)
+            if o["op"] == "always" or self._holds(["var", o["var"], o["op"], o["value"]]):
+                base, layout = layout_grid(self.emu, o["layout"], map_id), o["layout"]
+                break
+        if base is None:
+            base = MapGrid.from_rom(self.emu, map_id)
+        # Tiles its load scripts patch for the story so far (the Sky Pillar
+        # door, Sootopolis's steps): only the live map showed them before.
+        patches = maps()[map_id].get("tile_patches", ())
+        active = self._active_patches(map_id)
+        if not active:
+            return base
+        key = f"{map_id}#layout{layout}#patch" + ",".join(map(str, active))
+        return patched_grid(self.emu, base, map_layout_ptr(self.emu, map_id, layout),
+                            [patches[i] for i in active], key)
+
+    _OPS = {"lt": lambda v, x: v < x, "le": lambda v, x: v <= x, "eq": lambda v, x: v == x,
+            "ne": lambda v, x: v != x, "ge": lambda v, x: v >= x, "gt": lambda v, x: v > x}
+
+    def _active_patches(self, map_id: str) -> tuple:
+        """Indices of this map's tile patches that apply now."""
+        return tuple(i for i, pt in enumerate(maps()[map_id].get("tile_patches", ()))
+                     if all(self._holds(c) for c in pt["when"]))
+
+    def _holds(self, cond) -> bool:
+        """One tile-patch / layout condition: ["flag", name, set?] or
+        ["var", name, op, value]."""
+        if cond[0] == "flag":
+            return self.game.flag(cond[1]) == cond[2]
+        return self._OPS[cond[2]](self.game.var(cond[1]), cond[3])
 
     def obstacles(self, map_id: str, live_objects=None, ignore_story: bool = False) -> Obstacles:
         """Objects in the way on `map_id`.
@@ -364,11 +388,22 @@ class Planner:
         widens it if that fails (one-way ledges and transports can make the
         real route longer than the map graph suggests)."""
         slacks = (2, 6) if getattr(self, "narrow", False) else (2, 6, None)
+        t0 = _time.perf_counter()
+        r, tried = None, []
         for slack in slacks:
+            self._expanded, self._pruned = 0, False
             r = self._plan(start, goal, caps, live, live_objects, max_nodes, slack)
-            if r is not None or not getattr(goal, "maps", None):
-                return r
-        return None
+            tried.append((slack, self._expanded))
+            # A wider corridor only helps if this one cut something off
+            # (Seafloor: both searches expanded the same 81,117 states).
+            if r is not None or not getattr(goal, "maps", None) or not self._pruned:
+                break
+        dt = _time.perf_counter() - t0
+        if dt > 1.0:                             # worth a line: the TUI log shows stalls
+            log.info("PLAN slow %.2fs %s -> %s: %s, expanded %s", dt, start,
+                     getattr(goal, "__name__", "?") + str(sorted(getattr(goal, "maps", ()) or ())[:3]),
+                     "found %d steps" % len(r) if r is not None else "NO ROUTE", tried)
+        return r
 
     # Expansions are cached across plans, per map and per everything that can
     # change them (obstacles, caps, layout variables, the dynamic warp): heal
@@ -381,6 +416,9 @@ class Planner:
             vars_ = self._override_vars = sorted({
                 o["var"] for info in maps().values() for o in info.get("layout_overrides", ())
                 if o["op"] != "always" and o["var"] != "VAR_RESULT"})
+        # (Tile patches key each map's own edges instead: a global key over
+        # every map's patch flags flipped with the Shoal Cave tide, a clock
+        # flag, and threw away the whole edge cache each time.)
         return (tuple(self.game.var(v) for v in vars_),
                 bytes(self.emu.read(self.game.sb1() + 0x14, 8)))
 
@@ -419,8 +457,8 @@ class Planner:
             if live is not None and m == live.map_id:
                 memo: dict = {}                  # live RAM grid: this plan only
             else:
-                key = (m, world, capkey, frozenset(blocked), frozenset(ob.triggers),
-                       frozenset(ob.soft))
+                key = (m, world, self._active_patches(m), capkey, frozenset(blocked),
+                       frozenset(ob.triggers), frozenset(ob.soft))
                 memo = cache.setdefault(key, {})
             c = ctxs[m] = (memo, g, ob, frozenset(blocked))
             return c
@@ -444,10 +482,12 @@ class Planner:
             if _f - (hget(s.map, 50) if hget else 0.0) > cost + 1e-9:
                 continue                         # stale heap entry
             if limit is not None and hget(s.map, 99) > limit:
+                self._pruned = True             # the corridor cut this off
                 continue
             if goal(s):
                 return self._unwind(prev, start, s)
             expanded += 1
+            self._expanded = expanded
             if expanded > max_nodes or (expanded % 4096 == 0 and _time.process_time() > deadline):
                 return None
             memo, g, ob, blocked = ctx(s.map)
@@ -609,12 +649,19 @@ class Planner:
     LETTER = {"up": "U", "down": "D", "left": "L", "right": "R"}
 
     def _has_cracks(self, g: MapGrid) -> bool:
+        # Keyed by id() but holding the grid: a bare id() is reused once a
+        # grid is freed (every plan builds a new live grid), and a Sky Pillar
+        # floor then inherited another map's "no cracks" -- no ride moves, so
+        # no route to Rayquaza, and minutes of fallback searches.
         cache = self.__dict__.setdefault("_cracks", {})
-        key = id(g)
-        if key not in cache:
-            cache[key] = any(g.behavior(x, y) == self.CRACK
-                             for y in range(g.h) for x in range(g.w))
-        return cache[key]
+        hit = cache.get(id(g))
+        if hit is not None and hit[0] is g:
+            return hit[1]
+        if len(cache) > 64:
+            cache.clear()
+        found = any(g.behavior(x, y) == self.CRACK for y in range(g.h) for x in range(g.w))
+        cache[id(g)] = (g, found)
+        return found
 
     def _rides(self, s: State, g: MapGrid, blocked) -> list:
         """Mach Bike rides from standing at s that cross cracked floor:
