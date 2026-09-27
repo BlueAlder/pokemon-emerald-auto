@@ -91,6 +91,20 @@ class Controller:
         self.fly_hook = None                  # callable(dest_map) -> True once there
         self.bike_hook = None                 # callable(on) -> True once on/off the Mach Bike
         self.halt = None                      # callable() -> True: stop pumping and walking now
+        self.repel_hook = None                # callable() before a walk through wild grass/water
+        self.repel_ready = None               # callable() -> True: a Repel is on or in the bag
+        # POKEAUTO_FRAMES=1: every log line starts with the emulator frame,
+        # so game time can be split by activity after a run.
+        import os
+        if os.environ.get("POKEAUTO_FRAMES"):
+            class _Frames(logging.Filter):
+                def filter(self_, record):
+                    if not getattr(record, "_framed", False):
+                        record.msg = f"F{emu.frame} {record.msg}"
+                        record._framed = True
+                    return True
+            for name in ("pokeauto", "pokeauto.battle"):
+                logging.getLogger(name).addFilter(_Frames())
         self.fly_banned: set[str] = set()     # landing maps Fly failed to reach
         self._last_map, self._map_visit = "", 0
         self._in_health_check = False
@@ -374,6 +388,9 @@ class Controller:
         party = self.game.party()
         knows = lambda mv: any(p.knows(mv) for p in party)
         f = self.game.flag
+        # Under a Repel, tall grass costs nothing extra: no detours around it.
+        if avoid_grass and self.repel_ready and self.repel_ready():
+            avoid_grass = 0.0
         return NavCaps(
             strength=knows("MOVE_STRENGTH") and f("FLAG_BADGE04_GET"),
             dive=knows("MOVE_DIVE") and f("FLAG_BADGE07_GET"),
@@ -783,6 +800,8 @@ class Controller:
                 log.info("GOTO %s: %d steps from %s (%d,%d)", desc or goal.__name__,
                          len(plan), s.map, s.x, s.y)
                 last_state = s
+            if self.repel_hook and self._plan_has_encounters(plan):
+                self.repel_hook()
             ok = self._run_steps(plan, s)
             if ok:
                 plan = None
@@ -790,6 +809,27 @@ class Controller:
                 failures += 1
                 if failures > max_replans:
                     raise Stuck(f"could not reach {desc or goal.__name__}; last at {self.state()}")
+
+    def _plan_has_encounters(self, plan: list[Step], at_least: int = 3) -> bool:
+        """Does the walk cross a few tiles where wild Pokemon appear?"""
+        from .mapgrid import has_encounters, surfable
+        kinds = self.battle.data.wild_kinds() if self.battle else {}
+        live = MapGrid.from_ram(self.game)
+        n = 0
+        for st in plan:
+            e = st.expect
+            land, water = kinds.get(e.map, (False, False))
+            if not (land or water):
+                continue
+            g = self.planner.grid(e.map, live)
+            if not g.inside(e.x, e.y):
+                continue
+            b = g.behavior(e.x, e.y)
+            if has_encounters(b) and (water if surfable(b) else land):
+                n += 1
+                if n >= at_least:
+                    return True
+        return False
 
     def _talk_to_blocker(self, s: State, plan: list[Step], tried: set) -> bool:
         """The only route walks through a trainer or story NPC standing in a

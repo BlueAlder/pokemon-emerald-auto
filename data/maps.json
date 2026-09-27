@@ -90,6 +90,7 @@
 "name": "",
 "script": "AbandonedShip_Corridors_1F_EventScript_Charlie",
 "sight": "3",
+"trainer": "TRAINER_CHARLIE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 5,
 "y": 10
@@ -234,6 +235,7 @@
 "name": "",
 "script": "AbandonedShip_Corridors_B1F_EventScript_Duncan",
 "sight": "4",
+"trainer": "TRAINER_DUNCAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 9,
 "y": 6
@@ -846,6 +848,7 @@ true
 "name": "",
 "script": "AbandonedShip_Rooms2_1F_EventScript_Dan",
 "sight": "1",
+"trainer": "TRAINER_KIRA_AND_DAN_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 13
@@ -859,6 +862,7 @@ true
 "name": "",
 "script": "AbandonedShip_Rooms2_1F_EventScript_Kira",
 "sight": "1",
+"trainer": "TRAINER_KIRA_AND_DAN_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 6,
 "y": 13
@@ -885,6 +889,7 @@ true
 "name": "",
 "script": "AbandonedShip_Rooms2_1F_EventScript_Garrison",
 "sight": "3",
+"trainer": "TRAINER_GARRISON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 3,
 "y": 2
@@ -898,6 +903,7 @@ true
 "name": "",
 "script": "AbandonedShip_Rooms2_1F_EventScript_Jani",
 "sight": "3",
+"trainer": "TRAINER_JANI",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 2
@@ -1048,6 +1054,7 @@ true
 "name": "",
 "script": "AbandonedShip_Rooms_1F_EventScript_Thalia",
 "sight": "4",
+"trainer": "TRAINER_THALIA_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 11
@@ -1061,6 +1068,7 @@ true
 "name": "",
 "script": "AbandonedShip_Rooms_1F_EventScript_Demetrius",
 "sight": "4",
+"trainer": "TRAINER_DEMETRIUS",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 16
@@ -1527,6 +1535,7 @@ false
 "name": "",
 "script": "AquaHideout_1F_EventScript_Grunt1",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_AQUA_HIDEOUT_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 20,
 "y": 4
@@ -1579,6 +1588,7 @@ false
 "name": "",
 "script": "AquaHideout_B1F_EventScript_Grunt2",
 "sight": "4",
+"trainer": "TRAINER_GRUNT_AQUA_HIDEOUT_2",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 28,
 "y": 16
@@ -1592,6 +1602,7 @@ false
 "name": "",
 "script": "AquaHideout_B1F_EventScript_Grunt3",
 "sight": "5",
+"trainer": "TRAINER_GRUNT_AQUA_HIDEOUT_3",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 6,
 "y": 6
@@ -1618,6 +1629,7 @@ false
 "name": "",
 "script": "AquaHideout_B1F_EventScript_Grunt5",
 "sight": "4",
+"trainer": "TRAINER_GRUNT_AQUA_HIDEOUT_5",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 20,
 "y": 18
@@ -1683,6 +1695,7 @@ false
 "name": "",
 "script": "AquaHideout_B1F_EventScript_Grunt7",
 "sight": "4",
+"trainer": "TRAINER_GRUNT_AQUA_HIDEOUT_7",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 28,
 "y": 21
@@ -1908,6 +1921,7 @@ false
 "name": "LOCALID_AQUA_HIDEOUT_MATT",
 "script": "AquaHideout_B2F_EventScript_Matt",
 "sight": "0",
+"trainer": "TRAINER_MATT",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 23,
 "y": 19
@@ -1921,6 +1935,7 @@ false
 "name": "",
 "script": "AquaHideout_B2F_EventScript_Grunt4",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_AQUA_HIDEOUT_4",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 23,
 "y": 10
@@ -1960,6 +1975,7 @@ false
 "name": "",
 "script": "AquaHideout_B2F_EventScript_Grunt6",
 "sight": "5",
+"trainer": "TRAINER_GRUNT_AQUA_HIDEOUT_6",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 5
@@ -1973,6 +1989,7 @@ false
 "name": "",
 "script": "AquaHideout_B2F_EventScript_Grunt8",
 "sight": "5",
+"trainer": "TRAINER_GRUNT_AQUA_HIDEOUT_8",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 13,
 "y": 5
@@ -10431,6 +10448,7 @@ false
 "name": "",
 "script": "DewfordTown_Gym_EventScript_Brawly",
 "sight": "0",
+"trainer": "TRAINER_BRAWLY_1",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 4,
 "y": 3
@@ -10444,6 +10462,7 @@ false
 "name": "",
 "script": "DewfordTown_Gym_EventScript_Takao",
 "sight": "3",
+"trainer": "TRAINER_TAKAO",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 2,
 "y": 18
@@ -10457,6 +10476,7 @@ false
 "name": "",
 "script": "DewfordTown_Gym_EventScript_Jocelyn",
 "sight": "3",
+"trainer": "TRAINER_JOCELYN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 15,
 "y": 3
@@ -10470,6 +10490,7 @@ false
 "name": "",
 "script": "DewfordTown_Gym_EventScript_Laura",
 "sight": "2",
+"trainer": "TRAINER_LAURA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 12,
 "y": 25
@@ -10496,6 +10517,7 @@ false
 "name": "",
 "script": "DewfordTown_Gym_EventScript_Cristian",
 "sight": "3",
+"trainer": "TRAINER_CRISTIAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 8
@@ -10509,6 +10531,7 @@ false
 "name": "",
 "script": "DewfordTown_Gym_EventScript_Lilith",
 "sight": "3",
+"trainer": "TRAINER_LILITH",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 16,
 "y": 9
@@ -10522,6 +10545,7 @@ false
 "name": "",
 "script": "DewfordTown_Gym_EventScript_Brenden",
 "sight": "2",
+"trainer": "TRAINER_BRENDEN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 14,
 "y": 12
@@ -11308,6 +11332,7 @@ false
 "name": "",
 "script": "EverGrandeCity_DrakesRoom_EventScript_Drake",
 "sight": "0",
+"trainer": "TRAINER_DRAKE",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 6,
 "y": 5
@@ -11353,6 +11378,7 @@ false
 "name": "",
 "script": "EverGrandeCity_GlaciasRoom_EventScript_Glacia",
 "sight": "0",
+"trainer": "TRAINER_GLACIA",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 6,
 "y": 5
@@ -11647,6 +11673,7 @@ false
 "name": "",
 "script": "EverGrandeCity_PhoebesRoom_EventScript_Phoebe",
 "sight": "0",
+"trainer": "TRAINER_PHOEBE",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 6,
 "y": 5
@@ -12084,6 +12111,7 @@ false
 "name": "",
 "script": "EverGrandeCity_SidneysRoom_EventScript_Sidney",
 "sight": "0",
+"trainer": "TRAINER_SIDNEY",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 6,
 "y": 5
@@ -13548,6 +13576,7 @@ false
 "name": "",
 "script": "FortreeCity_Gym_EventScript_Winona",
 "sight": "0",
+"trainer": "TRAINER_WINONA_1",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 15,
 "y": 2
@@ -13561,6 +13590,7 @@ false
 "name": "",
 "script": "FortreeCity_Gym_EventScript_Jared",
 "sight": "3",
+"trainer": "TRAINER_JARED",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 14
@@ -13574,6 +13604,7 @@ false
 "name": "",
 "script": "FortreeCity_Gym_EventScript_Flint",
 "sight": "2",
+"trainer": "TRAINER_FLINT",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 10
@@ -13587,6 +13618,7 @@ false
 "name": "",
 "script": "FortreeCity_Gym_EventScript_Ashley",
 "sight": "1",
+"trainer": "TRAINER_ASHLEY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 5,
 "y": 17
@@ -13600,6 +13632,7 @@ false
 "name": "",
 "script": "FortreeCity_Gym_EventScript_Edwardo",
 "sight": "2",
+"trainer": "TRAINER_EDWARDO",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 9,
 "y": 8
@@ -13626,6 +13659,7 @@ false
 "name": "",
 "script": "FortreeCity_Gym_EventScript_Humberto",
 "sight": "1",
+"trainer": "TRAINER_HUMBERTO",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 23
@@ -13639,6 +13673,7 @@ false
 "name": "",
 "script": "FortreeCity_Gym_EventScript_Darius",
 "sight": "3",
+"trainer": "TRAINER_DARIUS",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 1,
 "y": 10
@@ -15133,6 +15168,7 @@ false
 "name": "",
 "script": "JaggedPass_EventScript_Eric",
 "sight": "3",
+"trainer": "TRAINER_ERIC",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 8
@@ -15146,6 +15182,7 @@ false
 "name": "",
 "script": "JaggedPass_EventScript_Ethan",
 "sight": "4",
+"trainer": "TRAINER_ETHAN_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 16,
 "y": 35
@@ -15172,6 +15209,7 @@ false
 "name": "",
 "script": "JaggedPass_EventScript_Diana",
 "sight": "3",
+"trainer": "TRAINER_DIANA_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 9,
 "y": 21
@@ -15185,6 +15223,7 @@ false
 "name": "LOCALID_MAGMA_HIDEOUT_GUARD",
 "script": "JaggedPass_EventScript_MagmaHideoutGuard",
 "sight": "0",
+"trainer": "TRAINER_GRUNT_JAGGED_PASS",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 16,
 "y": 19
@@ -15198,6 +15237,7 @@ false
 "name": "",
 "script": "JaggedPass_EventScript_Autumn",
 "sight": "3",
+"trainer": "TRAINER_AUTUMN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 14,
 "y": 25
@@ -15211,6 +15251,7 @@ false
 "name": "",
 "script": "JaggedPass_EventScript_Julio",
 "sight": "3",
+"trainer": "TRAINER_JULIO",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 18,
 "y": 25
@@ -15602,6 +15643,7 @@ false
 "name": "",
 "script": "LavaridgeTown_Gym_1F_EventScript_Flannery",
 "sight": "0",
+"trainer": "TRAINER_FLANNERY_1",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 13,
 "y": 9
@@ -23753,6 +23795,7 @@ true
 "name": "",
 "script": "MagmaHideout_1F_EventScript_Grunt1",
 "sight": "2",
+"trainer": "TRAINER_GRUNT_MAGMA_HIDEOUT_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 5
@@ -23779,6 +23822,7 @@ true
 "name": "",
 "script": "MagmaHideout_1F_EventScript_Grunt2",
 "sight": "4",
+"trainer": "TRAINER_GRUNT_MAGMA_HIDEOUT_2",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 30,
 "y": 20
@@ -23877,6 +23921,7 @@ true
 "name": "",
 "script": "MagmaHideout_2F_1R_EventScript_Grunt4",
 "sight": "1",
+"trainer": "TRAINER_GRUNT_MAGMA_HIDEOUT_4",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 18,
 "y": 19
@@ -23890,6 +23935,7 @@ true
 "name": "",
 "script": "MagmaHideout_2F_1R_EventScript_Grunt5",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_MAGMA_HIDEOUT_5",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 12,
 "y": 14
@@ -23903,6 +23949,7 @@ true
 "name": "",
 "script": "MagmaHideout_2F_1R_EventScript_Grunt14",
 "sight": "7",
+"trainer": "TRAINER_GRUNT_MAGMA_HIDEOUT_14",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 8,
 "y": 8
@@ -23916,6 +23963,7 @@ true
 "name": "",
 "script": "MagmaHideout_2F_1R_EventScript_Grunt3",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_MAGMA_HIDEOUT_3",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 21,
 "y": 11
@@ -23968,6 +24016,7 @@ true
 "name": "",
 "script": "MagmaHideout_2F_2R_EventScript_Grunt8",
 "sight": "7",
+"trainer": "TRAINER_GRUNT_MAGMA_HIDEOUT_8",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 29,
 "y": 8
@@ -23981,6 +24030,7 @@ true
 "name": "",
 "script": "MagmaHideout_2F_2R_EventScript_Grunt7",
 "sight": "2",
+"trainer": "TRAINER_GRUNT_MAGMA_HIDEOUT_7",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 25,
 "y": 11
@@ -24007,6 +24057,7 @@ true
 "name": "",
 "script": "MagmaHideout_2F_2R_EventScript_Grunt6",
 "sight": "4",
+"trainer": "TRAINER_GRUNT_MAGMA_HIDEOUT_6",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 8,
 "y": 9
@@ -24020,6 +24071,7 @@ true
 "name": "",
 "script": "MagmaHideout_2F_2R_EventScript_Grunt15",
 "sight": "1",
+"trainer": "TRAINER_GRUNT_MAGMA_HIDEOUT_15",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 13
@@ -24109,6 +24161,7 @@ true
 "name": "",
 "script": "MagmaHideout_3F_1R_EventScript_Grunt9",
 "sight": "5",
+"trainer": "TRAINER_GRUNT_MAGMA_HIDEOUT_9",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 2,
 "y": 7
@@ -24122,6 +24175,7 @@ true
 "name": "",
 "script": "MagmaHideout_3F_1R_EventScript_Grunt16",
 "sight": "4",
+"trainer": "TRAINER_GRUNT_MAGMA_HIDEOUT_16",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 21,
 "y": 21
@@ -24187,6 +24241,7 @@ true
 "name": "",
 "script": "MagmaHideout_3F_2R_EventScript_Grunt10",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_MAGMA_HIDEOUT_10",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 16,
 "y": 3
@@ -24296,6 +24351,7 @@ true
 "name": "LOCALID_MAGMA_HIDEOUT_4F_GRUNT_1",
 "script": "MagmaHideout_4F_EventScript_Grunt11",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_MAGMA_HIDEOUT_11",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 31,
 "y": 22
@@ -24309,6 +24365,7 @@ true
 "name": "LOCALID_MAGMA_HIDEOUT_4F_GRUNT_2",
 "script": "MagmaHideout_4F_EventScript_Grunt12",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_MAGMA_HIDEOUT_12",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 30,
 "y": 13
@@ -24322,6 +24379,7 @@ true
 "name": "LOCALID_MAGMA_HIDEOUT_4F_GRUNT_3",
 "script": "MagmaHideout_4F_EventScript_Grunt13",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_MAGMA_HIDEOUT_13",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 26,
 "y": 13
@@ -24335,6 +24393,7 @@ true
 "name": "LOCALID_MAGMA_HIDEOUT_4F_TABITHA",
 "script": "MagmaHideout_4F_EventScript_Tabitha",
 "sight": "4",
+"trainer": "TRAINER_TABITHA_MAGMA_HIDEOUT",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 22,
 "y": 4
@@ -24348,6 +24407,7 @@ true
 "name": "LOCALID_MAGMA_HIDEOUT_4F_MAXIE",
 "script": "MagmaHideout_4F_EventScript_Maxie",
 "sight": "0",
+"trainer": "TRAINER_MAXIE_MAGMA_HIDEOUT",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 16,
 "y": 21
@@ -25374,6 +25434,7 @@ true
 "name": "",
 "script": "MauvilleCity_Gym_EventScript_Wattson",
 "sight": "0",
+"trainer": "TRAINER_WATTSON_1",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 5,
 "y": 2
@@ -25387,6 +25448,7 @@ true
 "name": "",
 "script": "MauvilleCity_Gym_EventScript_Shawn",
 "sight": "1",
+"trainer": "TRAINER_SHAWN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 8
@@ -25400,6 +25462,7 @@ true
 "name": "",
 "script": "MauvilleCity_Gym_EventScript_Vivian",
 "sight": "2",
+"trainer": "TRAINER_VIVIAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 1,
 "y": 16
@@ -25413,6 +25476,7 @@ true
 "name": "",
 "script": "MauvilleCity_Gym_EventScript_Ben",
 "sight": "2",
+"trainer": "TRAINER_BEN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 5,
 "y": 10
@@ -25426,6 +25490,7 @@ true
 "name": "",
 "script": "MauvilleCity_Gym_EventScript_Kirk",
 "sight": "2",
+"trainer": "TRAINER_KIRK",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 1,
 "y": 13
@@ -25452,6 +25517,7 @@ true
 "name": "",
 "script": "MauvilleCity_Gym_EventScript_Angelo",
 "sight": "1",
+"trainer": "TRAINER_ANGELO",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 10
@@ -26161,6 +26227,7 @@ true
 "name": "",
 "script": "MeteorFalls_1F_2R_EventScript_Nicolas",
 "sight": "1",
+"trainer": "TRAINER_NICOLAS_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 13,
 "y": 2
@@ -26174,6 +26241,7 @@ true
 "name": "",
 "script": "MeteorFalls_1F_2R_EventScript_John",
 "sight": "1",
+"trainer": "TRAINER_JOHN_AND_JAY_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 6,
 "y": 12
@@ -26187,6 +26255,7 @@ true
 "name": "",
 "script": "MeteorFalls_1F_2R_EventScript_Jay",
 "sight": "1",
+"trainer": "TRAINER_JOHN_AND_JAY_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 12
@@ -26343,6 +26412,7 @@ true
 "name": "LOCALID_METEOR_FALLS_STEVEN",
 "script": "MeteorFalls_StevensCave_EventScript_Steven",
 "sight": "0",
+"trainer": "TRAINER_STEVEN",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 19,
 "y": 3
@@ -27301,6 +27371,7 @@ true
 "name": "",
 "script": "MossdeepCity_Gym_EventScript_TateAndLiza",
 "sight": "0",
+"trainer": "TRAINER_TATE_AND_LIZA_1",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 23,
 "y": 7
@@ -27314,6 +27385,7 @@ true
 "name": "",
 "script": "MossdeepCity_Gym_EventScript_Preston",
 "sight": "1",
+"trainer": "TRAINER_PRESTON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 1,
 "y": 30
@@ -27327,6 +27399,7 @@ true
 "name": "",
 "script": "MossdeepCity_Gym_EventScript_Blake",
 "sight": "1",
+"trainer": "TRAINER_BLAKE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 5,
 "y": 20
@@ -27340,6 +27413,7 @@ true
 "name": "",
 "script": "MossdeepCity_Gym_EventScript_Maura",
 "sight": "1",
+"trainer": "TRAINER_MAURA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 29
@@ -27353,6 +27427,7 @@ true
 "name": "",
 "script": "MossdeepCity_Gym_EventScript_Samantha",
 "sight": "1",
+"trainer": "TRAINER_SAMANTHA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 23
@@ -27366,6 +27441,7 @@ true
 "name": "",
 "script": "MossdeepCity_Gym_EventScript_Virgil",
 "sight": "1",
+"trainer": "TRAINER_VIRGIL",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 6,
 "y": 9
@@ -27379,6 +27455,7 @@ true
 "name": "",
 "script": "MossdeepCity_Gym_EventScript_Hannah",
 "sight": "1",
+"trainer": "TRAINER_HANNAH",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 6,
 "y": 3
@@ -27405,6 +27482,7 @@ true
 "name": "",
 "script": "MossdeepCity_Gym_EventScript_TateAndLiza",
 "sight": "0",
+"trainer": "TRAINER_TATE_AND_LIZA_1",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 24,
 "y": 7
@@ -27509,6 +27587,7 @@ true
 "name": "",
 "script": "MossdeepCity_Gym_EventScript_Nate",
 "sight": "1",
+"trainer": "TRAINER_NATE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 9,
 "y": 8
@@ -27522,6 +27601,7 @@ true
 "name": "",
 "script": "MossdeepCity_Gym_EventScript_Sylvia",
 "sight": "1",
+"trainer": "TRAINER_SYLVIA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 5
@@ -27613,6 +27693,7 @@ true
 "name": "",
 "script": "MossdeepCity_Gym_EventScript_Clifford",
 "sight": "1",
+"trainer": "TRAINER_CLIFFORD",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 22,
 "y": 25
@@ -27639,6 +27720,7 @@ true
 "name": "",
 "script": "MossdeepCity_Gym_EventScript_Macey",
 "sight": "1",
+"trainer": "TRAINER_MACEY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 25,
 "y": 25
@@ -27652,6 +27734,7 @@ true
 "name": "",
 "script": "MossdeepCity_Gym_EventScript_Kathleen",
 "sight": "1",
+"trainer": "TRAINER_KATHLEEN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 22,
 "y": 23
@@ -27704,6 +27787,7 @@ true
 "name": "",
 "script": "MossdeepCity_Gym_EventScript_Nicholas",
 "sight": "1",
+"trainer": "TRAINER_NICHOLAS",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 25,
 "y": 22
@@ -29209,6 +29293,7 @@ true
 "name": "",
 "script": "MossdeepCity_SpaceCenter_1F_EventScript_Grunt3",
 "sight": "2",
+"trainer": "TRAINER_GRUNT_SPACE_CENTER_3",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 12,
 "y": 9
@@ -29222,6 +29307,7 @@ true
 "name": "",
 "script": "MossdeepCity_SpaceCenter_1F_EventScript_Grunt1",
 "sight": "2",
+"trainer": "TRAINER_GRUNT_SPACE_CENTER_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 11,
 "y": 6
@@ -29235,6 +29321,7 @@ true
 "name": "",
 "script": "MossdeepCity_SpaceCenter_1F_EventScript_Grunt4",
 "sight": "2",
+"trainer": "TRAINER_GRUNT_SPACE_CENTER_4",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 2
@@ -29248,6 +29335,7 @@ true
 "name": "LOCALID_SPACE_CENTER_1F_STAIR_GRUNT",
 "script": "MossdeepCity_SpaceCenter_1F_EventScript_Grunt2",
 "sight": "0",
+"trainer": "TRAINER_GRUNT_SPACE_CENTER_2",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 13,
 "y": 2
@@ -29645,6 +29733,7 @@ false
 "name": "LOCALID_MT_CHIMNEY_MAXIE",
 "script": "MtChimney_EventScript_Maxie",
 "sight": "0",
+"trainer": "TRAINER_MAXIE_MT_CHIMNEY",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 13,
 "y": 6
@@ -29658,6 +29747,7 @@ false
 "name": "LOCALID_MT_CHIMNEY_TABITHA",
 "script": "MtChimney_EventScript_Tabitha",
 "sight": "2",
+"trainer": "TRAINER_TABITHA_MT_CHIMNEY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 12,
 "y": 11
@@ -29905,6 +29995,7 @@ false
 "name": "LOCALID_MT_CHIMNEY_MAGMA_GRUNT_2",
 "script": "MtChimney_EventScript_Grunt2",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_MT_CHIMNEY_2",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 9,
 "y": 16
@@ -29944,6 +30035,7 @@ false
 "name": "",
 "script": "MtChimney_EventScript_Shelby",
 "sight": "3",
+"trainer": "TRAINER_SHELBY_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 16,
 "y": 18
@@ -29957,6 +30049,7 @@ false
 "name": "",
 "script": "MtChimney_EventScript_Melissa",
 "sight": "6",
+"trainer": "TRAINER_MELISSA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 14,
 "y": 7
@@ -29970,6 +30063,7 @@ false
 "name": "",
 "script": "MtChimney_EventScript_Sheila",
 "sight": "3",
+"trainer": "TRAINER_SHEILA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 29,
 "y": 7
@@ -29983,6 +30077,7 @@ false
 "name": "",
 "script": "MtChimney_EventScript_Shirley",
 "sight": "3",
+"trainer": "TRAINER_SHIRLEY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 27,
 "y": 17
@@ -29996,6 +30091,7 @@ false
 "name": "LOCALID_MT_CHIMNEY_MAGMA_GRUNT_1",
 "script": "MtChimney_EventScript_Grunt1",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_MT_CHIMNEY_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 13,
 "y": 16
@@ -30009,6 +30105,7 @@ false
 "name": "",
 "script": "MtChimney_EventScript_Sawyer",
 "sight": "6",
+"trainer": "TRAINER_SAWYER_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 7
@@ -30226,6 +30323,7 @@ false
 "name": "",
 "script": "MtPyre_2F_EventScript_Mark",
 "sight": "2",
+"trainer": "TRAINER_MARK",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 3,
 "y": 6
@@ -30278,6 +30376,7 @@ false
 "name": "",
 "script": "MtPyre_2F_EventScript_Dez",
 "sight": "1",
+"trainer": "TRAINER_DEZ_AND_LUKE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 2,
 "y": 9
@@ -30291,6 +30390,7 @@ false
 "name": "",
 "script": "MtPyre_2F_EventScript_Luke",
 "sight": "1",
+"trainer": "TRAINER_DEZ_AND_LUKE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 3,
 "y": 9
@@ -30304,6 +30404,7 @@ false
 "name": "",
 "script": "MtPyre_2F_EventScript_Zander",
 "sight": "2",
+"trainer": "TRAINER_ZANDER",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 6,
 "y": 9
@@ -30317,6 +30418,7 @@ false
 "name": "",
 "script": "MtPyre_2F_EventScript_Leah",
 "sight": "2",
+"trainer": "TRAINER_LEAH",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 6,
 "y": 6
@@ -30383,6 +30485,7 @@ false
 "name": "",
 "script": "MtPyre_3F_EventScript_William",
 "sight": "4",
+"trainer": "TRAINER_WILLIAM",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 1,
 "y": 4
@@ -30396,6 +30499,7 @@ false
 "name": "",
 "script": "MtPyre_3F_EventScript_Kayla",
 "sight": "4",
+"trainer": "TRAINER_KAYLA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 11,
 "y": 4
@@ -30422,6 +30526,7 @@ false
 "name": "",
 "script": "MtPyre_3F_EventScript_Gabrielle",
 "sight": "4",
+"trainer": "TRAINER_GABRIELLE_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 6,
 "y": 4
@@ -30660,6 +30765,7 @@ false
 "name": "",
 "script": "MtPyre_6F_EventScript_Valerie",
 "sight": "3",
+"trainer": "TRAINER_VALERIE_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 6,
 "y": 3
@@ -30686,6 +30792,7 @@ false
 "name": "",
 "script": "MtPyre_6F_EventScript_Cedric",
 "sight": "3",
+"trainer": "TRAINER_CEDRIC",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 3
@@ -30978,6 +31085,7 @@ false
 "name": "LOCALID_MT_PYRE_SUMMIT_GRUNT_1",
 "script": "MtPyre_Summit_EventScript_Grunt1",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_MT_PYRE_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 21,
 "y": 15
@@ -30991,6 +31099,7 @@ false
 "name": "LOCALID_MT_PYRE_SUMMIT_GRUNT_2",
 "script": "MtPyre_Summit_EventScript_Grunt2",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_MT_PYRE_2",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 25,
 "y": 18
@@ -31004,6 +31113,7 @@ false
 "name": "LOCALID_MT_PYRE_SUMMIT_GRUNT_3",
 "script": "MtPyre_Summit_EventScript_Grunt3",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_MT_PYRE_3",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 21,
 "y": 11
@@ -31017,6 +31127,7 @@ false
 "name": "LOCALID_MT_PYRE_SUMMIT_GRUNT_4",
 "script": "MtPyre_Summit_EventScript_Grunt4",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_MT_PYRE_4",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 25,
 "y": 11
@@ -34109,6 +34220,7 @@ false
 "name": "",
 "script": "PetalburgCity_Gym_EventScript_Mary",
 "sight": "0",
+"trainer": "TRAINER_MARY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 94
@@ -34122,6 +34234,7 @@ false
 "name": "",
 "script": "PetalburgCity_Gym_EventScript_Randall",
 "sight": "0",
+"trainer": "TRAINER_RANDALL",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 81
@@ -34135,6 +34248,7 @@ false
 "name": "",
 "script": "PetalburgCity_Gym_EventScript_Parker",
 "sight": "0",
+"trainer": "TRAINER_PARKER",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 42
@@ -34148,6 +34262,7 @@ false
 "name": "",
 "script": "PetalburgCity_Gym_EventScript_Alexia",
 "sight": "0",
+"trainer": "TRAINER_ALEXIA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 55
@@ -34161,6 +34276,7 @@ false
 "name": "",
 "script": "PetalburgCity_Gym_EventScript_George",
 "sight": "0",
+"trainer": "TRAINER_GEORGE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 68
@@ -34174,6 +34290,7 @@ false
 "name": "",
 "script": "PetalburgCity_Gym_EventScript_Jody",
 "sight": "0",
+"trainer": "TRAINER_JODY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 16
@@ -34187,6 +34304,7 @@ false
 "name": "",
 "script": "PetalburgCity_Gym_EventScript_Berke",
 "sight": "0",
+"trainer": "TRAINER_BERKE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 29
@@ -35819,6 +35937,7 @@ false
 "name": "",
 "script": "PetalburgWoods_EventScript_Lyle",
 "sight": "3",
+"trainer": "TRAINER_LYLE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 32
@@ -35832,6 +35951,7 @@ false
 "name": "",
 "script": "PetalburgWoods_EventScript_James",
 "sight": "3",
+"trainer": "TRAINER_JAMES_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 14
@@ -36284,6 +36404,7 @@ false
 "name": "",
 "script": "Route102_EventScript_Calvin",
 "sight": "3",
+"trainer": "TRAINER_CALVIN_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 33,
 "y": 14
@@ -36297,6 +36418,7 @@ false
 "name": "",
 "script": "Route102_EventScript_Rick",
 "sight": "2",
+"trainer": "TRAINER_RICK",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 25,
 "y": 15
@@ -36310,6 +36432,7 @@ false
 "name": "",
 "script": "Route102_EventScript_Tiana",
 "sight": "3",
+"trainer": "TRAINER_TIANA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 8,
 "y": 7
@@ -36375,6 +36498,7 @@ false
 "name": "",
 "script": "Route102_EventScript_Allen",
 "sight": "3",
+"trainer": "TRAINER_ALLEN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 19,
 "y": 4
@@ -36453,6 +36577,7 @@ false
 "name": "",
 "script": "Route103_EventScript_Daisy",
 "sight": "3",
+"trainer": "TRAINER_DAISY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 71,
 "y": 11
@@ -36466,6 +36591,7 @@ false
 "name": "",
 "script": "Route103_EventScript_Liv",
 "sight": "1",
+"trainer": "TRAINER_AMY_AND_LIV_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 65,
 "y": 12
@@ -36479,6 +36605,7 @@ false
 "name": "",
 "script": "Route103_EventScript_Amy",
 "sight": "1",
+"trainer": "TRAINER_AMY_AND_LIV_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 64,
 "y": 12
@@ -36492,6 +36619,7 @@ false
 "name": "",
 "script": "Route103_EventScript_Andrew",
 "sight": "3",
+"trainer": "TRAINER_ANDREW",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 50,
 "y": 8
@@ -36570,6 +36698,7 @@ false
 "name": "",
 "script": "Route103_EventScript_Miguel",
 "sight": "5",
+"trainer": "TRAINER_MIGUEL_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 56,
 "y": 13
@@ -36622,6 +36751,7 @@ false
 "name": "",
 "script": "Route103_EventScript_Rhett",
 "sight": "2",
+"trainer": "TRAINER_RHETT",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 67,
 "y": 5
@@ -36635,6 +36765,7 @@ false
 "name": "",
 "script": "Route103_EventScript_Marcos",
 "sight": "2",
+"trainer": "TRAINER_MARCOS",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 67,
 "y": 9
@@ -36648,6 +36779,7 @@ false
 "name": "",
 "script": "Route103_EventScript_Isabelle",
 "sight": "5",
+"trainer": "TRAINER_ISABELLE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 36,
 "y": 6
@@ -36661,6 +36793,7 @@ false
 "name": "",
 "script": "Route103_EventScript_Pete",
 "sight": "5",
+"trainer": "TRAINER_PETE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 36,
 "y": 13
@@ -36893,6 +37026,7 @@ true
 "name": "",
 "script": "Route104_EventScript_Haley",
 "sight": "7",
+"trainer": "TRAINER_HALEY_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 31,
 "y": 24
@@ -36971,6 +37105,7 @@ true
 "name": "",
 "script": "Route104_EventScript_Ivan",
 "sight": "0",
+"trainer": "TRAINER_IVAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 29,
 "y": 8
@@ -37153,6 +37288,7 @@ true
 "name": "",
 "script": "Route104_EventScript_Gina",
 "sight": "1",
+"trainer": "TRAINER_GINA_AND_MIA_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 27,
 "y": 15
@@ -37166,6 +37302,7 @@ true
 "name": "",
 "script": "Route104_EventScript_Mia",
 "sight": "1",
+"trainer": "TRAINER_GINA_AND_MIA_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 28,
 "y": 15
@@ -37179,6 +37316,7 @@ true
 "name": "",
 "script": "Route104_EventScript_Winston",
 "sight": "3",
+"trainer": "TRAINER_WINSTON_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 21,
 "y": 25
@@ -37192,6 +37330,7 @@ true
 "name": "",
 "script": "Route104_EventScript_Cindy",
 "sight": "3",
+"trainer": "TRAINER_CINDY_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 11,
 "y": 44
@@ -37218,6 +37357,7 @@ true
 "name": "",
 "script": "Route104_EventScript_Billy",
 "sight": "2",
+"trainer": "TRAINER_BILLY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 18,
 "y": 67
@@ -37283,6 +37423,7 @@ true
 "name": "",
 "script": "Route104_EventScript_Darian",
 "sight": "0",
+"trainer": "TRAINER_DARIAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 15,
 "y": 59
@@ -37581,6 +37722,7 @@ true
 "name": "",
 "script": "Route105_EventScript_Luis",
 "sight": "6",
+"trainer": "TRAINER_LUIS",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 19,
 "y": 60
@@ -37594,6 +37736,7 @@ true
 "name": "",
 "script": "Route105_EventScript_Dominik",
 "sight": "3",
+"trainer": "TRAINER_DOMINIK",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 27,
 "y": 36
@@ -37607,6 +37750,7 @@ true
 "name": "",
 "script": "Route105_EventScript_Beverly",
 "sight": "3",
+"trainer": "TRAINER_BEVERLY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 8,
 "y": 45
@@ -37620,6 +37764,7 @@ true
 "name": "",
 "script": "Route105_EventScript_Imani",
 "sight": "3",
+"trainer": "TRAINER_IMANI",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 19,
 "y": 9
@@ -37646,6 +37791,7 @@ true
 "name": "",
 "script": "Route105_EventScript_Foster",
 "sight": "3",
+"trainer": "TRAINER_FOSTER",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 17,
 "y": 48
@@ -37659,6 +37805,7 @@ true
 "name": "",
 "script": "Route105_EventScript_Josue",
 "sight": "2",
+"trainer": "TRAINER_JOSUE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 54
@@ -37672,6 +37819,7 @@ true
 "name": "",
 "script": "Route105_EventScript_Andres",
 "sight": "4",
+"trainer": "TRAINER_ANDRES_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 58
@@ -37790,6 +37938,7 @@ false
 "name": "",
 "script": "Route106_EventScript_Douglas",
 "sight": "3",
+"trainer": "TRAINER_DOUGLAS",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 18,
 "y": 5
@@ -37803,6 +37952,7 @@ false
 "name": "",
 "script": "Route106_EventScript_Kyla",
 "sight": "3",
+"trainer": "TRAINER_KYLA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 29,
 "y": 10
@@ -37816,6 +37966,7 @@ false
 "name": "",
 "script": "Route106_EventScript_Elliot",
 "sight": "4",
+"trainer": "TRAINER_ELLIOT_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 51,
 "y": 14
@@ -37829,6 +37980,7 @@ false
 "name": "",
 "script": "Route106_EventScript_Ned",
 "sight": "3",
+"trainer": "TRAINER_NED",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 65,
 "y": 14
@@ -37891,6 +38043,7 @@ false
 "name": "",
 "script": "Route107_EventScript_Darrin",
 "sight": "3",
+"trainer": "TRAINER_DARRIN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 41,
 "y": 10
@@ -37904,6 +38057,7 @@ false
 "name": "",
 "script": "Route107_EventScript_Tony",
 "sight": "2",
+"trainer": "TRAINER_TONY_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 23,
 "y": 11
@@ -37917,6 +38071,7 @@ false
 "name": "",
 "script": "Route107_EventScript_Denise",
 "sight": "5",
+"trainer": "TRAINER_DENISE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 16,
 "y": 7
@@ -37930,6 +38085,7 @@ false
 "name": "",
 "script": "Route107_EventScript_Beth",
 "sight": "5",
+"trainer": "TRAINER_BETH",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 50,
 "y": 11
@@ -37943,6 +38099,7 @@ false
 "name": "",
 "script": "Route107_EventScript_Lisa",
 "sight": "1",
+"trainer": "TRAINER_LISA_AND_RAY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 33,
 "y": 4
@@ -37956,6 +38113,7 @@ false
 "name": "",
 "script": "Route107_EventScript_Ray",
 "sight": "1",
+"trainer": "TRAINER_LISA_AND_RAY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 32,
 "y": 4
@@ -37969,6 +38127,7 @@ false
 "name": "",
 "script": "Route107_EventScript_Camron",
 "sight": "5",
+"trainer": "TRAINER_CAMRON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 50,
 "y": 5
@@ -38021,6 +38180,7 @@ false
 "name": "",
 "script": "Route108_EventScript_Jerome",
 "sight": "3",
+"trainer": "TRAINER_JEROME",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 52,
 "y": 13
@@ -38034,6 +38194,7 @@ false
 "name": "",
 "script": "Route108_EventScript_Tara",
 "sight": "3",
+"trainer": "TRAINER_TARA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 35,
 "y": 12
@@ -38047,6 +38208,7 @@ false
 "name": "",
 "script": "Route108_EventScript_Matthew",
 "sight": "3",
+"trainer": "TRAINER_MATTHEW",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 13,
 "y": 13
@@ -38060,6 +38222,7 @@ false
 "name": "",
 "script": "Route108_EventScript_Missy",
 "sight": "3",
+"trainer": "TRAINER_MISSY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 8,
 "y": 7
@@ -38073,6 +38236,7 @@ false
 "name": "",
 "script": "Route108_EventScript_Carolina",
 "sight": "1",
+"trainer": "TRAINER_CAROLINA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 41,
 "y": 5
@@ -38086,6 +38250,7 @@ false
 "name": "",
 "script": "Route108_EventScript_Cory",
 "sight": "1",
+"trainer": "TRAINER_CORY_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 43,
 "y": 5
@@ -38255,6 +38420,7 @@ false
 "name": "",
 "script": "Route109_EventScript_David",
 "sight": "5",
+"trainer": "TRAINER_DAVID",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 12,
 "y": 36
@@ -38268,6 +38434,7 @@ false
 "name": "",
 "script": "Route109_EventScript_Alice",
 "sight": "5",
+"trainer": "TRAINER_ALICE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 25,
 "y": 39
@@ -38281,6 +38448,7 @@ false
 "name": "",
 "script": "Route109_EventScript_Huey",
 "sight": "1",
+"trainer": "TRAINER_HUEY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 15,
 "y": 17
@@ -38294,6 +38462,7 @@ false
 "name": "",
 "script": "Route109_EventScript_Edmond",
 "sight": "6",
+"trainer": "TRAINER_EDMOND",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 24,
 "y": 13
@@ -38307,6 +38476,7 @@ false
 "name": "",
 "script": "Route109_EventScript_Ricky",
 "sight": "3",
+"trainer": "TRAINER_RICKY_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 19,
 "y": 10
@@ -38320,6 +38490,7 @@ false
 "name": "",
 "script": "Route109_EventScript_Lola",
 "sight": "4",
+"trainer": "TRAINER_LOLA_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 22,
 "y": 7
@@ -38359,6 +38530,7 @@ false
 "name": "",
 "script": "Route109_EventScript_Gwen",
 "sight": "3",
+"trainer": "TRAINER_GWEN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 29,
 "y": 32
@@ -38372,6 +38544,7 @@ false
 "name": "",
 "script": "Route109_EventScript_Austina",
 "sight": "3",
+"trainer": "TRAINER_AUSTINA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 28,
 "y": 31
@@ -38385,6 +38558,7 @@ false
 "name": "",
 "script": "Route109_EventScript_Carter",
 "sight": "3",
+"trainer": "TRAINER_CARTER",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 21,
 "y": 56
@@ -38437,6 +38611,7 @@ false
 "name": "",
 "script": "Route109_EventScript_Mel",
 "sight": "1",
+"trainer": "TRAINER_MEL_AND_PAUL",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 8,
 "y": 41
@@ -38450,6 +38625,7 @@ false
 "name": "",
 "script": "Route109_EventScript_Paul",
 "sight": "1",
+"trainer": "TRAINER_MEL_AND_PAUL",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 9,
 "y": 41
@@ -38489,6 +38665,7 @@ false
 "name": "",
 "script": "Route109_EventScript_Hailey",
 "sight": "6",
+"trainer": "TRAINER_HAILEY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 17,
 "y": 13
@@ -38502,6 +38679,7 @@ false
 "name": "",
 "script": "Route109_EventScript_Chandler",
 "sight": "4",
+"trainer": "TRAINER_CHANDLER",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 27,
 "y": 7
@@ -38528,6 +38706,7 @@ false
 "name": "",
 "script": "Route109_EventScript_Elijah",
 "sight": "3",
+"trainer": "TRAINER_ELIJAH",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 17,
 "y": 56
@@ -38579,6 +38758,7 @@ false
 "name": "",
 "script": "Route109_SeashoreHouse_EventScript_Dwayne",
 "sight": "2",
+"trainer": "TRAINER_DWAYNE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 2,
 "y": 3
@@ -38592,6 +38772,7 @@ false
 "name": "",
 "script": "Route109_SeashoreHouse_EventScript_Simon",
 "sight": "2",
+"trainer": "TRAINER_SIMON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 14,
 "y": 9
@@ -38605,6 +38786,7 @@ false
 "name": "",
 "script": "Route109_SeashoreHouse_EventScript_Johanna",
 "sight": "2",
+"trainer": "TRAINER_JOHANNA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 5
@@ -39010,6 +39192,7 @@ false
 "name": "",
 "script": "Route110_EventScript_Jasmine",
 "sight": "3",
+"trainer": "TRAINER_JASMINE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 16,
 "y": 73
@@ -39023,6 +39206,7 @@ false
 "name": "",
 "script": "Route110_EventScript_Anthony",
 "sight": "3",
+"trainer": "TRAINER_ANTHONY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 19,
 "y": 31
@@ -39036,6 +39220,7 @@ false
 "name": "",
 "script": "Route110_EventScript_Abigail",
 "sight": "4",
+"trainer": "TRAINER_ABIGAIL_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 30,
 "y": 31
@@ -39049,6 +39234,7 @@ false
 "name": "",
 "script": "Route110_EventScript_Benjamin",
 "sight": "3",
+"trainer": "TRAINER_BENJAMIN_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 16,
 "y": 55
@@ -39062,6 +39248,7 @@ false
 "name": "",
 "script": "Route110_EventScript_Edward",
 "sight": "6",
+"trainer": "TRAINER_EDWARD",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 3,
 "y": 39
@@ -39075,6 +39262,7 @@ false
 "name": "",
 "script": "Route110_EventScript_Jaclyn",
 "sight": "1",
+"trainer": "TRAINER_JACLYN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 33,
 "y": 15
@@ -39088,6 +39276,7 @@ false
 "name": "",
 "script": "Route110_EventScript_Edwin",
 "sight": "4",
+"trainer": "TRAINER_EDWIN_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 34,
 "y": 40
@@ -39101,6 +39290,7 @@ false
 "name": "",
 "script": "Route110_EventScript_Dale",
 "sight": "1",
+"trainer": "TRAINER_DALE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 19
@@ -39257,6 +39447,7 @@ false
 "name": "",
 "script": "Route110_EventScript_Jacob",
 "sight": "2",
+"trainer": "TRAINER_JACOB",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 21,
 "y": 78
@@ -39296,6 +39487,7 @@ false
 "name": "",
 "script": "Route110_EventScript_Timmy",
 "sight": "3",
+"trainer": "TRAINER_TIMMY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 33,
 "y": 69
@@ -39309,6 +39501,7 @@ false
 "name": "",
 "script": "Route110_EventScript_Isabel",
 "sight": "2",
+"trainer": "TRAINER_ISABEL_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 76
@@ -39322,6 +39515,7 @@ false
 "name": "",
 "script": "Route110_EventScript_Kaleb",
 "sight": "2",
+"trainer": "TRAINER_KALEB",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 76
@@ -39335,6 +39529,7 @@ false
 "name": "",
 "script": "Route110_EventScript_Alyssa",
 "sight": "6",
+"trainer": "TRAINER_ALYSSA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 39
@@ -39348,6 +39543,7 @@ false
 "name": "",
 "script": "Route110_EventScript_Joseph",
 "sight": "3",
+"trainer": "TRAINER_JOSEPH",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 36,
 "y": 40
@@ -39825,6 +40021,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle1_EventScript_Sally",
 "sight": "6",
+"trainer": "TRAINER_SALLY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 14,
 "y": 20
@@ -39838,6 +40035,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle1_EventScript_Eddie",
 "sight": "2",
+"trainer": "TRAINER_EDDIE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 14,
 "y": 8
@@ -39851,6 +40049,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle1_EventScript_Robin",
 "sight": "2",
+"trainer": "TRAINER_ROBIN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 2,
 "y": 15
@@ -40123,6 +40322,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle2_EventScript_Ted",
 "sight": "1",
+"trainer": "TRAINER_TED",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 13,
 "y": 10
@@ -40136,6 +40336,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle2_EventScript_Paul",
 "sight": "4",
+"trainer": "TRAINER_PAUL",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 17
@@ -40149,6 +40350,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle2_EventScript_Georgia",
 "sight": "2",
+"trainer": "TRAINER_GEORGIA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 11,
 "y": 9
@@ -40275,6 +40477,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle3_EventScript_Justin",
 "sight": "2",
+"trainer": "TRAINER_JUSTIN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 19
@@ -40288,6 +40491,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle3_EventScript_Martha",
 "sight": "1",
+"trainer": "TRAINER_MARTHA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 4
@@ -40301,6 +40505,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle3_EventScript_Alan",
 "sight": "1",
+"trainer": "TRAINER_ALAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 10
@@ -40446,6 +40651,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle4_EventScript_Cora",
 "sight": "1",
+"trainer": "TRAINER_CORA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 2,
 "y": 2
@@ -40459,6 +40665,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle4_EventScript_Paula",
 "sight": "2",
+"trainer": "TRAINER_PAULA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 14,
 "y": 7
@@ -40472,6 +40679,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle4_EventScript_Yuji",
 "sight": "2",
+"trainer": "TRAINER_YUJI",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 2,
 "y": 14
@@ -40992,6 +41200,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle6_EventScript_Sophia",
 "sight": "1",
+"trainer": "TRAINER_SOPHIA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 9
@@ -41005,6 +41214,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle6_EventScript_Benny",
 "sight": "3",
+"trainer": "TRAINER_BENNY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 11,
 "y": 10
@@ -41018,6 +41228,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle6_EventScript_Sebastian",
 "sight": "1",
+"trainer": "TRAINER_SEBASTIAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 5
@@ -41131,6 +41342,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle7_EventScript_Joshua",
 "sight": "1",
+"trainer": "TRAINER_JOSHUA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 9,
 "y": 20
@@ -41144,6 +41356,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle7_EventScript_Alexis",
 "sight": "1",
+"trainer": "TRAINER_ALEXIS",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 2
@@ -41157,6 +41370,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle7_EventScript_Patricia",
 "sight": "1",
+"trainer": "TRAINER_PATRICIA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 8,
 "y": 17
@@ -41183,6 +41397,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle7_EventScript_Alvaro",
 "sight": "1",
+"trainer": "TRAINER_ALVARO",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 9,
 "y": 2
@@ -41196,6 +41411,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle7_EventScript_Mariela",
 "sight": "1",
+"trainer": "TRAINER_MARIELA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 8,
 "y": 13
@@ -41209,6 +41425,7 @@ false
 "name": "",
 "script": "Route110_TrickHousePuzzle7_EventScript_Everett",
 "sight": "1",
+"trainer": "TRAINER_EVERETT",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 9,
 "y": 12
@@ -41690,6 +41907,7 @@ true
 "name": "",
 "script": "Route110_TrickHousePuzzle8_EventScript_Vincent",
 "sight": "1",
+"trainer": "TRAINER_VINCENT",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 1,
 "y": 10
@@ -41703,6 +41921,7 @@ true
 "name": "",
 "script": "Route110_TrickHousePuzzle8_EventScript_Leroy",
 "sight": "1",
+"trainer": "TRAINER_LEROY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 2
@@ -41716,6 +41935,7 @@ true
 "name": "",
 "script": "Route110_TrickHousePuzzle8_EventScript_Keira",
 "sight": "1",
+"trainer": "TRAINER_KEIRA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 8,
 "y": 17
@@ -42337,6 +42557,7 @@ true
 "name": "",
 "script": "Route111_EventScript_Heidi",
 "sight": "3",
+"trainer": "TRAINER_HEIDI",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 28,
 "y": 51
@@ -42389,6 +42610,7 @@ true
 "name": "",
 "script": "Route111_EventScript_Drew",
 "sight": "3",
+"trainer": "TRAINER_DREW",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 29,
 "y": 37
@@ -42402,6 +42624,7 @@ true
 "name": "",
 "script": "Route111_EventScript_Dusty",
 "sight": "2",
+"trainer": "TRAINER_DUSTY_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 27,
 "y": 69
@@ -42415,6 +42638,7 @@ true
 "name": "",
 "script": "Route111_EventScript_Beau",
 "sight": "4",
+"trainer": "TRAINER_BEAU",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 21,
 "y": 47
@@ -42428,6 +42652,7 @@ true
 "name": "",
 "script": "Route111_EventScript_Becky",
 "sight": "3",
+"trainer": "TRAINER_BECKY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 32,
 "y": 66
@@ -42636,6 +42861,7 @@ true
 "name": "",
 "script": "Route111_EventScript_Irene",
 "sight": "2",
+"trainer": "TRAINER_IRENE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 82
@@ -42649,6 +42875,7 @@ true
 "name": "",
 "script": "Route111_EventScript_Travis",
 "sight": "3",
+"trainer": "TRAINER_TRAVIS",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 11,
 "y": 71
@@ -42662,6 +42889,7 @@ true
 "name": "",
 "script": "Route111_EventScript_Daisuke",
 "sight": "2",
+"trainer": "TRAINER_DAISUKE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 32,
 "y": 29
@@ -42675,6 +42903,7 @@ true
 "name": "",
 "script": "Route111_EventScript_Brooke",
 "sight": "4",
+"trainer": "TRAINER_BROOKE_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 11,
 "y": 11
@@ -42688,6 +42917,7 @@ true
 "name": "",
 "script": "Route111_EventScript_Wilton",
 "sight": "3",
+"trainer": "TRAINER_WILTON_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 9,
 "y": 27
@@ -42727,6 +42957,7 @@ true
 "name": "",
 "script": "Route111_EventScript_Tyron",
 "sight": "5",
+"trainer": "TRAINER_TYRON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 26,
 "y": 132
@@ -42740,6 +42971,7 @@ true
 "name": "",
 "script": "Route111_EventScript_Celina",
 "sight": "5",
+"trainer": "TRAINER_CELINA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 20,
 "y": 132
@@ -42753,6 +42985,7 @@ true
 "name": "",
 "script": "Route111_EventScript_Bianca",
 "sight": "2",
+"trainer": "TRAINER_BIANCA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 19,
 "y": 121
@@ -42766,6 +42999,7 @@ true
 "name": "",
 "script": "Route111_EventScript_Hayden",
 "sight": "3",
+"trainer": "TRAINER_HAYDEN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 16,
 "y": 119
@@ -42779,6 +43013,7 @@ true
 "name": "",
 "script": "Route111_EventScript_Bryan",
 "sight": "7",
+"trainer": "TRAINER_BRYAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 29,
 "y": 77
@@ -42792,6 +43027,7 @@ true
 "name": "",
 "script": "Route111_EventScript_Celia",
 "sight": "6",
+"trainer": "TRAINER_CELIA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 22,
 "y": 77
@@ -42805,6 +43041,7 @@ true
 "name": "",
 "script": "Route111_EventScript_Branden",
 "sight": "7",
+"trainer": "TRAINER_BRANDEN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 37,
 "y": 77
@@ -43405,6 +43642,7 @@ false
 "name": "",
 "script": "Route112_EventScript_Brice",
 "sight": "2",
+"trainer": "TRAINER_BRICE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 24,
 "y": 34
@@ -43418,6 +43656,7 @@ false
 "name": "",
 "script": "Route112_EventScript_Larry",
 "sight": "3",
+"trainer": "TRAINER_LARRY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 29,
 "y": 49
@@ -43431,6 +43670,7 @@ false
 "name": "",
 "script": "Route112_EventScript_Carol",
 "sight": "3",
+"trainer": "TRAINER_CAROL",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 22,
 "y": 46
@@ -43444,6 +43684,7 @@ false
 "name": "",
 "script": "Route112_EventScript_Trent",
 "sight": "3",
+"trainer": "TRAINER_TRENT_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 15,
 "y": 40
@@ -43548,6 +43789,7 @@ false
 "name": "",
 "script": "Route112_EventScript_Bryant",
 "sight": "3",
+"trainer": "TRAINER_BRYANT",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 31,
 "y": 7
@@ -43561,6 +43803,7 @@ false
 "name": "",
 "script": "Route112_EventScript_Shayla",
 "sight": "3",
+"trainer": "TRAINER_SHAYLA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 31,
 "y": 11
@@ -43987,6 +44230,7 @@ false
 "name": "",
 "script": "Route113_EventScript_Jaylen",
 "sight": "3",
+"trainer": "TRAINER_JAYLEN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 62,
 "y": 8
@@ -44000,6 +44244,7 @@ false
 "name": "",
 "script": "Route113_EventScript_Dillon",
 "sight": "3",
+"trainer": "TRAINER_DILLON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 21,
 "y": 11
@@ -44013,6 +44258,7 @@ false
 "name": "",
 "script": "Route113_EventScript_Madeline",
 "sight": "2",
+"trainer": "TRAINER_MADELINE_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 51,
 "y": 11
@@ -44052,6 +44298,7 @@ false
 "name": "",
 "script": "Route113_EventScript_Lao",
 "sight": "1",
+"trainer": "TRAINER_LAO_1",
 "trainer_type": "TRAINER_TYPE_BURIED",
 "x": 29,
 "y": 6
@@ -44065,6 +44312,7 @@ false
 "name": "",
 "script": "Route113_EventScript_Lung",
 "sight": "1",
+"trainer": "TRAINER_LUNG",
 "trainer_type": "TRAINER_TYPE_BURIED",
 "x": 71,
 "y": 2
@@ -44078,6 +44326,7 @@ false
 "name": "",
 "script": "Route113_EventScript_Tori",
 "sight": "1",
+"trainer": "TRAINER_TORI_AND_TIA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 45,
 "y": 6
@@ -44091,6 +44340,7 @@ false
 "name": "",
 "script": "Route113_EventScript_Tia",
 "sight": "1",
+"trainer": "TRAINER_TORI_AND_TIA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 46,
 "y": 6
@@ -44117,6 +44367,7 @@ false
 "name": "",
 "script": "Route113_EventScript_Wyatt",
 "sight": "4",
+"trainer": "TRAINER_WYATT",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 75,
 "y": 3
@@ -44130,6 +44381,7 @@ false
 "name": "",
 "script": "Route113_EventScript_Lawrence",
 "sight": "1",
+"trainer": "TRAINER_LAWRENCE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 71,
 "y": 4
@@ -44143,6 +44395,7 @@ false
 "name": "",
 "script": "Route113_EventScript_Sophie",
 "sight": "6",
+"trainer": "TRAINER_SOPHIE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 6
@@ -44156,6 +44409,7 @@ false
 "name": "",
 "script": "Route113_EventScript_Coby",
 "sight": "6",
+"trainer": "TRAINER_COBY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 13
@@ -44424,6 +44678,7 @@ false
 "name": "",
 "script": "Route114_EventScript_Lenny",
 "sight": "6",
+"trainer": "TRAINER_LENNY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 15,
 "y": 65
@@ -44437,6 +44692,7 @@ false
 "name": "",
 "script": "Route114_EventScript_Lucas",
 "sight": "4",
+"trainer": "TRAINER_LUCAS_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 30,
 "y": 72
@@ -44450,6 +44706,7 @@ false
 "name": "",
 "script": "Route114_EventScript_Shane",
 "sight": "3",
+"trainer": "TRAINER_SHANE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 22,
 "y": 50
@@ -44463,6 +44720,7 @@ false
 "name": "",
 "script": "Route114_EventScript_Nancy",
 "sight": "3",
+"trainer": "TRAINER_NANCY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 19,
 "y": 35
@@ -44476,6 +44734,7 @@ false
 "name": "",
 "script": "Route114_EventScript_Steve",
 "sight": "3",
+"trainer": "TRAINER_STEVE_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 20,
 "y": 56
@@ -44580,6 +44839,7 @@ false
 "name": "",
 "script": "Route114_EventScript_Nolan",
 "sight": "0",
+"trainer": "TRAINER_NOLAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 25,
 "y": 6
@@ -44593,6 +44853,7 @@ false
 "name": "",
 "script": "Route114_EventScript_Claude",
 "sight": "0",
+"trainer": "TRAINER_CLAUDE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 19,
 "y": 26
@@ -44606,6 +44867,7 @@ false
 "name": "",
 "script": "Route114_EventScript_Bernie",
 "sight": "3",
+"trainer": "TRAINER_BERNIE_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 30,
 "y": 58
@@ -44671,6 +44933,7 @@ false
 "name": "",
 "script": "Route114_EventScript_Ivy",
 "sight": "1",
+"trainer": "TRAINER_TYRA_AND_IVY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 24,
 "y": 44
@@ -44684,6 +44947,7 @@ false
 "name": "",
 "script": "Route114_EventScript_Tyra",
 "sight": "1",
+"trainer": "TRAINER_TYRA_AND_IVY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 23,
 "y": 44
@@ -44697,6 +44961,7 @@ false
 "name": "",
 "script": "Route114_EventScript_Charlotte",
 "sight": "3",
+"trainer": "TRAINER_CHARLOTTE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 28,
 "y": 20
@@ -44710,6 +44975,7 @@ false
 "name": "",
 "script": "Route114_EventScript_Angelina",
 "sight": "4",
+"trainer": "TRAINER_ANGELINA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 26,
 "y": 72
@@ -44736,6 +45002,7 @@ false
 "name": "",
 "script": "Route114_EventScript_Kai",
 "sight": "3",
+"trainer": "TRAINER_KAI",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 28,
 "y": 16
@@ -45235,6 +45502,7 @@ false
 "name": "",
 "script": "Route115_EventScript_Timothy",
 "sight": "6",
+"trainer": "TRAINER_TIMOTHY_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 5,
 "y": 15
@@ -45248,6 +45516,7 @@ false
 "name": "",
 "script": "Route115_EventScript_Nob",
 "sight": "4",
+"trainer": "TRAINER_NOB_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 27,
 "y": 53
@@ -45300,6 +45569,7 @@ false
 "name": "",
 "script": "Route115_EventScript_Cyndy",
 "sight": "3",
+"trainer": "TRAINER_CYNDY_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 15,
 "y": 50
@@ -45313,6 +45583,7 @@ false
 "name": "",
 "script": "Route115_EventScript_Koichi",
 "sight": "2",
+"trainer": "TRAINER_KOICHI",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 19,
 "y": 15
@@ -45326,6 +45597,7 @@ false
 "name": "",
 "script": "Route115_EventScript_Hector",
 "sight": "4",
+"trainer": "TRAINER_HECTOR",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 24,
 "y": 62
@@ -45430,6 +45702,7 @@ false
 "name": "",
 "script": "Route115_EventScript_Kyra",
 "sight": "2",
+"trainer": "TRAINER_KYRA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 15
@@ -45443,6 +45716,7 @@ false
 "name": "",
 "script": "Route115_EventScript_Jaiden",
 "sight": "3",
+"trainer": "TRAINER_JAIDEN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 11,
 "y": 12
@@ -45456,6 +45730,7 @@ false
 "name": "",
 "script": "Route115_EventScript_Helene",
 "sight": "4",
+"trainer": "TRAINER_HELENE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 15,
 "y": 7
@@ -45469,6 +45744,7 @@ false
 "name": "",
 "script": "Route115_EventScript_Alix",
 "sight": "4",
+"trainer": "TRAINER_ALIX",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 7
@@ -45482,6 +45758,7 @@ false
 "name": "",
 "script": "Route115_EventScript_Marlene",
 "sight": "4",
+"trainer": "TRAINER_MARLENE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 28,
 "y": 62
@@ -45718,6 +45995,7 @@ false
 "name": "",
 "script": "Route116_EventScript_Joey",
 "sight": "3",
+"trainer": "TRAINER_JOEY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 12,
 "y": 7
@@ -45757,6 +46035,7 @@ false
 "name": "",
 "script": "Route116_EventScript_Jose",
 "sight": "2",
+"trainer": "TRAINER_JOSE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 13,
 "y": 17
@@ -45848,6 +46127,7 @@ false
 "name": "",
 "script": "Route116_EventScript_Clark",
 "sight": "3",
+"trainer": "TRAINER_CLARK",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 36,
 "y": 17
@@ -45887,6 +46167,7 @@ false
 "name": "",
 "script": "Route116_EventScript_Janice",
 "sight": "2",
+"trainer": "TRAINER_JANICE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 26,
 "y": 6
@@ -45900,6 +46181,7 @@ false
 "name": "",
 "script": "Route116_EventScript_Karen",
 "sight": "3",
+"trainer": "TRAINER_KAREN_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 22,
 "y": 16
@@ -45913,6 +46195,7 @@ false
 "name": "",
 "script": "Route116_EventScript_Jerry",
 "sight": "4",
+"trainer": "TRAINER_JERRY_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 28,
 "y": 8
@@ -45978,6 +46261,7 @@ false
 "name": "",
 "script": "Route116_EventScript_Sarah",
 "sight": "1",
+"trainer": "TRAINER_SARAH",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 33,
 "y": 8
@@ -45991,6 +46275,7 @@ false
 "name": "",
 "script": "Route116_EventScript_Dawson",
 "sight": "2",
+"trainer": "TRAINER_DAWSON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 33,
 "y": 5
@@ -46030,6 +46315,7 @@ false
 "name": "",
 "script": "Route116_EventScript_Johnson",
 "sight": "5",
+"trainer": "TRAINER_JOHNSON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 36,
 "y": 13
@@ -46043,6 +46329,7 @@ false
 "name": "",
 "script": "Route116_EventScript_Devan",
 "sight": "5",
+"trainer": "TRAINER_DEVAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 42,
 "y": 13
@@ -46323,6 +46610,7 @@ false
 "name": "",
 "script": "Route117_EventScript_Dylan",
 "sight": "4",
+"trainer": "TRAINER_DYLAN_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 38,
 "y": 16
@@ -46336,6 +46624,7 @@ false
 "name": "",
 "script": "Route117_EventScript_Lydia",
 "sight": "3",
+"trainer": "TRAINER_LYDIA_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 8,
 "y": 10
@@ -46349,6 +46638,7 @@ false
 "name": "",
 "script": "Route117_EventScript_Isaac",
 "sight": "4",
+"trainer": "TRAINER_ISAAC_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 33,
 "y": 11
@@ -46440,6 +46730,7 @@ false
 "name": "",
 "script": "Route117_EventScript_Maria",
 "sight": "5",
+"trainer": "TRAINER_MARIA_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 26,
 "y": 13
@@ -46453,6 +46744,7 @@ false
 "name": "",
 "script": "Route117_EventScript_Derek",
 "sight": "4",
+"trainer": "TRAINER_DEREK",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 17,
 "y": 12
@@ -46466,6 +46758,7 @@ false
 "name": "",
 "script": "Route117_EventScript_Meg",
 "sight": "1",
+"trainer": "TRAINER_ANNA_AND_MEG_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 43,
 "y": 6
@@ -46479,6 +46772,7 @@ false
 "name": "",
 "script": "Route117_EventScript_Anna",
 "sight": "1",
+"trainer": "TRAINER_ANNA_AND_MEG_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 42,
 "y": 6
@@ -46505,6 +46799,7 @@ false
 "name": "",
 "script": "Route117_EventScript_Brandi",
 "sight": "4",
+"trainer": "TRAINER_BRANDI",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 15,
 "y": 4
@@ -46518,6 +46813,7 @@ false
 "name": "",
 "script": "Route117_EventScript_Aisha",
 "sight": "4",
+"trainer": "TRAINER_AISHA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 21,
 "y": 4
@@ -46531,6 +46827,7 @@ false
 "name": "",
 "script": "Route117_EventScript_Melina",
 "sight": "4",
+"trainer": "TRAINER_MELINA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 16,
 "y": 4
@@ -46788,6 +47085,7 @@ false
 "name": "",
 "script": "Route118_EventScript_Perry",
 "sight": "3",
+"trainer": "TRAINER_PERRY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 64,
 "y": 10
@@ -46918,6 +47216,7 @@ false
 "name": "",
 "script": "Route118_EventScript_Rose",
 "sight": "4",
+"trainer": "TRAINER_ROSE_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 12
@@ -46931,6 +47230,7 @@ false
 "name": "",
 "script": "Route118_EventScript_Wade",
 "sight": "0",
+"trainer": "TRAINER_WADE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 14,
 "y": 14
@@ -46944,6 +47244,7 @@ false
 "name": "",
 "script": "Route118_EventScript_Chester",
 "sight": "3",
+"trainer": "TRAINER_CHESTER",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 56,
 "y": 7
@@ -46957,6 +47258,7 @@ false
 "name": "",
 "script": "Route118_EventScript_Barny",
 "sight": "2",
+"trainer": "TRAINER_BARNY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 39,
 "y": 15
@@ -46970,6 +47272,7 @@ false
 "name": "",
 "script": "Route118_EventScript_Dalton",
 "sight": "3",
+"trainer": "TRAINER_DALTON_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 17,
 "y": 11
@@ -47009,6 +47312,7 @@ false
 "name": "",
 "script": "Route118_EventScript_Deandre",
 "sight": "4",
+"trainer": "TRAINER_DEANDRE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 7
@@ -47513,6 +47817,7 @@ false
 "name": "",
 "script": "Route119_EventScript_Greg",
 "sight": "1",
+"trainer": "TRAINER_GREG",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 12,
 "y": 123
@@ -47526,6 +47831,7 @@ false
 "name": "",
 "script": "Route119_EventScript_Taylor",
 "sight": "1",
+"trainer": "TRAINER_TAYLOR",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 26,
 "y": 123
@@ -47539,6 +47845,7 @@ false
 "name": "",
 "script": "Route119_EventScript_Donald",
 "sight": "1",
+"trainer": "TRAINER_DONALD",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 5,
 "y": 125
@@ -47552,6 +47859,7 @@ false
 "name": "",
 "script": "Route119_EventScript_Jackson",
 "sight": "3",
+"trainer": "TRAINER_JACKSON_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 74
@@ -47565,6 +47873,7 @@ false
 "name": "",
 "script": "Route119_EventScript_Brent",
 "sight": "1",
+"trainer": "TRAINER_BRENT",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 28,
 "y": 116
@@ -47578,6 +47887,7 @@ false
 "name": "",
 "script": "Route119_EventScript_Catherine",
 "sight": "2",
+"trainer": "TRAINER_CATHERINE_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 35,
 "y": 83
@@ -47591,6 +47901,7 @@ false
 "name": "",
 "script": "Route119_EventScript_Doug",
 "sight": "1",
+"trainer": "TRAINER_DOUG",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 34,
 "y": 122
@@ -47604,6 +47915,7 @@ false
 "name": "",
 "script": "Route119_EventScript_Kent",
 "sight": "1",
+"trainer": "TRAINER_KENT",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 17,
 "y": 128
@@ -47617,6 +47929,7 @@ false
 "name": "",
 "script": "Route119_EventScript_Yasu",
 "sight": "1",
+"trainer": "TRAINER_YASU",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 28,
 "y": 14
@@ -47630,6 +47943,7 @@ false
 "name": "",
 "script": "Route119_EventScript_Takashi",
 "sight": "3",
+"trainer": "TRAINER_TAKASHI",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 19,
 "y": 49
@@ -47643,6 +47957,7 @@ false
 "name": "",
 "script": "Route119_EventScript_Hugh",
 "sight": "3",
+"trainer": "TRAINER_HUGH",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 50
@@ -47656,6 +47971,7 @@ false
 "name": "",
 "script": "Route119_EventScript_Phil",
 "sight": "5",
+"trainer": "TRAINER_PHIL",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 8,
 "y": 63
@@ -47903,6 +48219,7 @@ false
 "name": "",
 "script": "Route119_EventScript_Hideo",
 "sight": "3",
+"trainer": "TRAINER_HIDEO",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 29,
 "y": 6
@@ -47942,6 +48259,7 @@ false
 "name": "",
 "script": "Route119_EventScript_Chris",
 "sight": "0",
+"trainer": "TRAINER_CHRIS",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 13,
 "y": 104
@@ -47955,6 +48273,7 @@ false
 "name": "",
 "script": "Route119_EventScript_Rachel",
 "sight": "5",
+"trainer": "TRAINER_RACHEL",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 8,
 "y": 68
@@ -47968,6 +48287,7 @@ false
 "name": "",
 "script": "Route119_EventScript_Dayton",
 "sight": "3",
+"trainer": "TRAINER_DAYTON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 16,
 "y": 52
@@ -47981,6 +48301,7 @@ false
 "name": "",
 "script": "Route119_EventScript_Fabian",
 "sight": "4",
+"trainer": "TRAINER_FABIAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 32,
 "y": 15
@@ -48229,6 +48550,7 @@ false
 "name": "",
 "script": "Route119_WeatherInstitute_1F_EventScript_Grunt1",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_WEATHER_INST_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 15,
 "y": 3
@@ -48242,6 +48564,7 @@ false
 "name": "",
 "script": "Route119_WeatherInstitute_1F_EventScript_Grunt4",
 "sight": "2",
+"trainer": "TRAINER_GRUNT_WEATHER_INST_4",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 5
@@ -48333,6 +48656,7 @@ false
 "name": "LOCALID_WEATHER_INSTITUTE_2F_GRUNT_1",
 "script": "Route119_WeatherInstitute_2F_EventScript_Grunt2",
 "sight": "4",
+"trainer": "TRAINER_GRUNT_WEATHER_INST_2",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 15,
 "y": 6
@@ -48346,6 +48670,7 @@ false
 "name": "LOCALID_WEATHER_INSTITUTE_2F_GRUNT_2",
 "script": "Route119_WeatherInstitute_2F_EventScript_Grunt3",
 "sight": "2",
+"trainer": "TRAINER_GRUNT_WEATHER_INST_3",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 8
@@ -48359,6 +48684,7 @@ false
 "name": "LOCALID_WEATHER_INSTITUTE_2F_SHELLY",
 "script": "Route119_WeatherInstitute_2F_EventScript_Shelly",
 "sight": "0",
+"trainer": "TRAINER_SHELLY_WEATHER_INSTITUTE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 6
@@ -48424,6 +48750,7 @@ false
 "name": "LOCALID_WEATHER_INSTITUTE_2F_GRUNT_4",
 "script": "Route119_WeatherInstitute_2F_EventScript_Grunt5",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_WEATHER_INST_5",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 19,
 "y": 6
@@ -48916,6 +49243,7 @@ false
 "name": "",
 "script": "Route120_EventScript_Colin",
 "sight": "3",
+"trainer": "TRAINER_COLIN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 5,
 "y": 22
@@ -48929,6 +49257,7 @@ false
 "name": "",
 "script": "Route120_EventScript_Robert",
 "sight": "3",
+"trainer": "TRAINER_ROBERT_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 32,
 "y": 14
@@ -48942,6 +49271,7 @@ false
 "name": "",
 "script": "Route120_EventScript_Lorenzo",
 "sight": "7",
+"trainer": "TRAINER_LORENZO",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 27,
 "y": 51
@@ -48955,6 +49285,7 @@ false
 "name": "",
 "script": "Route120_EventScript_Jenna",
 "sight": "2",
+"trainer": "TRAINER_JENNA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 36,
 "y": 45
@@ -48968,6 +49299,7 @@ false
 "name": "",
 "script": "Route120_EventScript_Jeffrey",
 "sight": "3",
+"trainer": "TRAINER_JEFFREY_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 19,
 "y": 80
@@ -49085,6 +49417,7 @@ false
 "name": "",
 "script": "Route120_EventScript_Jennifer",
 "sight": "4",
+"trainer": "TRAINER_JENNIFER",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 31,
 "y": 37
@@ -49098,6 +49431,7 @@ false
 "name": "",
 "script": "Route120_EventScript_Chip",
 "sight": "4",
+"trainer": "TRAINER_CHIP",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 9,
 "y": 60
@@ -49111,6 +49445,7 @@ false
 "name": "",
 "script": "Route120_EventScript_Clarissa",
 "sight": "4",
+"trainer": "TRAINER_CLARISSA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 16,
 "y": 6
@@ -49124,6 +49459,7 @@ false
 "name": "",
 "script": "Route120_EventScript_Angelica",
 "sight": "3",
+"trainer": "TRAINER_ANGELICA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 18,
 "y": 34
@@ -49215,6 +49551,7 @@ false
 "name": "",
 "script": "Route120_EventScript_Keigo",
 "sight": "3",
+"trainer": "TRAINER_KEIGO",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 72
@@ -49228,6 +49565,7 @@ false
 "name": "",
 "script": "Route120_EventScript_Riley",
 "sight": "3",
+"trainer": "TRAINER_RILEY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 19,
 "y": 28
@@ -49319,6 +49657,7 @@ false
 "name": "",
 "script": "Route120_EventScript_Callie",
 "sight": "3",
+"trainer": "TRAINER_CALLIE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 19,
 "y": 32
@@ -49332,6 +49671,7 @@ false
 "name": "",
 "script": "Route120_EventScript_Leonel",
 "sight": "3",
+"trainer": "TRAINER_LEONEL",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 14,
 "y": 34
@@ -49741,6 +50081,7 @@ true
 "name": "",
 "script": "Route121_EventScript_Kate",
 "sight": "1",
+"trainer": "TRAINER_KATE_AND_JOY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 39,
 "y": 9
@@ -49754,6 +50095,7 @@ true
 "name": "",
 "script": "Route121_EventScript_Joy",
 "sight": "1",
+"trainer": "TRAINER_KATE_AND_JOY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 40,
 "y": 9
@@ -49832,6 +50174,7 @@ true
 "name": "",
 "script": "Route121_EventScript_Vanessa",
 "sight": "4",
+"trainer": "TRAINER_VANESSA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 63,
 "y": 5
@@ -49845,6 +50188,7 @@ true
 "name": "",
 "script": "Route121_EventScript_Walter",
 "sight": "3",
+"trainer": "TRAINER_WALTER_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 55,
 "y": 8
@@ -49858,6 +50202,7 @@ true
 "name": "",
 "script": "Route121_EventScript_Tammy",
 "sight": "4",
+"trainer": "TRAINER_TAMMY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 11,
 "y": 11
@@ -49871,6 +50216,7 @@ true
 "name": "",
 "script": "Route121_EventScript_Jessica",
 "sight": "4",
+"trainer": "TRAINER_JESSICA_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 22,
 "y": 5
@@ -49910,6 +50256,7 @@ true
 "name": "",
 "script": "Route121_EventScript_Cale",
 "sight": "3",
+"trainer": "TRAINER_CALE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 11,
 "y": 6
@@ -49923,6 +50270,7 @@ true
 "name": "",
 "script": "Route121_EventScript_Myles",
 "sight": "4",
+"trainer": "TRAINER_MYLES",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 59,
 "y": 8
@@ -49936,6 +50284,7 @@ true
 "name": "",
 "script": "Route121_EventScript_Pat",
 "sight": "4",
+"trainer": "TRAINER_PAT",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 59,
 "y": 13
@@ -49949,6 +50298,7 @@ true
 "name": "",
 "script": "Route121_EventScript_Marcel",
 "sight": "6",
+"trainer": "TRAINER_MARCEL",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 65,
 "y": 9
@@ -49962,6 +50312,7 @@ true
 "name": "",
 "script": "Route121_EventScript_Cristin",
 "sight": "6",
+"trainer": "TRAINER_CRISTIN_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 72,
 "y": 9
@@ -50579,6 +50930,7 @@ true
 "name": "",
 "script": "Route123_EventScript_Wendy",
 "sight": "1",
+"trainer": "TRAINER_WENDY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 70,
 "y": 12
@@ -50592,6 +50944,7 @@ true
 "name": "",
 "script": "Route123_EventScript_Braxton",
 "sight": "2",
+"trainer": "TRAINER_BRAXTON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 58,
 "y": 7
@@ -50813,6 +51166,7 @@ true
 "name": "",
 "script": "Route123_EventScript_Violet",
 "sight": "2",
+"trainer": "TRAINER_VIOLET",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 18,
 "y": 9
@@ -50826,6 +51180,7 @@ true
 "name": "",
 "script": "Route123_EventScript_Yuki",
 "sight": "1",
+"trainer": "TRAINER_MIU_AND_YUKI",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 38,
 "y": 13
@@ -50839,6 +51194,7 @@ true
 "name": "",
 "script": "Route123_EventScript_Miu",
 "sight": "1",
+"trainer": "TRAINER_MIU_AND_YUKI",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 37,
 "y": 13
@@ -50852,6 +51208,7 @@ true
 "name": "",
 "script": "Route123_EventScript_Cameron",
 "sight": "7",
+"trainer": "TRAINER_CAMERON_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 138,
 "y": 12
@@ -50865,6 +51222,7 @@ true
 "name": "",
 "script": "Route123_EventScript_Jacki",
 "sight": "1",
+"trainer": "TRAINER_JACKI_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 49,
 "y": 16
@@ -50878,6 +51236,7 @@ true
 "name": "",
 "script": "Route123_EventScript_Kindra",
 "sight": "4",
+"trainer": "TRAINER_KINDRA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 87,
 "y": 12
@@ -50917,6 +51276,7 @@ true
 "name": "",
 "script": "Route123_EventScript_Jonas",
 "sight": "1",
+"trainer": "TRAINER_JONAS",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 138,
 "y": 14
@@ -50930,6 +51290,7 @@ true
 "name": "",
 "script": "Route123_EventScript_Kayley",
 "sight": "1",
+"trainer": "TRAINER_KAYLEY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 138,
 "y": 16
@@ -50943,6 +51304,7 @@ true
 "name": "",
 "script": "Route123_EventScript_Ed",
 "sight": "4",
+"trainer": "TRAINER_ED",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 87,
 "y": 17
@@ -50956,6 +51318,7 @@ true
 "name": "",
 "script": "Route123_EventScript_Fernando",
 "sight": "2",
+"trainer": "TRAINER_FERNANDO_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 66,
 "y": 16
@@ -50969,6 +51332,7 @@ true
 "name": "",
 "script": "Route123_EventScript_Alberto",
 "sight": "2",
+"trainer": "TRAINER_ALBERTO",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 66,
 "y": 19
@@ -50982,6 +51346,7 @@ true
 "name": "",
 "script": "Route123_EventScript_Frederick",
 "sight": "2",
+"trainer": "TRAINER_FREDRICK",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 49,
 "y": 19
@@ -51008,6 +51373,7 @@ true
 "name": "",
 "script": "Route123_EventScript_Jazmyn",
 "sight": "3",
+"trainer": "TRAINER_JAZMYN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 14,
 "y": 16
@@ -51021,6 +51387,7 @@ true
 "name": "",
 "script": "Route123_EventScript_Davis",
 "sight": "3",
+"trainer": "TRAINER_DAVIS",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 14,
 "y": 12
@@ -51167,6 +51534,7 @@ true
 "name": "",
 "script": "Route124_EventScript_Spencer",
 "sight": "3",
+"trainer": "TRAINER_SPENCER",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 34,
 "y": 25
@@ -51180,6 +51548,7 @@ true
 "name": "",
 "script": "Route124_EventScript_Roland",
 "sight": "7",
+"trainer": "TRAINER_ROLAND",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 61,
 "y": 74
@@ -51193,6 +51562,7 @@ true
 "name": "",
 "script": "Route124_EventScript_Jenny",
 "sight": "3",
+"trainer": "TRAINER_JENNY_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 49,
 "y": 45
@@ -51206,6 +51576,7 @@ true
 "name": "",
 "script": "Route124_EventScript_Grace",
 "sight": "5",
+"trainer": "TRAINER_GRACE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 23
@@ -51219,6 +51590,7 @@ true
 "name": "",
 "script": "Route124_EventScript_Chad",
 "sight": "2",
+"trainer": "TRAINER_CHAD",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 58,
 "y": 58
@@ -51271,6 +51643,7 @@ true
 "name": "",
 "script": "Route124_EventScript_Lila",
 "sight": "1",
+"trainer": "TRAINER_LILA_AND_ROY_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 18,
 "y": 44
@@ -51284,6 +51657,7 @@ true
 "name": "",
 "script": "Route124_EventScript_Roy",
 "sight": "1",
+"trainer": "TRAINER_LILA_AND_ROY_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 17,
 "y": 44
@@ -51297,6 +51671,7 @@ true
 "name": "",
 "script": "Route124_EventScript_Declan",
 "sight": "5",
+"trainer": "TRAINER_DECLAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 29
@@ -51310,6 +51685,7 @@ true
 "name": "",
 "script": "Route124_EventScript_Isabella",
 "sight": "7",
+"trainer": "TRAINER_ISABELLA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 69,
 "y": 74
@@ -51461,6 +51837,7 @@ true
 "name": "",
 "script": "Route125_EventScript_Nolen",
 "sight": "2",
+"trainer": "TRAINER_NOLEN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 31
@@ -51474,6 +51851,7 @@ true
 "name": "",
 "script": "Route125_EventScript_Stan",
 "sight": "2",
+"trainer": "TRAINER_STAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 45,
 "y": 9
@@ -51487,6 +51865,7 @@ true
 "name": "",
 "script": "Route125_EventScript_Tanya",
 "sight": "3",
+"trainer": "TRAINER_TANYA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 38,
 "y": 24
@@ -51500,6 +51879,7 @@ true
 "name": "",
 "script": "Route125_EventScript_Sharon",
 "sight": "3",
+"trainer": "TRAINER_SHARON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 30,
 "y": 28
@@ -51513,6 +51893,7 @@ true
 "name": "",
 "script": "Route125_EventScript_Ernest",
 "sight": "2",
+"trainer": "TRAINER_ERNEST_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 21,
 "y": 30
@@ -51526,6 +51907,7 @@ true
 "name": "",
 "script": "Route125_EventScript_Kim",
 "sight": "1",
+"trainer": "TRAINER_KIM_AND_IRIS",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 17,
 "y": 19
@@ -51539,6 +51921,7 @@ true
 "name": "",
 "script": "Route125_EventScript_Iris",
 "sight": "1",
+"trainer": "TRAINER_KIM_AND_IRIS",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 18,
 "y": 19
@@ -51552,6 +51935,7 @@ true
 "name": "",
 "script": "Route125_EventScript_Presley",
 "sight": "3",
+"trainer": "TRAINER_PRESLEY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 43,
 "y": 19
@@ -51565,6 +51949,7 @@ true
 "name": "",
 "script": "Route125_EventScript_Auron",
 "sight": "3",
+"trainer": "TRAINER_AURON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 48,
 "y": 19
@@ -51632,6 +52017,7 @@ true
 "name": "",
 "script": "Route126_EventScript_Barry",
 "sight": "3",
+"trainer": "TRAINER_BARRY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 51,
 "y": 65
@@ -51645,6 +52031,7 @@ true
 "name": "",
 "script": "Route126_EventScript_Dean",
 "sight": "3",
+"trainer": "TRAINER_DEAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 56,
 "y": 22
@@ -51658,6 +52045,7 @@ true
 "name": "",
 "script": "Route126_EventScript_Nikki",
 "sight": "3",
+"trainer": "TRAINER_NIKKI",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 63,
 "y": 43
@@ -51671,6 +52059,7 @@ true
 "name": "",
 "script": "Route126_EventScript_Brenda",
 "sight": "3",
+"trainer": "TRAINER_BRENDA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 9,
 "y": 48
@@ -51697,6 +52086,7 @@ true
 "name": "",
 "script": "Route126_EventScript_Sienna",
 "sight": "7",
+"trainer": "TRAINER_SIENNA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 15,
 "y": 66
@@ -51710,6 +52100,7 @@ true
 "name": "",
 "script": "Route126_EventScript_Pablo",
 "sight": "7",
+"trainer": "TRAINER_PABLO_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 66
@@ -51723,6 +52114,7 @@ true
 "name": "",
 "script": "Route126_EventScript_Isobel",
 "sight": "7",
+"trainer": "TRAINER_ISOBEL",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 64,
 "y": 5
@@ -51736,6 +52128,7 @@ true
 "name": "",
 "script": "Route126_EventScript_Leonardo",
 "sight": "7",
+"trainer": "TRAINER_LEONARDO",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 56,
 "y": 5
@@ -51838,6 +52231,7 @@ true
 "name": "",
 "script": "Route127_EventScript_Camden",
 "sight": "2",
+"trainer": "TRAINER_CAMDEN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 45,
 "y": 42
@@ -51851,6 +52245,7 @@ true
 "name": "",
 "script": "Route127_EventScript_Donny",
 "sight": "4",
+"trainer": "TRAINER_DONNY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 18,
 "y": 68
@@ -51890,6 +52285,7 @@ true
 "name": "",
 "script": "Route127_EventScript_Jonah",
 "sight": "0",
+"trainer": "TRAINER_JONAH",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 42,
 "y": 21
@@ -51903,6 +52299,7 @@ true
 "name": "",
 "script": "Route127_EventScript_Roger",
 "sight": "0",
+"trainer": "TRAINER_ROGER",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 64,
 "y": 19
@@ -51916,6 +52313,7 @@ true
 "name": "",
 "script": "Route127_EventScript_Henry",
 "sight": "0",
+"trainer": "TRAINER_HENRY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 54,
 "y": 14
@@ -51929,6 +52327,7 @@ true
 "name": "",
 "script": "Route127_EventScript_Aidan",
 "sight": "2",
+"trainer": "TRAINER_AIDAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 15,
 "y": 23
@@ -51942,6 +52341,7 @@ true
 "name": "",
 "script": "Route127_EventScript_Koji",
 "sight": "3",
+"trainer": "TRAINER_KOJI_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 63,
 "y": 63
@@ -51955,6 +52355,7 @@ true
 "name": "",
 "script": "Route127_EventScript_Athena",
 "sight": "2",
+"trainer": "TRAINER_ATHENA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 12,
 "y": 23
@@ -52050,6 +52451,7 @@ true
 "name": "",
 "script": "Route128_EventScript_Isaiah",
 "sight": "3",
+"trainer": "TRAINER_ISAIAH_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 35,
 "y": 33
@@ -52063,6 +52465,7 @@ true
 "name": "",
 "script": "Route128_EventScript_Katelyn",
 "sight": "7",
+"trainer": "TRAINER_KATELYN_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 78,
 "y": 24
@@ -52115,6 +52518,7 @@ true
 "name": "",
 "script": "Route128_EventScript_Wayne",
 "sight": "0",
+"trainer": "TRAINER_WAYNE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 63,
 "y": 28
@@ -52128,6 +52532,7 @@ true
 "name": "",
 "script": "Route128_EventScript_Ruben",
 "sight": "3",
+"trainer": "TRAINER_RUBEN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 47,
 "y": 9
@@ -52141,6 +52546,7 @@ true
 "name": "",
 "script": "Route128_EventScript_Alexa",
 "sight": "3",
+"trainer": "TRAINER_ALEXA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 24,
 "y": 8
@@ -52154,6 +52560,7 @@ true
 "name": "",
 "script": "Route128_EventScript_Carlee",
 "sight": "4",
+"trainer": "TRAINER_CARLEE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 101,
 "y": 29
@@ -52167,6 +52574,7 @@ true
 "name": "",
 "script": "Route128_EventScript_Harrison",
 "sight": "4",
+"trainer": "TRAINER_HARRISON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 101,
 "y": 22
@@ -52213,6 +52621,7 @@ true
 "name": "",
 "script": "Route129_EventScript_Chase",
 "sight": "3",
+"trainer": "TRAINER_CHASE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 28,
 "y": 16
@@ -52226,6 +52635,7 @@ true
 "name": "",
 "script": "Route129_EventScript_Allison",
 "sight": "2",
+"trainer": "TRAINER_ALLISON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 14
@@ -52239,6 +52649,7 @@ true
 "name": "",
 "script": "Route129_EventScript_Tisha",
 "sight": "5",
+"trainer": "TRAINER_TISHA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 13,
 "y": 22
@@ -52252,6 +52663,7 @@ true
 "name": "",
 "script": "Route129_EventScript_Reed",
 "sight": "2",
+"trainer": "TRAINER_REED",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 35,
 "y": 9
@@ -52265,6 +52677,7 @@ true
 "name": "",
 "script": "Route129_EventScript_Clarence",
 "sight": "5",
+"trainer": "TRAINER_CLARENCE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 13,
 "y": 27
@@ -52306,6 +52719,7 @@ true
 "name": "",
 "script": "Route130_EventScript_Rodney",
 "sight": "3",
+"trainer": "TRAINER_RODNEY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 70,
 "y": 21
@@ -52319,6 +52733,7 @@ true
 "name": "",
 "script": "Route130_EventScript_Katie",
 "sight": "5",
+"trainer": "TRAINER_KATIE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 21
@@ -52345,6 +52760,7 @@ true
 "name": "",
 "script": "Route130_EventScript_Santiago",
 "sight": "5",
+"trainer": "TRAINER_SANTIAGO",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 30
@@ -52394,6 +52810,7 @@ true
 "name": "",
 "script": "Route131_EventScript_Richard",
 "sight": "3",
+"trainer": "TRAINER_RICHARD",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 41,
 "y": 32
@@ -52407,6 +52824,7 @@ true
 "name": "",
 "script": "Route131_EventScript_Herman",
 "sight": "4",
+"trainer": "TRAINER_HERMAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 18,
 "y": 19
@@ -52420,6 +52838,7 @@ true
 "name": "",
 "script": "Route131_EventScript_Susie",
 "sight": "4",
+"trainer": "TRAINER_SUSIE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 22
@@ -52433,6 +52852,7 @@ true
 "name": "",
 "script": "Route131_EventScript_Kara",
 "sight": "3",
+"trainer": "TRAINER_KARA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 31,
 "y": 25
@@ -52446,6 +52866,7 @@ true
 "name": "",
 "script": "Route131_EventScript_Reli",
 "sight": "1",
+"trainer": "TRAINER_RELI_AND_IAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 9,
 "y": 16
@@ -52459,6 +52880,7 @@ true
 "name": "",
 "script": "Route131_EventScript_Ian",
 "sight": "1",
+"trainer": "TRAINER_RELI_AND_IAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 8,
 "y": 16
@@ -52472,6 +52894,7 @@ true
 "name": "",
 "script": "Route131_EventScript_Kevin",
 "sight": "5",
+"trainer": "TRAINER_KEVIN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 52,
 "y": 20
@@ -52485,6 +52908,7 @@ true
 "name": "",
 "script": "Route131_EventScript_Talia",
 "sight": "5",
+"trainer": "TRAINER_TALIA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 52,
 "y": 27
@@ -52534,6 +52958,7 @@ true
 "name": "",
 "script": "Route132_EventScript_Gilbert",
 "sight": "2",
+"trainer": "TRAINER_GILBERT",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 40,
 "y": 13
@@ -52547,6 +52972,7 @@ true
 "name": "",
 "script": "Route132_EventScript_Dana",
 "sight": "2",
+"trainer": "TRAINER_DANA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 6
@@ -52573,6 +52999,7 @@ true
 "name": "",
 "script": "Route132_EventScript_Kiyo",
 "sight": "4",
+"trainer": "TRAINER_KIYO",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 9,
 "y": 15
@@ -52586,6 +53013,7 @@ true
 "name": "",
 "script": "Route132_EventScript_Ronald",
 "sight": "1",
+"trainer": "TRAINER_RONALD",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 49,
 "y": 28
@@ -52599,6 +53027,7 @@ true
 "name": "",
 "script": "Route132_EventScript_Paxton",
 "sight": "4",
+"trainer": "TRAINER_PAXTON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 33,
 "y": 26
@@ -52612,6 +53041,7 @@ true
 "name": "",
 "script": "Route132_EventScript_Darcy",
 "sight": "4",
+"trainer": "TRAINER_DARCY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 33,
 "y": 31
@@ -52625,6 +53055,7 @@ true
 "name": "",
 "script": "Route132_EventScript_Makayla",
 "sight": "4",
+"trainer": "TRAINER_MAKAYLA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 21,
 "y": 30
@@ -52638,6 +53069,7 @@ true
 "name": "",
 "script": "Route132_EventScript_Jonathan",
 "sight": "4",
+"trainer": "TRAINER_JONATHAN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 21,
 "y": 25
@@ -52692,6 +53124,7 @@ true
 "name": "",
 "script": "Route133_EventScript_Franklin",
 "sight": "3",
+"trainer": "TRAINER_FRANKLIN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 68,
 "y": 27
@@ -52705,6 +53138,7 @@ true
 "name": "",
 "script": "Route133_EventScript_Linda",
 "sight": "3",
+"trainer": "TRAINER_LINDA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 13,
 "y": 3
@@ -52718,6 +53152,7 @@ true
 "name": "",
 "script": "Route133_EventScript_Debra",
 "sight": "3",
+"trainer": "TRAINER_DEBRA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 68,
 "y": 28
@@ -52757,6 +53192,7 @@ true
 "name": "",
 "script": "Route133_EventScript_Beck",
 "sight": "2",
+"trainer": "TRAINER_BECK",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 14
@@ -52770,6 +53206,7 @@ true
 "name": "",
 "script": "Route133_EventScript_Warren",
 "sight": "4",
+"trainer": "TRAINER_WARREN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 37,
 "y": 15
@@ -52783,6 +53220,7 @@ true
 "name": "",
 "script": "Route133_EventScript_Mollie",
 "sight": "3",
+"trainer": "TRAINER_MOLLIE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 56,
 "y": 11
@@ -52796,6 +53234,7 @@ true
 "name": "",
 "script": "Route133_EventScript_Conor",
 "sight": "3",
+"trainer": "TRAINER_CONOR",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 56,
 "y": 15
@@ -52855,6 +53294,7 @@ true
 "name": "",
 "script": "Route134_EventScript_Jack",
 "sight": "2",
+"trainer": "TRAINER_JACK",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 49,
 "y": 9
@@ -52868,6 +53308,7 @@ true
 "name": "",
 "script": "Route134_EventScript_Laurel",
 "sight": "3",
+"trainer": "TRAINER_LAUREL",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 58,
 "y": 7
@@ -52881,6 +53322,7 @@ true
 "name": "",
 "script": "Route134_EventScript_Aaron",
 "sight": "2",
+"trainer": "TRAINER_AARON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 41,
 "y": 23
@@ -52894,6 +53336,7 @@ true
 "name": "",
 "script": "Route134_EventScript_Alex",
 "sight": "6",
+"trainer": "TRAINER_ALEX",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 24,
 "y": 23
@@ -52907,6 +53350,7 @@ true
 "name": "",
 "script": "Route134_EventScript_Hitoshi",
 "sight": "5",
+"trainer": "TRAINER_HITOSHI",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 49,
 "y": 16
@@ -52920,6 +53364,7 @@ true
 "name": "",
 "script": "Route134_EventScript_Marley",
 "sight": "2",
+"trainer": "TRAINER_MARLEY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 43,
 "y": 23
@@ -52933,6 +53378,7 @@ true
 "name": "",
 "script": "Route134_EventScript_Kelvin",
 "sight": "6",
+"trainer": "TRAINER_KELVIN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 24,
 "y": 30
@@ -52946,6 +53392,7 @@ true
 "name": "",
 "script": "Route134_EventScript_Reyna",
 "sight": "5",
+"trainer": "TRAINER_REYNA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 50,
 "y": 16
@@ -52959,6 +53406,7 @@ true
 "name": "",
 "script": "Route134_EventScript_Hudson",
 "sight": "3",
+"trainer": "TRAINER_HUDSON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 63,
 "y": 14
@@ -54373,6 +54821,7 @@ true
 "name": "",
 "script": "RustboroCity_Gym_EventScript_Roxanne",
 "sight": "0",
+"trainer": "TRAINER_ROXANNE_1",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 5,
 "y": 2
@@ -54386,6 +54835,7 @@ true
 "name": "",
 "script": "RustboroCity_Gym_EventScript_Josh",
 "sight": "2",
+"trainer": "TRAINER_JOSH",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 5,
 "y": 13
@@ -54399,6 +54849,7 @@ true
 "name": "",
 "script": "RustboroCity_Gym_EventScript_Tommy",
 "sight": "3",
+"trainer": "TRAINER_TOMMY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 3,
 "y": 9
@@ -54425,6 +54876,7 @@ true
 "name": "",
 "script": "RustboroCity_Gym_EventScript_Marc",
 "sight": "3",
+"trainer": "TRAINER_MARC",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 1,
 "y": 6
@@ -55242,6 +55694,7 @@ true
 "name": "LOCALID_RUSTURF_TUNNEL_GRUNT",
 "script": "RusturfTunnel_EventScript_Grunt",
 "sight": "0",
+"trainer": "TRAINER_GRUNT_RUSTURF_TUNNEL",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 14,
 "y": 5
@@ -55281,6 +55734,7 @@ true
 "name": "",
 "script": "RusturfTunnel_EventScript_Mike",
 "sight": "3",
+"trainer": "TRAINER_MIKE_2",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 32,
 "y": 13
@@ -56220,6 +56674,7 @@ true
 "name": "",
 "script": "SeafloorCavern_Room1_EventScript_Grunt1",
 "sight": "2",
+"trainer": "TRAINER_GRUNT_SEAFLOOR_CAVERN_1",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 8,
 "y": 6
@@ -56233,6 +56688,7 @@ true
 "name": "",
 "script": "SeafloorCavern_Room1_EventScript_Grunt2",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_SEAFLOOR_CAVERN_2",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 15,
 "y": 10
@@ -56526,6 +56982,7 @@ true
 "name": "",
 "script": "SeafloorCavern_Room3_EventScript_Shelly",
 "sight": "6",
+"trainer": "TRAINER_SHELLY_SEAFLOOR_CAVERN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 9,
 "y": 5
@@ -56539,6 +56996,7 @@ true
 "name": "",
 "script": "SeafloorCavern_Room3_EventScript_Grunt5",
 "sight": "4",
+"trainer": "TRAINER_GRUNT_SEAFLOOR_CAVERN_5",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 5,
 "y": 5
@@ -56591,6 +57049,7 @@ true
 "name": "",
 "script": "SeafloorCavern_Room4_EventScript_Grunt3",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_SEAFLOOR_CAVERN_3",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 5,
 "y": 8
@@ -56604,6 +57063,7 @@ true
 "name": "",
 "script": "SeafloorCavern_Room4_EventScript_Grunt4",
 "sight": "3",
+"trainer": "TRAINER_GRUNT_SEAFLOOR_CAVERN_4",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 5,
 "y": 12
@@ -71311,6 +71771,7 @@ true
 "name": "LOCALID_OCEANIC_MUSEUM_2F_CAPT_STERN",
 "script": "SlateportCity_OceanicMuseum_2F_EventScript_CaptStern",
 "sight": "0",
+"trainer": "TRAINER_GRUNT_MUSEUM_1",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 13,
 "y": 6
@@ -72508,6 +72969,7 @@ false
 "name": "",
 "script": "SootopolisCity_Gym_1F_EventScript_Juan",
 "sight": "0",
+"trainer": "TRAINER_JUAN_1",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 8,
 "y": 2
@@ -72573,6 +73035,7 @@ false
 "name": "",
 "script": "SootopolisCity_Gym_B1F_EventScript_Andrea",
 "sight": "1",
+"trainer": "TRAINER_ANDREA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 17
@@ -72586,6 +73049,7 @@ false
 "name": "",
 "script": "SootopolisCity_Gym_B1F_EventScript_Connie",
 "sight": "1",
+"trainer": "TRAINER_CONNIE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 9,
 "y": 19
@@ -72599,6 +73063,7 @@ false
 "name": "",
 "script": "SootopolisCity_Gym_B1F_EventScript_Brianna",
 "sight": "1",
+"trainer": "TRAINER_BRIANNA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 12,
 "y": 7
@@ -72612,6 +73077,7 @@ false
 "name": "",
 "script": "SootopolisCity_Gym_B1F_EventScript_Bridget",
 "sight": "5",
+"trainer": "TRAINER_BRIDGET",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 11,
 "y": 9
@@ -72625,6 +73091,7 @@ false
 "name": "",
 "script": "SootopolisCity_Gym_B1F_EventScript_Tiffany",
 "sight": "4",
+"trainer": "TRAINER_TIFFANY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 5,
 "y": 6
@@ -72638,6 +73105,7 @@ false
 "name": "",
 "script": "SootopolisCity_Gym_B1F_EventScript_Bethany",
 "sight": "2",
+"trainer": "TRAINER_BETHANY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 8
@@ -72651,6 +73119,7 @@ false
 "name": "",
 "script": "SootopolisCity_Gym_B1F_EventScript_Crissy",
 "sight": "2",
+"trainer": "TRAINER_CRISSY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 8
@@ -72664,6 +73133,7 @@ false
 "name": "",
 "script": "SootopolisCity_Gym_B1F_EventScript_Olivia",
 "sight": "3",
+"trainer": "TRAINER_OLIVIA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 9,
 "y": 7
@@ -72677,6 +73147,7 @@ false
 "name": "",
 "script": "SootopolisCity_Gym_B1F_EventScript_Daphne",
 "sight": "3",
+"trainer": "TRAINER_DAPHNE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 6,
 "y": 13
@@ -72690,6 +73161,7 @@ false
 "name": "",
 "script": "SootopolisCity_Gym_B1F_EventScript_Annika",
 "sight": "3",
+"trainer": "TRAINER_ANNIKA",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 13
@@ -73983,6 +74455,7 @@ false
 "name": "",
 "script": "SSTidalLowerDeck_EventScript_Phillip",
 "sight": "3",
+"trainer": "TRAINER_PHILLIP",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 10,
 "y": 4
@@ -73996,6 +74469,7 @@ false
 "name": "",
 "script": "SSTidalLowerDeck_EventScript_Leonard",
 "sight": "3",
+"trainer": "TRAINER_LEONARD",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 7,
 "y": 4
@@ -74055,6 +74529,7 @@ false
 "name": "",
 "script": "SSTidalRooms_EventScript_Colton",
 "sight": "0",
+"trainer": "TRAINER_COLTON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 7
@@ -74068,6 +74543,7 @@ false
 "name": "",
 "script": "SSTidalRooms_EventScript_Micah",
 "sight": "3",
+"trainer": "TRAINER_MICAH",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 34,
 "y": 11
@@ -74081,6 +74557,7 @@ false
 "name": "",
 "script": "SSTidalRooms_EventScript_Thomas",
 "sight": "0",
+"trainer": "TRAINER_THOMAS",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 21,
 "y": 5
@@ -74094,6 +74571,7 @@ false
 "name": "",
 "script": "SSTidalRooms_EventScript_Jed",
 "sight": "1",
+"trainer": "TRAINER_LEA_AND_JED",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 5,
 "y": 14
@@ -74107,6 +74585,7 @@ false
 "name": "",
 "script": "SSTidalRooms_EventScript_Lea",
 "sight": "1",
+"trainer": "TRAINER_LEA_AND_JED",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 4,
 "y": 14
@@ -74120,6 +74599,7 @@ false
 "name": "",
 "script": "SSTidalRooms_EventScript_Garret",
 "sight": "3",
+"trainer": "TRAINER_GARRET",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 22,
 "y": 11
@@ -74133,6 +74613,7 @@ false
 "name": "",
 "script": "SSTidalRooms_EventScript_Naomi",
 "sight": "0",
+"trainer": "TRAINER_NAOMI",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 15,
 "y": 6
@@ -76810,6 +77291,7 @@ true
 "name": "",
 "script": "VictoryRoad_1F_EventScript_Edgar",
 "sight": "3",
+"trainer": "TRAINER_EDGAR",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 33,
 "y": 22
@@ -76823,6 +77305,7 @@ true
 "name": "",
 "script": "VictoryRoad_1F_EventScript_Hope",
 "sight": "4",
+"trainer": "TRAINER_HOPE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 6,
 "y": 15
@@ -76836,6 +77319,7 @@ true
 "name": "",
 "script": "VictoryRoad_1F_EventScript_Albert",
 "sight": "3",
+"trainer": "TRAINER_ALBERT",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 27,
 "y": 34
@@ -76888,6 +77372,7 @@ true
 "name": "",
 "script": "VictoryRoad_1F_EventScript_ExitWally",
 "sight": "0",
+"trainer": "TRAINER_WALLY_VR_2",
 "trainer_type": "TRAINER_TYPE_NONE",
 "x": 31,
 "y": 9
@@ -76901,6 +77386,7 @@ true
 "name": "",
 "script": "VictoryRoad_1F_EventScript_Katelynn",
 "sight": "2",
+"trainer": "TRAINER_KATELYNN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 29,
 "y": 17
@@ -76914,6 +77400,7 @@ true
 "name": "",
 "script": "VictoryRoad_1F_EventScript_Quincy",
 "sight": "2",
+"trainer": "TRAINER_QUINCY",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 32,
 "y": 17
@@ -77149,6 +77636,7 @@ true
 "name": "",
 "script": "VictoryRoad_B1F_EventScript_Samuel",
 "sight": "3",
+"trainer": "TRAINER_SAMUEL",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 37,
 "y": 12
@@ -77162,6 +77650,7 @@ true
 "name": "",
 "script": "VictoryRoad_B1F_EventScript_Shannon",
 "sight": "4",
+"trainer": "TRAINER_SHANNON",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 26,
 "y": 16
@@ -77175,6 +77664,7 @@ true
 "name": "",
 "script": "VictoryRoad_B1F_EventScript_Michelle",
 "sight": "2",
+"trainer": "TRAINER_MICHELLE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 5,
 "y": 21
@@ -77227,6 +77717,7 @@ true
 "name": "",
 "script": "VictoryRoad_B1F_EventScript_Mitchell",
 "sight": "4",
+"trainer": "TRAINER_MITCHELL",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 14,
 "y": 16
@@ -77240,6 +77731,7 @@ true
 "name": "",
 "script": "VictoryRoad_B1F_EventScript_Halle",
 "sight": "3",
+"trainer": "TRAINER_HALLE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 14,
 "y": 20
@@ -77341,6 +77833,7 @@ true
 "name": "",
 "script": "VictoryRoad_B2F_EventScript_Vito",
 "sight": "2",
+"trainer": "TRAINER_VITO",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 15,
 "y": 6
@@ -77354,6 +77847,7 @@ true
 "name": "",
 "script": "VictoryRoad_B2F_EventScript_Owen",
 "sight": "4",
+"trainer": "TRAINER_OWEN",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 43,
 "y": 14
@@ -77367,6 +77861,7 @@ true
 "name": "",
 "script": "VictoryRoad_B2F_EventScript_Caroline",
 "sight": "2",
+"trainer": "TRAINER_CAROLINE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 2,
 "y": 17
@@ -77380,6 +77875,7 @@ true
 "name": "",
 "script": "VictoryRoad_B2F_EventScript_Julie",
 "sight": "2",
+"trainer": "TRAINER_JULIE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 35,
 "y": 22
@@ -77406,6 +77902,7 @@ true
 "name": "",
 "script": "VictoryRoad_B2F_EventScript_Dianne",
 "sight": "2",
+"trainer": "TRAINER_DIANNE",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 25,
 "y": 18
@@ -77419,6 +77916,7 @@ true
 "name": "",
 "script": "VictoryRoad_B2F_EventScript_Felix",
 "sight": "2",
+"trainer": "TRAINER_FELIX",
 "trainer_type": "TRAINER_TYPE_NORMAL",
 "x": 25,
 "y": 21

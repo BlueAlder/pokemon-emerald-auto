@@ -96,6 +96,9 @@ class NavCaps:
     ignore_story_objects: bool = False  # plan through NPCs that a script may move away
     fly: tuple = ()             # State we land on for every town Fly can reach
     mach: bool = False          # Mach Bike dashes over cracked floors (Sky Pillar)
+    avoid_trainers: float = 0.0   # extra cost per step in an unbeaten trainer's sight
+    # (off: trainers are the cheapest experience -- avoiding them at 60 per
+    # step doubled the grinding before Brawly)
 
     def grid_caps(self) -> Caps:
         return Caps(surf=self.surf, waterfall=self.waterfall)
@@ -109,6 +112,7 @@ class Obstacles:
     triggers: set = field(default_factory=set)    # active coord scripts (soft)
     boulders: set = field(default_factory=set)    # Strength boulders
     soft: set = field(default_factory=set)        # NPCs placed by map data only
+    sight: set = field(default_factory=set)       # seen by a trainer not beaten yet
 
 
 FALL_TILES = {MB["MB_CRACKED_FLOOR"], MB["MB_CRACKED_FLOOR_HOLE"], const("MB_CRACKED_ICE")}
@@ -251,7 +255,46 @@ class Planner:
                 except (ValueError, KeyError):
                     pass
         obs.walls |= {(x, y) for (m, x, y) in self.learned_blocks if m == map_id}
+        obs.sight = self._trainer_sight(map_id, live_objects)
         return obs
+
+    _DIRS = {"UP": (0, -1), "DOWN": (0, 1), "LEFT": (-1, 0), "RIGHT": (1, 0)}
+
+    def _trainer_sight(self, map_id: str, live_objects=None) -> set:
+        """Tiles an unbeaten trainer on map_id would spot us on: along the way
+        it faces (all four for those that turn or wander), up to its sight
+        range, stopped by walls. Trainer battles are ~45 s of game time each;
+        routes pay to go round the ones that are cheap to go round."""
+        out: set = set()
+        tmpls = [t for t in maps()[map_id]["objects"] if t.get("trainer")]
+        if not tmpls:
+            return out
+        start = _CONSTS.get("TRAINER_FLAGS_START", 0x500)
+        where = {o.local_id: (o.x, o.y) for o in live_objects or () if not o.is_player}
+        g = self.grid(map_id)
+        for t in tmpls:
+            if t["trainer"] not in _CONSTS or self.game.flag(start + _CONSTS[t["trainer"]]):
+                continue                        # beaten: never fights again
+            flag = t["flag"]
+            if flag and flag != "0" and self._flag(flag):
+                continue                        # not there
+            try:
+                rng = int(str(t.get("sight") or "0"), 0)
+            except ValueError:
+                rng = 0
+            if rng <= 0:
+                continue
+            x0, y0 = where.get(t["local_id"], (t["x"], t["y"]))
+            mv = t["movement"].replace("MOVEMENT_TYPE_", "")
+            dirs = [d for d in self._DIRS if d in mv] if mv.startswith("FACE_") else list(self._DIRS)
+            for d in dirs:
+                dx, dy = self._DIRS[d]
+                for k in range(1, rng + 1):
+                    x, y = x0 + dx * k, y0 + dy * k
+                    if not g.inside(x, y) or g.collision(x, y):
+                        break
+                    out.add((x, y))
+        return out
 
     @staticmethod
     def _all_triggers(map_id: str) -> set:
@@ -501,6 +544,8 @@ class Planner:
                                  if ls.map != s.map]
             for ns, action, d, c in edges:
                 nc = cost + c
+                if caps.avoid_trainers and ns.map == s.map and (ns.x, ns.y) in ob.sight:
+                    nc += caps.avoid_trainers
                 if nc < dist.get(ns, 1e18):
                     dist[ns] = nc
                     prev[ns] = (s, (action, d))

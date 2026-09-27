@@ -41,6 +41,10 @@ class Agent:
         self.ctl.health_check = self._health_check
         self.ctl.fly_hook = self._fly
         self.ctl.bike_hook = self.ride
+        self.ctl.repel_hook = self.maybe_repel
+        self.ctl.repel_ready = lambda: not self.wild_wanted() and (
+            self.game.var("VAR_REPEL_STEP_COUNT") > 0
+            or any(self.game.has_item(n) for n, _ in self.REPELS))
         self.grinding: dict | None = None      # who/what level while grind_to runs (TUI)
         self.training: dict | None = None      # team target while train() runs (TUI)
         self.started = time.time()
@@ -464,8 +468,10 @@ class Agent:
 
     MART_EXCLUDE = ("BATTLE_FRONTIER", "TRAINER_HILL")
 
-    def shop(self, wants: dict[str, int]) -> None:
-        """Buy `wants` (capped by money) at the nearest Marts that stock them."""
+    def shop(self, wants: dict[str, int], max_steps: int | None = None) -> None:
+        """Buy `wants` (capped by money) at the nearest Marts that stock them.
+        With max_steps, only from a Mart that close (restocking on the way:
+        unlimited, it once walked 720 steps for Hyper Potions)."""
         from .menus import buy
         wants = {k: v for k, v in wants.items() if v > 0}
         stock = [(mid, m["script"], set(m["items"])) for mid, info in maps().items()
@@ -478,11 +484,23 @@ class Agent:
             if best == 0:
                 log.info("SHOP nobody sells %s", sorted(wants))
                 return
-            places = {mid for mid, _, items in stock if len(set(wants) & items) == best}
+            places = {mid for mid, _, items in stock
+                      if len(set(wants) & items) == (best if max_steps is None else 1) or
+                      (max_steps is not None and set(wants) & items)}
 
             def at_mart(st, places=places):
                 return st.map in places
             at_mart.maps = places
+            if max_steps is not None:
+                self.ctl.planner.narrow = True
+                from .nav import NavCaps
+                walk = NavCaps(**{**self.ctl.nav_caps().__dict__, "fly": ()})
+                plan = self.ctl.planner.plan(self.ctl.state(), at_mart, walk,
+                                             live=MapGrid.from_ram(self.game),
+                                             live_objects=self.game.objects())
+                if plan is None or len(plan) > max_steps:
+                    log.info("SHOP no Mart within %d steps for %s", max_steps, sorted(wants))
+                    return
             self.ctl.goto(at_mart, desc="nearest Mart with " + ",".join(sorted(wants)))
             here = self.game.map_id()
             script, items = max(((sc, it) for mid, sc, it in stock if mid == here),
@@ -513,6 +531,43 @@ class Agent:
         log.info("LEAGUE supplies: %s", wants)
         self.shop(wants)
 
+    # Wild battles cost ~38 s of game time each and a run met ~200 of them
+    # just walking: travel under a Repel (it keeps away anything below the
+    # lead's level), except while grinding or catching.
+    REPELS = [("ITEM_MAX_REPEL", 250), ("ITEM_SUPER_REPEL", 200), ("ITEM_REPEL", 100)]
+
+    def wild_wanted(self) -> bool:
+        # Random encounters give less experience per battle than a grinding
+        # spot picked for it: travel under a Repel always, grind when a
+        # target asks (135 random encounters were ~45 minutes of a run).
+        return bool(self.grinding or self.training or self.battle.policy.catch_species
+                    or self.__dict__.get("_want_wilds"))
+
+    def maybe_repel(self) -> None:
+        if self.wild_wanted() or self.game.var("VAR_REPEL_STEP_COUNT") > 0:
+            return
+        item = next((n for n, _ in self.REPELS if self.game.has_item(n)), None)
+        if item is None or not self.ctl.free():
+            return
+        try:
+            self.use_item(item)
+        except Stuck as exc:
+            log.info("REPEL failed: %s", exc)
+            for _ in range(4):
+                self.ctl.press("B", release=12)
+            self.pump()
+            return
+        log.info("REPEL %s (%d steps)", item, self.game.var("VAR_REPEL_STEP_COUNT"))
+        if self.game.var("VAR_REPEL_STEP_COUNT") == 0:
+            log.info("REPELDBG mode=%s text=%r held=%d", self.game.mode(),
+                     self.game.string_var4()[-60:], self.game.has_item(item))
+
+    def repel_to_buy(self) -> str:
+        """The best Repel the marts on our way sell by now."""
+        badges = self.game.badges()
+        return ("ITEM_MAX_REPEL" if badges >= 7 else
+                "ITEM_SUPER_REPEL" if badges >= 5 else "ITEM_REPEL")
+
     def restock(self) -> None:
         """Keep a sensible stock of healing items and balls for the stage we are at."""
         badges = self.game.badges()
@@ -524,8 +579,22 @@ class Agent:
         if badges >= 1 and self.game.has_item("ITEM_POKE_BALL") + self.game.has_item(
                 "ITEM_GREAT_BALL") < 5:
             wants["ITEM_GREAT_BALL" if badges >= 3 else "ITEM_POKE_BALL"] = 5
+        # X items stand in for levels in boss fights (Battle.setup_choice).
+        xs = [("ITEM_X_ATTACK", 2), ("ITEM_X_SPEED", 2)] if badges >= 1 else []
+        if badges >= 3:
+            xs.append(("ITEM_X_SPECIAL", 4))
+        for item, n in xs:
+            if self.game.has_item(item) == 0 and self.game.money() > 4000:
+                wants[item] = n
+        repel = self.repel_to_buy()
+        held = sum(self.game.has_item(n) for n, _ in self.REPELS)
+        price = {"ITEM_REPEL": 350, "ITEM_SUPER_REPEL": 500, "ITEM_MAX_REPEL": 700}[repel]
+        if held < 3:
+            n = min(10, max(0, (self.game.money() - 2500) // price))
+            if n >= 3:
+                wants[repel] = n
         if sum(wants.values()) and self.game.money() > 1500:
-            self.shop(wants)
+            self.shop(wants, max_steps=80)
 
     # -- move learning ------------------------------------------------------------------
     KEEP_MOVES = {"MOVE_SURF", "MOVE_STRENGTH", "MOVE_CUT", "MOVE_ROCK_SMASH",
@@ -624,12 +693,11 @@ class Agent:
         _bag_ready(self.ctl)
         order = self.game.bag_order(pocket)
         want = order.index(iid)
-        for _ in range(80):
-            cur = self._bag_pos()["index"][pidx]
-            if cur == want:
-                break
-            self.ctl.press("DOWN" if cur < want else "UP", release=6)
-        self.ctl.press("A", release=16)                  # context menu
+        # Check what the game actually opened: a Super Repel was "used" as
+        # the X Speed next to it, wasting both.
+        from .menus import open_item_context
+        if not open_item_context(self.ctl, pidx, want, iid):
+            raise Stuck(f"bag: could not select {item}")
         if give or register:
             # Context menus are grids: USE GIVE / TOSS CANCEL (items) or USE
             # REGISTER / - CANCEL (key items); the second entry is top right.
@@ -849,7 +917,7 @@ class Agent:
                 self.needs_heal() or self.low_attack_pp(0.35)
                 or (m.important and self.low_attack_pp())):
             self.heal()
-        if self.game.badges() >= 2 and self.game.money() > 3000 \
+        if self.game.badges() >= 1 and self.game.money() > 1500 \
                 and not self.game.map_id().startswith(self.NO_CENTER_MAPS):
             try:
                 self.restock()
@@ -867,9 +935,10 @@ class Agent:
         losses = self.battle.trainer_losses
         if losses > self._losses_seen:
             if m.important and self._same_fight(getattr(self, "_started", None), m.name):
+                league = m.name in self.LEAGUE_FIGHTS
+                step, cap = (2, 4) if league else (self.LOSS_BOOST, self.LOSS_BOOST_MAX)
                 self._level_boost[m.name] = min(
-                    self.LOSS_BOOST_MAX, self._level_boost.get(m.name, 0) +
-                    self.LOSS_BOOST * (losses - self._losses_seen))
+                    cap, self._level_boost.get(m.name, 0) + step * (losses - self._losses_seen))
                 log.info("LOST a trainer battle: %s targets now +%d levels",
                          m.name, self._level_boost[m.name])
             self._losses_seen = losses

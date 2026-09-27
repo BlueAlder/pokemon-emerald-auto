@@ -332,6 +332,15 @@ def main() -> int:
         if patches:
             maps[mid]["tile_patches"] = patches
 
+        # Which trainer an object is (its script's trainerbattle): the planner
+        # routes around the sight of those not beaten yet.
+        for o in maps[mid]["objects"]:
+            for line in labels.get(o.get("script") or "", []):
+                m = re.match(r"trainerbattle_\w+ (TRAINER_\w+)", line)
+                if m:
+                    o["trainer"] = m.group(1)
+                    break
+
         # Marts: which clerk script sells which items (pokemart <list label>).
         marts = []
         for label, body in labels.items():

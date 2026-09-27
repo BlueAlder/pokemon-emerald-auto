@@ -157,7 +157,7 @@ def e4_team_level(a) -> int:
     """The Elite Four team target: with Rayquaza (L70) carrying the fights,
     Swampert as it arrives from Victory Road (~60; grinding it to 66 cost
     57 minutes); without it, 66."""
-    return 58 if any(p.species_name == "RAYQUAZA" for p in a.game.party()) else 66
+    return 56 if any(p.species_name == "RAYQUAZA" for p in a.game.party()) else 66
 
 
 def e4_lead(a) -> int:
@@ -209,7 +209,7 @@ ROUTE: list[Milestone] = [
     Milestone("back_to_lab", var_ge("VAR_BIRCH_LAB_STATE", 3),
               [goto("MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB")], heal_first=False),
     Milestone("rival_route103", var_ge("VAR_BIRCH_LAB_STATE", 4),
-              [goto("MAP_ROUTE103"), talk("MAP_ROUTE103", 2)], min_level=7, important=True),
+              [goto("MAP_ROUTE103"), talk("MAP_ROUTE103", 2)], min_level=6, important=True),
     Milestone("pokedex", flag("FLAG_RECEIVED_POKEDEX_FROM_BIRCH"),
               [goto("MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB")]),
     Milestone("running_shoes", flag("FLAG_RECEIVED_RUNNING_SHOES"),
@@ -226,7 +226,9 @@ ROUTE: list[Milestone] = [
     Milestone("badge_stone", badges(1),
               [goto("MAP_RUSTBORO_CITY_GYM"),
                talk_s("MAP_RUSTBORO_CITY_GYM", "EventScript_Roxanne")],
-              min_level=15, important=True),
+              # 16 exactly: evolving at 16 is when Marshtomp learns Mud Shot (a
+              # jump from 15 to 17 in Roxanne's fight skipped it).
+              min_level=16, important=True),
 
     # -- Devon Goods, Mr. Briney, Dewford ------------------------------------------
     Milestone("goods_stolen", any_of(flag("FLAG_DEVON_GOODS_STOLEN"),
@@ -234,7 +236,7 @@ ROUTE: list[Milestone] = [
               [goto("MAP_RUSTBORO_CITY", 23, 22)]),
     Milestone("recover_goods", flag("FLAG_RECOVERED_DEVON_GOODS"),
               [goto("MAP_RUSTURF_TUNNEL"), talk_s("MAP_RUSTURF_TUNNEL", "EventScript_Grunt")],
-              min_level=16),
+              min_level=15),
     Milestone("pokenav", flag("FLAG_RECEIVED_POKENAV"),
               [goto("MAP_RUSTBORO_CITY", 30, 11)]),
     Milestone("sail_dewford", flag("FLAG_VISITED_DEWFORD_TOWN"),
@@ -246,10 +248,10 @@ ROUTE: list[Milestone] = [
                       talk_s("MAP_ROUTE104_MR_BRINEYS_HOUSE", "EventScript_Briney")),
                goto("MAP_DEWFORD_TOWN_POKEMON_CENTER_1F"),   # respawn here, not Rustboro
                goto("MAP_DEWFORD_TOWN_GYM"), talk_s("MAP_DEWFORD_TOWN_GYM", "EventScript_Brawly")],
-              min_level=22, important=True),
+              min_level=20, important=True),
     Milestone("steven_letter", flag("FLAG_DELIVERED_STEVEN_LETTER"),
               [goto("MAP_GRANITE_CAVE_STEVENS_ROOM"),
-               talk_s("MAP_GRANITE_CAVE_STEVENS_ROOM", "EventScript_Steven")], min_level=21),
+               talk_s("MAP_GRANITE_CAVE_STEVENS_ROOM", "EventScript_Steven")], min_level=19),
     Milestone("sail_slateport", flag("FLAG_VISITED_SLATEPORT_CITY"),
               [prefer("SLATEPORT"),
                unless(reachable("MAP_SLATEPORT_CITY"), goto("MAP_DEWFORD_TOWN"),
@@ -270,13 +272,13 @@ ROUTE: list[Milestone] = [
                goto("MAP_SLATEPORT_CITY_OCEANIC_MUSEUM_1F", 9, 7),
                goto("MAP_SLATEPORT_CITY_OCEANIC_MUSEUM_2F"),
                talk_s("MAP_SLATEPORT_CITY_OCEANIC_MUSEUM_2F", "EventScript_CaptStern")],
-              min_level=24),
+              min_level=23),
     Milestone("reach_mauville", flag("FLAG_VISITED_MAUVILLE_CITY"),
               [unless(reachable("MAP_SLATEPORT_CITY"), prefer("SLATEPORT"), goto("MAP_DEWFORD_TOWN"),
                       talk_s("MAP_DEWFORD_TOWN", "EventScript_Briney")),
                goto("MAP_SLATEPORT_CITY_POKEMON_CENTER_1F"),   # respawn on the mainland
                goto("MAP_MAUVILLE_CITY")],
-              min_level=27, important=True, hint="walk Route 110 to Mauville (the rival waits there)"),
+              min_level=25, important=True, hint="walk Route 110 to Mauville (the rival waits there)"),
     # Rydel's free bike: the Mach Bike, the only way over the Sky Pillar's
     # cracked floors once Rayquaza has woken (see catch_rayquaza).
     Milestone("mach_bike", has_item("ITEM_MACH_BIKE"),
@@ -288,12 +290,12 @@ ROUTE: list[Milestone] = [
                talk_s("MAP_MAUVILLE_CITY_HOUSE1", "EventScript_RockSmashDude")]),
     Milestone("wally_mauville", flag("FLAG_DEFEATED_WALLY_MAUVILLE"),
               [answer("battle me", True), goto("MAP_MAUVILLE_CITY"),
-               talk_s("MAP_MAUVILLE_CITY", "EventScript_Wally")], min_level=27),
+               talk_s("MAP_MAUVILLE_CITY", "EventScript_Wally")], min_level=25),
     Milestone("badge_dynamo", badges(3),
               [goto("MAP_MAUVILLE_CITY_GYM"),
                call("goto_puzzle", "MAP_MAUVILLE_CITY_GYM", 5, 2),
                talk_s("MAP_MAUVILLE_CITY_GYM", "EventScript_Wattson")],
-              min_level=27, important=True),
+              min_level=25, important=True),
 
     # -- Rock Smash north, Meteor Falls, Mt. Chimney, Lavaridge -----------------------------
     Milestone("teach_rock_smash", lambda a: any(p.knows("MOVE_ROCK_SMASH") for p in a.game.party()),
@@ -302,19 +304,19 @@ ROUTE: list[Milestone] = [
               [goto("MAP_RUSTURF_TUNNEL"), interact("MAP_RUSTURF_TUNNEL", 24, 5)],
               hint="smash the rocks in Rusturf Tunnel so Wanda's boyfriend gives HM04 Strength"),
     Milestone("meteor_falls", var_ge("VAR_METEOR_FALLS_STATE", 1),
-              [goto("MAP_METEOR_FALLS_1F_1R", 14, 18)], min_level=30),
+              [goto("MAP_METEOR_FALLS_1F_1R", 14, 18)], min_level=28),
     Milestone("mt_chimney", flag("FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY"),
               [unless(reachable("MAP_MT_CHIMNEY"),
                       goto("MAP_ROUTE112_CABLE_CAR_STATION"),
                       talk_s("MAP_ROUTE112_CABLE_CAR_STATION", "EventScript_Attendant")),
                goto("MAP_MT_CHIMNEY"), talk_s("MAP_MT_CHIMNEY", "EventScript_Maxie")],
-              min_level=32, important=True),
+              min_level=30, important=True),
     Milestone("reach_lavaridge", flag("FLAG_VISITED_LAVARIDGE_TOWN"),
               [goto("MAP_LAVARIDGE_TOWN")]),
     Milestone("badge_heat", badges(4),
               [goto("MAP_LAVARIDGE_TOWN_GYM_1F"),
                talk_s("MAP_LAVARIDGE_TOWN_GYM_1F", "EventScript_Flannery")],
-              min_level=34, important=True),
+              min_level=31, important=True),
 
     # -- an HM carrier, Norman, Surf -------------------------------------------------------
     Milestone("catch_marill", lambda a: any(p.species_name in ("MARILL", "AZUMARILL")
@@ -325,7 +327,7 @@ ROUTE: list[Milestone] = [
               [call("teach", "ITEM_HM04", ["AZUMARILL", "MARILL"])]),
     Milestone("badge_balance", badges(5),
               [goto("MAP_PETALBURG_CITY_GYM"), petalburg_gym],
-              min_level=40, important=True, hint="beat Norman at the Petalburg Gym"),
+              min_level=36, important=True, hint="beat Norman at the Petalburg Gym"),
     Milestone("surf", flag("FLAG_RECEIVED_HM_SURF"),
               [goto("MAP_PETALBURG_CITY"), goto("MAP_PETALBURG_CITY_WALLYS_HOUSE")],
               hint="get HM03 Surf from Wally's father in Petalburg"),
@@ -336,7 +338,7 @@ ROUTE: list[Milestone] = [
     Milestone("weather_institute", var_ge("VAR_WEATHER_INSTITUTE_STATE", 1),
               [goto("MAP_ROUTE119_WEATHER_INSTITUTE_2F"),
                talk_s("MAP_ROUTE119_WEATHER_INSTITUTE_2F", "EventScript_Shelly")],
-              min_level=42, important=True, hint="drive Team Aqua out of the Weather Institute"),
+              min_level=38, important=True, hint="drive Team Aqua out of the Weather Institute"),
     # The rival waits on Route 119 (Grovyle): go in healed, like a boss.
     Milestone("reach_fortree", flag("FLAG_VISITED_FORTREE_CITY"), [goto("MAP_FORTREE_CITY")],
               important=True),
@@ -348,7 +350,7 @@ ROUTE: list[Milestone] = [
               hint="reveal the invisible Kecleon blocking the Fortree Gym"),
     Milestone("badge_feather", badges(6),
               [goto("MAP_FORTREE_CITY_GYM"), call("fortree_gym")],
-              min_level=44, important=True, hint="beat Winona at the Fortree Gym"),
+              min_level=41, important=True, hint="beat Winona at the Fortree Gym"),
     # Fly (the Feather Badge lets it be used): Wingull live on Route 121, on
     # the way to Lilycove. From here on the planner flies between towns.
     Milestone("catch_flyer", lambda a: any(p.species_name in ("WINGULL", "PELIPPER")
@@ -367,8 +369,15 @@ ROUTE: list[Milestone] = [
 
     # -- Lilycove, Mt. Pyre, the Magma Hideout, the harbor, the Aqua Hideout -------------
     Milestone("reach_lilycove", flag("FLAG_VISITED_LILYCOVE_CITY"), [goto("MAP_LILYCOVE_CITY")]),
+    # The Department Store sells every X item: enough for the rest of the
+    # game (boss fights set up instead of grinding levels).
+    Milestone("x_items", lambda a: a.game.badges() >= 7 or
+              a.game.has_item("ITEM_X_SPECIAL") >= 8,
+              [goto("MAP_LILYCOVE_CITY_DEPARTMENT_STORE_3F"),
+               call("shop", {"ITEM_X_SPECIAL": 14, "ITEM_X_SPEED": 8, "ITEM_X_ATTACK": 8})],
+              hint="stock X items at the Lilycove Department Store"),
     Milestone("mt_pyre_summit", var_ge("VAR_MT_PYRE_STATE", 1),
-              [goto("MAP_MT_PYRE_SUMMIT", 23, 7)], min_level=46, important=True,
+              [goto("MAP_MT_PYRE_SUMMIT", 23, 7)], min_level=44, important=True,
               hint="climb Mt. Pyre and stop Team Aqua at the summit"),
     Milestone("magma_emblem", has_item("ITEM_MAGMA_EMBLEM"),
               [goto("MAP_MT_PYRE_SUMMIT"), talk_s("MAP_MT_PYRE_SUMMIT", "EventScript_OldLady")],
@@ -379,7 +388,7 @@ ROUTE: list[Milestone] = [
               hint="use the Magma Emblem to open the hidden entrance on Jagged Pass"),
     Milestone("magma_hideout", flag("FLAG_GROUDON_AWAKENED_MAGMA_HIDEOUT"),
               [goto("MAP_MAGMA_HIDEOUT_4F"), talk_s("MAP_MAGMA_HIDEOUT_4F", "EventScript_Maxie")],
-              min_level=48, important=True, hint="stop Maxie deep inside the Magma Hideout"),
+              min_level=45, important=True, hint="stop Maxie deep inside the Magma Hideout"),
     Milestone("slateport_harbor", var_ge("VAR_SLATEPORT_HARBOR_STATE", 2),
               [unless(lambda a: a.game.var("VAR_SLATEPORT_CITY_STATE") >= 2,
                       goto("MAP_SLATEPORT_CITY"),
@@ -389,7 +398,7 @@ ROUTE: list[Milestone] = [
     Milestone("aqua_hideout", flag("FLAG_HIDE_LILYCOVE_CITY_AQUA_GRUNTS"),
               [goto("MAP_AQUA_HIDEOUT_B2F"), goto("MAP_AQUA_HIDEOUT_B2F", 28, 17),
                talk_s("MAP_AQUA_HIDEOUT_B2F", "EventScript_Matt")],
-              min_level=48, important=True, hint="clear the Team Aqua Hideout in Lilycove"),
+              min_level=45, important=True, hint="clear the Team Aqua Hideout in Lilycove"),
     Milestone("master_ball", any_of(flag("FLAG_ITEM_AQUA_HIDEOUT_B1F_MASTER_BALL"),
                                     has_item("ITEM_MASTER_BALL")),
               [goto("MAP_AQUA_HIDEOUT_B1F"),
@@ -406,12 +415,12 @@ ROUTE: list[Milestone] = [
               # double battle at 53 (it arrives at ~52), while training a
               # partner here costs ~110 battles in L27 grass. (55 cost 38 min;
               # at 52 Solrock's Solar Beam in sun once blacked it out.)
-              min_level=53, important=True,
+              min_level=50, important=True,
               hint="beat Tate and Liza at the Mossdeep Gym"),
     Milestone("space_center", flag("FLAG_DEFEATED_MAGMA_SPACE_CENTER"),
               [goto("MAP_MOSSDEEP_CITY_SPACE_CENTER_2F"),
                talk_s("MAP_MOSSDEEP_CITY_SPACE_CENTER_2F", "SpaceCenter_2F_EventScript_Steven")],
-              min_level=52, important=True, hint="stop Team Magma at the Mossdeep Space Center"),
+              min_level=50, important=True, hint="stop Team Magma at the Mossdeep Space Center"),
     Milestone("dive", flag("FLAG_RECEIVED_HM_DIVE"),
               [goto("MAP_MOSSDEEP_CITY_STEVENS_HOUSE"),
                talk_s("MAP_MOSSDEEP_CITY_STEVENS_HOUSE", "StevensHouse_EventScript_Steven")],
@@ -421,7 +430,7 @@ ROUTE: list[Milestone] = [
     Milestone("seafloor_cavern", var_ge("VAR_SEAFLOOR_CAVERN_STATE", 1),
               [goto("MAP_SEAFLOOR_CAVERN_ROOM9"),
                trigger("MAP_SEAFLOOR_CAVERN_ROOM9", "SeafloorCavern_Room9_EventScript_ArchieAwakenKyogre")],
-              min_level=53, important=True, hint="stop Archie in the Seafloor Cavern"),
+              min_level=51, important=True, hint="stop Archie in the Seafloor Cavern"),
 
     # -- Sootopolis, the Cave of Origin, Sky Pillar, Rayquaza ------------------------------
     Milestone("sootopolis", var_ge("VAR_SOOTOPOLIS_CITY_STATE", 2), [goto(SOOTOPOLIS)],
@@ -438,7 +447,7 @@ ROUTE: list[Milestone] = [
     Milestone("rayquaza", var_ge("VAR_SKY_PILLAR_STATE", 1),
               [goto("MAP_SKY_PILLAR_OUTSIDE"), goto("MAP_SKY_PILLAR_TOP"),
                trigger("MAP_SKY_PILLAR_TOP", "AwakenRayquaza")],
-              min_level=53, hint="climb the Sky Pillar and wake Rayquaza"),
+              min_level=51, hint="climb the Sky Pillar and wake Rayquaza"),
     Milestone("rayquaza_calms", var_ge("VAR_SKY_PILLAR_STATE", 2), [goto(SOOTOPOLIS)],
               hint="return to Sootopolis where Rayquaza stops the fight"),
     Milestone("maxie_archie", flag("FLAG_SOOTOPOLIS_ARCHIE_MAXIE_LEAVE"),
@@ -464,7 +473,7 @@ ROUTE: list[Milestone] = [
     Milestone("badge_rain", badges(8),
               [goto("MAP_SOOTOPOLIS_CITY_GYM_1F"),
                call("ice_gym", "MAP_SOOTOPOLIS_CITY_GYM_1F", "EventScript_Juan", 8)],
-              min_level=53, team_level=46, important=True,
+              min_level=51, team_level=46, important=True,
               hint="crack the ice floors of the Sootopolis Gym and beat Juan"),
 
     # -- Ever Grande, Victory Road, the Elite Four ------------------------------------------
@@ -475,7 +484,7 @@ ROUTE: list[Milestone] = [
     Milestone("victory_road", flag("FLAG_DEFEATED_WALLY_VICTORY_ROAD"),
               [goto("MAP_VICTORY_ROAD_1F"),
                trigger("MAP_VICTORY_ROAD_1F", "WallyBattleTrigger1")],
-              min_level=60, important=True, hint="beat Wally at the entrance of Victory Road"),
+              min_level=56, important=True, hint="beat Wally at the entrance of Victory Road"),
     # Five fights with no Pokemon Center: two Pokemon run out of PP. Recruit
     # two more from Victory Road (Hariyama catches easily) and train them.
     # (By species, not party size: the Fly carrier takes a slot too.)
@@ -502,7 +511,7 @@ ROUTE: list[Milestone] = [
                       call("teach", tm, list(who), *([old] if old else [])))
                for tm, mv, who, old in E4_TMS_FULL]),
     Milestone("enter_league", flag("FLAG_ENTERED_ELITE_FOUR"),
-              [goto(LEAGUE), call("league_supplies"),
+              [goto(LEAGUE), call("league_supplies"), call("heal"),
                talk_s(LEAGUE, "PokemonLeague_1F_EventScript_DoorGuard")],
               min_level=e4_lead, team_level=e4_team_level, team_size=4, important=True,
               hint="cross Victory Road and show the guards all eight badges"),

@@ -41,6 +41,41 @@ def _bag_ready(ctl, timeout: int = 120) -> None:
         ctl.idle(2)
 
 
+def open_item_context(ctl, pidx: int, want: int, item_id: int) -> bool:
+    """With the bag list up on pocket pidx: cursor to row `want`, press A,
+    and make sure the context menu opened on item_id. The cursor read can lag
+    a press, and an A pressed too early is dropped (then the stored item is
+    stale): wait for the menu before judging, and only back out of an open
+    menu (B in the list itself would close the bag)."""
+    emu = ctl.emu
+    for _ in range(4):
+        for _ in range(80):
+            cur = bag_pos(emu)["index"][pidx]
+            if cur == want:
+                ctl.idle(4)
+                if bag_pos(emu)["index"][pidx] == want:
+                    break
+                continue
+            ctl.press("DOWN" if cur < want else "UP", release=6)
+        ctl.press("A", release=8)
+        opened = False
+        for _ in range(15):
+            if any("ItemContext" in t for t in ctl.game.active_tasks()):
+                opened = True
+                break
+            ctl.idle(2)
+        if not opened:
+            continue                           # the press was dropped: again
+        if emu.u16(S["gSpecialVar_ItemId"]) == item_id:
+            ctl.idle(8)
+            return True
+        log.info("BAG opened %s, not %s; again",
+                 const_names()["ITEM_"].get(emu.u16(S["gSpecialVar_ItemId"])),
+                 const_names()["ITEM_"].get(item_id))
+        ctl.press("B", release=16)             # close the menu, back to the list
+    return False
+
+
 def bag_select(ctl, item_id: int) -> None:
     """With the bag open, move to item_id and press A (opens its context menu)."""
     game, emu = ctl.game, ctl.emu
@@ -55,12 +90,7 @@ def bag_select(ctl, item_id: int) -> None:
         _bag_ready(ctl)
     _bag_ready(ctl)
     want = game.bag_order(pocket).index(item_id)
-    for _ in range(80):
-        cur = bag_pos(emu)["index"][pidx]
-        if cur == want:
-            break
-        ctl.press("DOWN" if cur < want else "UP", release=6)
-    ctl.press("A", release=16)
+    open_item_context(ctl, pidx, want, item_id)
 
 
 def buy(ctl, clerk_talk, wants: dict[str, int]) -> None:

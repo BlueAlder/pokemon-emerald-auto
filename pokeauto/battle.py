@@ -66,6 +66,61 @@ class Battle:
         self.faints = 0                          # our Pokemon knocked out (TUI)
 
     # -- state helpers ----------------------------------------------------------------
+    # Leaders, the Elite Four and the Champion, the teams' admins and bosses,
+    # the rival: fights worth a turn or two of X items (gTrainers[].trainerClass).
+    BOSS_CLASSES = {0x0B, 0x0D, 0x1F, 0x20, 0x26, 0x31, 0x32, 0x35}
+    # Gen 3 splits by type: these are special (Surf, Muddy Water), the rest
+    # physical (Earthquake, Mud Shot).
+    SPECIAL_TYPES = {"TYPE_FIRE", "TYPE_WATER", "TYPE_GRASS", "TYPE_ELECTRIC", "TYPE_PSYCHIC",
+                     "TYPE_ICE", "TYPE_DRAGON", "TYPE_DARK"}
+    X_PER_BATTLE = 6
+
+    def boss_battle(self) -> bool:
+        if not self.is_trainer():
+            return False
+        tid = self.emu.u16(S["gTrainerBattleOpponent_A"])
+        return self.emu.u8(S["gTrainers"] + tid * 0x28 + 1) in self.BOSS_CLASSES
+
+    def setup_choice(self, battler: int, me_bm, best, threat: float, we_first: bool,
+                     we_ko: bool):
+        """An X item instead of attacking, in a boss fight: +2 in the stat our
+        best move uses, then +2 Speed if they outspeed us. Speedrunners win
+        these fights levels lower this way, and levels cost the most time.
+        Only while healthy and not about to be knocked out."""
+        if not self.boss_battle() or self._items_disabled or self.is_double():
+            return None
+        top = max((m.level for m in self.game.party() if not m.is_egg), default=0)
+        if me_bm.level < top - 5:
+            return None                        # the HM carriers are not worth boosting
+        if self.__dict__.get("_x_used", 0) >= self.X_PER_BATTLE:
+            return None
+        if me_bm.hp < me_bm.max_hp * 0.6 or threat * 2 >= me_bm.hp:
+            return None
+        # Boosts last the whole battle: against a full team, set up on the
+        # first harmless Pokemon (+4, as the runners do) and sweep the rest in
+        # one hit each -- which also saves the PP five League fights eat.
+        left = sum(1 for m in self.game.enemy_party() if m.hp > 0)
+        if we_ko and left <= 1:
+            return None                        # the last one falls to this hit
+        cap = 10 if left >= 3 else 8           # stage 6 is neutral: +4 / +2
+        mv = me_bm.moves[best.slot] if best.kind == "move" and best.slot < 4 else None
+        if mv is None or not mv.id:
+            return None
+        info = self.data.move(mv.id)
+        tname = const_names()["TYPE_"].get(info.type, "")
+        want = [("ITEM_X_SPECIAL", 4) if tname in self.SPECIAL_TYPES else ("ITEM_X_ATTACK", 1)]
+        if not we_first:
+            want.append(("ITEM_X_SPEED", 3))
+        stages = me_bm.stat_stages
+        for item, idx in want:
+            limit = cap if idx != 3 else 8     # Speed: +2 is plenty
+            if stages[idx] < limit and self.game.has_item(item) \
+                    and C(item) not in getattr(self, "_bad_items", ()):
+                self._x_used = self.__dict__.get("_x_used", 0) + 1
+                return Choice("item", C(item), target=self.game.battler_party_index(battler),
+                              why=f"set up: {item[5:]} (stage {stages[idx] - 6:+d})")
+        return None
+
     def is_trainer(self) -> bool:
         return bool(self.game.battle_type() & C("BATTLE_TYPE_TRAINER"))
 
@@ -93,6 +148,7 @@ class Battle:
         self._pending.clear()
         self._submitted.clear()
         self._refused.clear()
+        self._x_used = 0
         self._bad_switch = set()
         self._shift_tries = {}
         self._items_disabled = False
@@ -103,6 +159,7 @@ class Battle:
         idle = 0
         start = self.emu.frame
         trainer = self.is_trainer()
+        self._was_boss = self.boss_battle()
         seen = False
         alive = {m.personality for m in self.game.party() if not m.fainted and not m.is_egg}
         while True:
@@ -116,6 +173,12 @@ class Battle:
                 if seen and trainer and self.game.battle_outcome() & 0x7F in (2, 3):
                     self.trainer_losses += 1
                     log.info("BATTLE lost to a trainer (%d so far)", self.trainer_losses)
+                if seen:
+                    # One line per battle: what kind and what it cost in game
+                    # time (frames / 60), for the run-time accounting.
+                    log.info("BATTLE END %s %s %d turns %.0fs", "trainer" if trainer else "wild",
+                             "boss" if trainer and self.__dict__.get("_was_boss") else "-",
+                             len(self.log) - self._log_start, (self.emu.frame - start) / 60)
                 return
             seen = True
             if self.emu.frame - start > 60 * 60 * 30:
@@ -393,6 +456,14 @@ class Battle:
 
     # -- party menu (switching in) ------------------------------------------------------
     def _party_menu(self, tasks) -> None:
+        pending = self._pending.get(0)
+        if pending and pending.kind == "item" and \
+                "Choose a" in self.game.string_var4() and "Use on" not in self.game.string_var4():
+            # The switch menu with an item pending: the item step is over (or
+            # was cancelled). Back out rather than SHIFT the active Pokemon.
+            self._pending.pop(0, None)
+            self.ctl.press("B", release=10)
+            return
         target = self._switch_target()
         addr = S["gPartyMenu"] + 9
         if target is None:
@@ -426,9 +497,14 @@ class Battle:
                       struct.unpack("b", self.emu.read(addr, 1))[0], self._pending.get(0))
             self.ctl.press("A", release=10)          # SHIFT / SEND OUT is first
             return
-        if self.game.fading():
-            self.ctl.idle(4)
-            return
+        # Let the menu finish sliding in -- but only so long: in the battle
+        # party menu for an item ("Use on which POKeMON?") the fade flag can
+        # stay up, and waiting on it every time meant A was never pressed and
+        # the potion or X item "had no effect".
+        for _ in range(10):
+            if not self.game.fading():
+                break
+            self.ctl.idle(3)
         for _ in range(8):
             if struct.unpack("b", self.emu.read(addr, 1))[0] == target:
                 break
@@ -590,6 +666,9 @@ class Battle:
                 if cure:
                     return Choice("item", C(cure), target=self.game.battler_party_index(battler),
                                   why=f"cure {kind}")
+        setup = self.setup_choice(battler, me_bm, best, threat, we_first, we_ko)
+        if setup:
+            return setup
         if threat >= me_bm.hp and not (we_ko and we_first):
             sw = self.best_switch(exclude_active=True, against=foe)
             if sw is not None and self._switch_value(sw, foe) > 0.35 and not self._trapped():

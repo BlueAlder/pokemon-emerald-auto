@@ -269,6 +269,14 @@ class RouteRunner:
                 log.info("ROUTE time budget exhausted at %s", m.name)
                 return False
             log.info("=== MILESTONE %s === %s", m.name, a.status_line())
+            # The level the next few boss fights ask for: below it, wild
+            # battles on the way are experience we would grind for anyway.
+            ahead = [x for x in self.milestones[self.active_index:self.active_index + 8]
+                     if x.important]
+            try:
+                a.level_needed = max((x.targets(a)[0] for x in ahead), default=0)
+            except Exception:
+                a.level_needed = 0
             self.first = self.first or m.name
             self._open = m
             ok = False

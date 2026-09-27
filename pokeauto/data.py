@@ -107,6 +107,25 @@ class GameData:
             self._wild = out
         return self._wild
 
+    def wild_kinds(self) -> dict[str, tuple[bool, bool]]:
+        """map id -> (has land encounters, has water encounters). Behaviours
+        alone overstate it: shop floors use the cave-floor tile, and town
+        ponds are water with no table."""
+        if getattr(self, "_wild_kinds", None) is None:
+            from .symbols import maps
+            by_num = {(v["group"], v["num"]): k for k, v in maps().items()}
+            out = {}
+            base = S["gWildMonHeaders"]
+            for i in range(S.size("gWildMonHeaders") // 20):
+                grp, num, land, water = struct.unpack("<BBxxII", self.emu.read(base + i * 20, 12))
+                if grp == 0xFF:
+                    break
+                mid = by_num.get((grp, num))
+                if mid:
+                    out[mid] = (bool(land), bool(water))
+            self._wild_kinds = out
+        return self._wild_kinds
+
     def type_chart(self) -> dict[tuple[int, int], float]:
         """(attacking type, defending type) -> multiplier, from gTypeEffectiveness."""
         if self._chart is None:
