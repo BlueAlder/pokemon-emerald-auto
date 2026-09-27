@@ -57,8 +57,65 @@ class Agent:
         self.ctl.goto(at(map_id, x, y), desc=f"{map_id}" + (f"({x},{y})" if x is not None else ""),
                       **kw)
 
+    # Gym leaders and the story bosses you talk to: whoever's script this is
+    # gets a full team (from the bag) right before the conversation starts.
+    BOSS_SCRIPT = re.compile(r"EventScript_(Roxanne|Brawly|Wattson|Flannery|Norman|Winona|"
+                             r"TateAndLiza|Juan|Maxie|Archie|Matt|Tabitha|Shelly)\b")
+
     def talk(self, map_id: str, local_id: int):
-        self.ctl.talk(map_id, local_id)
+        obj = next((o for o in maps()[map_id]["objects"] if o["local_id"] == local_id), None)
+        boss = bool(obj and self.BOSS_SCRIPT.search(obj.get("script") or "")) \
+            and map_id not in ("MAP_MAUVILLE_CITY", "MAP_SOOTOPOLIS_CITY")   # talks, not fights
+        self.ctl.talk(map_id, local_id,
+                      before_press=(lambda: self.heal_before_boss(obj["script"])) if boss else None)
+
+    RESETTING_GYMS = ("MAP_FORTREE_CITY_GYM", "MAP_SOOTOPOLIS_CITY_GYM_1F",
+                      "MAP_SOOTOPOLIS_CITY_GYM_B1F", "MAP_MOSSDEEP_CITY_GYM")
+
+    def attack_budget(self, mon) -> float:
+        """Attacking PP left, weighted by power (Muddy Water's PP matter more
+        than Rock Smash's)."""
+        moves = [(mv, self.data.move(mv.id)) for mv in mon.moves if mv.id]
+        full = sum(info.power * info.pp for mv, info in moves if info.power)
+        return sum(info.power * mv.pp for mv, info in moves if info.power) / full if full else 1.0
+
+    def heal_before_boss(self, who: str) -> None:
+        """Revive, cure and top up the fighters from the bag, standing in front
+        of a boss: the gym's trainers on the way used to leave the team at half
+        HP for the leader, and a loss costs a trip back plus levels of grinding.
+        Only the fighters (the first two -- doubles -- and the trained team):
+        HM carriers do not need potions."""
+        from .emerald import team_pref
+        team = team_pref(self)
+        lead = self.lead()
+        # Potions cannot give PP back: Swampert met Norman with Muddy Water at
+        # 6/10 and lost. Where walking out keeps the gym's progress (beaten
+        # trainers stay beaten; not the puzzles that reset or are solved
+        # live), a Pokemon Center first, then the milestone runs again.
+        # Gyms only (their Center is next door) and once per boss: out of the
+        # Magma Hideout and back twice cost 47 minutes, and the way back
+        # through a dungeon spends the PP again.
+        here = self.game.map_id()
+        trips = self.__dict__.setdefault("_boss_center_trips", set())
+        if lead and "_GYM" in here and here not in self.RESETTING_GYMS \
+                and who not in trips and self.attack_budget(lead) < 0.6:
+            trips.add(who)
+            log.info("BOSS %s ahead: %s low on PP (%.0f%%), to a Pokemon Center first",
+                     who.split("EventScript_")[-1], lead.species_name,
+                     100 * self.attack_budget(lead))
+            self.heal()
+            # Back the way the milestone knows (Norman's doors open by its own
+            # routine): walking straight back could not get through them.
+            raise Stuck("healed before the boss; walking back")
+        fighters = {m.slot for m in self.game.party()
+                    if not m.is_egg and (m.slot < 2 or m.species_name in team)}
+        low = [m for m in self.game.party() if m.slot in fighters
+               and (m.fainted or m.hp_frac < 0.9 or m.status & 0xFF)]
+        if not low:
+            return
+        log.info("BOSS %s ahead: healing %s", who.split("EventScript_")[-1],
+                 ", ".join(f"{m.species_name} {m.hp}/{m.max_hp}" for m in low))
+        self.heal_with_items(min_frac=0.9, slots=fighters)
 
     def goto_puzzle(self, map_id: str, x: int, y: int):
         from .nav import adjacent as _adj
@@ -326,11 +383,12 @@ class Agent:
     POTION_HEAL = [("ITEM_POTION", 20), ("ITEM_SUPER_POTION", 50), ("ITEM_HYPER_POTION", 200),
                    ("ITEM_MAX_POTION", 999), ("ITEM_FULL_RESTORE", 999)]
 
-    def heal_with_items(self, min_frac: float = 0.8) -> None:
-        """Revive and top up the party from the bag (inside the Elite Four,
-        and inside gyms, where walking out breaks the puzzle's progress)."""
+    def heal_with_items(self, min_frac: float = 0.8, slots=None) -> None:
+        """Revive and top up the party (or just `slots`) from the bag (inside
+        the Elite Four, and inside gyms, where walking out breaks the puzzle's
+        progress)."""
         for mon in self.game.party():
-            if mon.is_egg:
+            if mon.is_egg or (slots is not None and mon.slot not in slots):
                 continue
             slot = mon.slot
             if mon.fainted:

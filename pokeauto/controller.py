@@ -1045,7 +1045,7 @@ class Controller:
         return False
 
     def talk(self, map_id: str, local_id: int, max_steps: int = 120,
-             pump_after: bool = True) -> None:
+             pump_after: bool = True, before_press=None) -> None:
         """Walk up to an NPC and press A facing them.
 
         NPCs wander, so this chases: one planned step at a time toward where
@@ -1087,6 +1087,10 @@ class Controller:
                               desc=f"near object {local_id}")
                 continue
             if s.map == map_id and self._talk_offset(map_id, s.x, s.y, o.x, o.y):
+                if before_press:
+                    before_press()             # e.g. top up before a boss
+                    before_press = None
+                    continue                   # re-read: they may have moved
                 self.face(facing_dir(s.x, s.y, o.x, o.y))
                 o2 = self.live_object(local_id)
                 if o2 and (o2.x, o2.y) == (o.x, o.y):
