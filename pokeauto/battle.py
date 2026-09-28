@@ -621,6 +621,15 @@ class Battle:
                 if not self._run_blocked():
                     return Choice("run", why="not worth fighting")
 
+        # Doubles (Tate & Liza): a partner with Rain Dance calls rain first.
+        # It washes out Solrock's sun, so Solar Beam is slow and halved
+        # instead of 4x on Swampert, and powers up Surf.
+        if self.is_double() and not wild and not self.emu.u16(S["gBattleWeather"]) & 0x7:
+            rd = next((i for i, mv in enumerate(me_bm.moves)
+                       if mv.id == C("MOVE_RAIN_DANCE") and mv.pp), None)
+            if rd is not None and rd not in self.unusable_slots(battler):
+                return Choice("move", rd, why="Rain Dance: rain washes out the sun")
+
         options = self.move_options(me_bm, me, foes, battler)
         banned = self.unusable_slots(battler)
         options = [o for o in options if o.kind != "move" or o.slot not in banned]

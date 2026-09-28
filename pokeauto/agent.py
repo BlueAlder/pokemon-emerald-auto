@@ -42,6 +42,11 @@ class Agent:
         self.ctl.fly_hook = self._fly
         self.ctl.bike_hook = self.ride
         self.ctl.repel_hook = self.maybe_repel
+        # Trainers are the cheapest experience while it is needed; above the
+        # next bosses' levels (late game, Rayquaza) each is ~45 s for nothing.
+        self.ctl.trainer_cost = lambda: 60.0 if (
+            self.lead() is not None and not self.grinding
+            and self.lead().level >= self.__dict__.get("level_needed", 99) + 2) else 0.0
         self.ctl.repel_ready = lambda: not self.wild_wanted() and (
             self.game.var("VAR_REPEL_STEP_COUNT") > 0
             or any(self.game.has_item(n) for n, _ in self.REPELS))
@@ -365,6 +370,14 @@ class Agent:
                   if m.species_name in TEAM_PREF else len(TEAM_PREF))
         if ace.slot != 0 and ace.species_name in TEAM_PREF:
             self.party_swap(0, ace.slot)
+
+    def partner(self, species: str) -> None:
+        """Put `species` second: the ace's partner in a double battle."""
+        mon = next((m for m in self.game.party() if m.species_name == species and not m.fainted),
+                   None)
+        if mon and mon.slot != 1 and len(self.game.party()) > 1:
+            log.info("PARTNER for doubles: %s", species)
+            self.party_swap(1, mon.slot)
 
     def lead_with(self, species: str) -> None:
         """Put `species` in front (if it is in the party and standing)."""

@@ -93,6 +93,7 @@ class Controller:
         self.halt = None                      # callable() -> True: stop pumping and walking now
         self.repel_hook = None                # callable() before a walk through wild grass/water
         self.repel_ready = None               # callable() -> True: a Repel is on or in the bag
+        self.trainer_cost = None              # callable() -> planner cost of a trainer's sight
         # POKEAUTO_FRAMES=1: every log line starts with the emulator frame,
         # so game time can be split by activity after a run.
         import os
@@ -391,7 +392,8 @@ class Controller:
         # Under a Repel, tall grass costs nothing extra: no detours around it.
         if avoid_grass and self.repel_ready and self.repel_ready():
             avoid_grass = 0.0
-        return NavCaps(
+        trainers = self.trainer_cost() if self.trainer_cost else 0.0
+        return NavCaps(avoid_trainers=trainers,
             strength=knows("MOVE_STRENGTH") and f("FLAG_BADGE04_GET"),
             dive=knows("MOVE_DIVE") and f("FLAG_BADGE07_GET"),
             surf=knows("MOVE_SURF") and f("FLAG_BADGE05_GET"),
