@@ -157,7 +157,7 @@ def e4_team_level(a) -> int:
     """The Elite Four team target: with Rayquaza (L70) carrying the fights,
     Swampert as it arrives from Victory Road (~60; grinding it to 66 cost
     57 minutes); without it, 66."""
-    return 56 if any(p.species_name == "RAYQUAZA" for p in a.game.party()) else 66
+    return 60 if any(p.species_name == "RAYQUAZA" for p in a.game.party()) else 66
 
 
 def e4_lead(a) -> int:
@@ -209,7 +209,7 @@ ROUTE: list[Milestone] = [
     Milestone("back_to_lab", var_ge("VAR_BIRCH_LAB_STATE", 3),
               [goto("MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB")], heal_first=False),
     Milestone("rival_route103", var_ge("VAR_BIRCH_LAB_STATE", 4),
-              [goto("MAP_ROUTE103"), talk("MAP_ROUTE103", 2)], min_level=6, important=True),
+              [goto("MAP_ROUTE103"), talk("MAP_ROUTE103", 2)], min_level=7, important=True),
     Milestone("pokedex", flag("FLAG_RECEIVED_POKEDEX_FROM_BIRCH"),
               [goto("MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB")]),
     Milestone("running_shoes", flag("FLAG_RECEIVED_RUNNING_SHOES"),
@@ -231,6 +231,13 @@ ROUTE: list[Milestone] = [
               min_level=16, important=True),
 
     # -- Devon Goods, Mr. Briney, Dewford ------------------------------------------
+    # X Attack / X Speed for Brawly (Mud Shot is physical): Rustboro's Mart
+    # is the last before Dewford, and the badge money pays for them.
+    Milestone("early_x_items", lambda a: a.game.badges() >= 2 or
+              a.game.has_item("ITEM_X_ATTACK") >= 2,
+              [goto("MAP_RUSTBORO_CITY_MART"),
+               call("shop", {"ITEM_X_ATTACK": 3, "ITEM_X_SPEED": 2})],
+              hint="buy X items in Rustboro for Brawly", optional=True),
     Milestone("goods_stolen", any_of(flag("FLAG_DEVON_GOODS_STOLEN"),
                                      flag("FLAG_RECOVERED_DEVON_GOODS")),
               [goto("MAP_RUSTBORO_CITY", 23, 22)]),
@@ -248,7 +255,7 @@ ROUTE: list[Milestone] = [
                       talk_s("MAP_ROUTE104_MR_BRINEYS_HOUSE", "EventScript_Briney")),
                goto("MAP_DEWFORD_TOWN_POKEMON_CENTER_1F"),   # respawn here, not Rustboro
                goto("MAP_DEWFORD_TOWN_GYM"), talk_s("MAP_DEWFORD_TOWN_GYM", "EventScript_Brawly")],
-              min_level=20, important=True),
+              min_level=22, important=True),
     Milestone("steven_letter", flag("FLAG_DELIVERED_STEVEN_LETTER"),
               [goto("MAP_GRANITE_CAVE_STEVENS_ROOM"),
                talk_s("MAP_GRANITE_CAVE_STEVENS_ROOM", "EventScript_Steven")], min_level=19),
@@ -278,7 +285,7 @@ ROUTE: list[Milestone] = [
                       talk_s("MAP_DEWFORD_TOWN", "EventScript_Briney")),
                goto("MAP_SLATEPORT_CITY_POKEMON_CENTER_1F"),   # respawn on the mainland
                goto("MAP_MAUVILLE_CITY")],
-              min_level=25, important=True, hint="walk Route 110 to Mauville (the rival waits there)"),
+              min_level=27, important=True, hint="walk Route 110 to Mauville (the rival waits there)"),
     # Rydel's free bike: the Mach Bike, the only way over the Sky Pillar's
     # cracked floors once Rayquaza has woken (see catch_rayquaza).
     Milestone("mach_bike", has_item("ITEM_MACH_BIKE"),
@@ -338,7 +345,7 @@ ROUTE: list[Milestone] = [
     Milestone("weather_institute", var_ge("VAR_WEATHER_INSTITUTE_STATE", 1),
               [goto("MAP_ROUTE119_WEATHER_INSTITUTE_2F"),
                talk_s("MAP_ROUTE119_WEATHER_INSTITUTE_2F", "EventScript_Shelly")],
-              min_level=38, important=True, hint="drive Team Aqua out of the Weather Institute"),
+              min_level=40, important=True, hint="drive Team Aqua out of the Weather Institute"),
     # The rival waits on Route 119 (Grovyle): go in healed, like a boss.
     Milestone("reach_fortree", flag("FLAG_VISITED_FORTREE_CITY"), [goto("MAP_FORTREE_CITY")],
               important=True),
@@ -350,7 +357,7 @@ ROUTE: list[Milestone] = [
               hint="reveal the invisible Kecleon blocking the Fortree Gym"),
     Milestone("badge_feather", badges(6),
               [goto("MAP_FORTREE_CITY_GYM"), call("fortree_gym")],
-              min_level=41, important=True, hint="beat Winona at the Fortree Gym"),
+              min_level=43, important=True, hint="beat Winona at the Fortree Gym"),
     # Fly (the Feather Badge lets it be used): Wingull live on Route 121, on
     # the way to Lilycove. From here on the planner flies between towns.
     Milestone("catch_flyer", lambda a: any(p.species_name in ("WINGULL", "PELIPPER")
@@ -415,7 +422,7 @@ ROUTE: list[Milestone] = [
               # double battle at 53 (it arrives at ~52), while training a
               # partner here costs ~110 battles in L27 grass. (55 cost 38 min;
               # at 52 Solrock's Solar Beam in sun once blacked it out.)
-              min_level=50, important=True,
+              min_level=55, important=True,
               hint="beat Tate and Liza at the Mossdeep Gym"),
     Milestone("space_center", flag("FLAG_DEFEATED_MAGMA_SPACE_CENTER"),
               [goto("MAP_MOSSDEEP_CITY_SPACE_CENTER_2F"),
@@ -537,6 +544,11 @@ ROUTE: list[Milestone] = [
                talk_s("MAP_EVER_GRANDE_CITY_DRAKES_ROOM", "EventScript_Drake")],
               heal_first=False, important=True, hint="beat Drake of the Elite Four"),
     Milestone("champion", champion_beaten,
-              [call("heal_with_items"), call("rotate_lead"), e4_room("MAP_EVER_GRANDE_CITY_CHAMPIONS_ROOM")],
+              # Swampert leads: its Earthquake takes Wailord, Tentacruel,
+              # Whiscash and Milotic, while Rayquaza stays fresh for Ludicolo
+              # (4x on Swampert, and it heals) and Gyarados. Rayquaza leading
+              # was spent by Wailord: 14 losses to Wallace in six runs.
+              [call("heal_with_items"), call("rotate_lead"), call("lead_with", "SWAMPERT"),
+               e4_room("MAP_EVER_GRANDE_CITY_CHAMPIONS_ROOM")],
               heal_first=False, important=True, hint="beat Champion Wallace"),
 ]

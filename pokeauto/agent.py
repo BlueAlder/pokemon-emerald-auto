@@ -101,7 +101,7 @@ class Agent:
         # through a dungeon spends the PP again.
         here = self.game.map_id()
         trips = self.__dict__.setdefault("_boss_center_trips", set())
-        if lead and "_GYM" in here and here not in self.RESETTING_GYMS \
+        if lead and "_GYM" in here \
                 and who not in trips and self.attack_budget(lead) < 0.6:
             trips.add(who)
             log.info("BOSS %s ahead: %s low on PP (%.0f%%), to a Pokemon Center first",
@@ -333,6 +333,14 @@ class Agent:
         """Called between steps of every walk: detour to heal before it is too late."""
         if self.__dict__.get("_healing"):
             return False               # already walking to a Pokemon Center
+        lead = self.lead()
+        # Potions first: a walk to the Center crosses more trainers (one
+        # detour met four at 33 HP and lost), and often they are enough.
+        if lead and not lead.fainted and lead.hp_frac < 0.5 \
+                and any(self.game.has_item(n) for n, _ in self.POTION_HEAL):
+            self.heal_with_items(min_frac=0.8, slots={lead.slot})
+            if not self.needs_heal(0.4):
+                return False
         if self.game.party() and self.needs_heal(0.4):
             if self.game.map_id().startswith(self.NO_CENTER_MAPS):
                 self.heal_with_items()
@@ -357,6 +365,14 @@ class Agent:
                   if m.species_name in TEAM_PREF else len(TEAM_PREF))
         if ace.slot != 0 and ace.species_name in TEAM_PREF:
             self.party_swap(0, ace.slot)
+
+    def lead_with(self, species: str) -> None:
+        """Put `species` in front (if it is in the party and standing)."""
+        mon = next((m for m in self.game.party() if m.species_name == species and not m.fainted),
+                   None)
+        if mon and mon.slot != 0:
+            log.info("E4 lead: %s", species)
+            self.party_swap(0, mon.slot)
 
     def rotate_lead(self, foe_type: str | None = None) -> None:
         """Before each Elite Four fight: lead with the trained member that has
@@ -507,6 +523,13 @@ class Agent:
                                 key=lambda z: len(set(wants) & z[1]))
             clerk = next((o for o in maps()[here]["objects"] if o["script"] == script), None)
             if clerk is None:
+                # The clerk's own script picks the list (Rustboro's basic or
+                # expanded stock), so the list label is on no object: find
+                # the clerk by sprite; buy() reads what is really for sale.
+                clerk = next((o for o in maps()[here]["objects"]
+                              if o["gfx"] == "OBJ_EVENT_GFX_MART_EMPLOYEE"), None)
+                items = set().union(*(it for mid, sc, it in stock if mid == here))
+            if clerk is None:
                 raise Stuck(f"no clerk for {script} in {here}")
             basket = {k: v for k, v in wants.items() if k in items}
             buy(self.ctl, lambda: self.ctl.talk(here, clerk["local_id"], pump_after=False), basket)
@@ -571,7 +594,7 @@ class Agent:
     def restock(self) -> None:
         """Keep a sensible stock of healing items and balls for the stage we are at."""
         badges = self.game.badges()
-        potion = ("ITEM_HYPER_POTION" if badges >= 6 else
+        potion = ("ITEM_HYPER_POTION" if badges >= 4 else
                   "ITEM_SUPER_POTION" if badges >= 2 else "ITEM_POTION")
         want = {potion: 10 if badges >= 2 else 5}
         have = self.game.has_item(potion)

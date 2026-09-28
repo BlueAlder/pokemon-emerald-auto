@@ -94,6 +94,16 @@ class Battle:
             return None                        # the HM carriers are not worth boosting
         if self.__dict__.get("_x_used", 0) >= self.X_PER_BATTLE:
             return None
+        foes = self._foes()
+        # Boosting against a foe that boosts itself (Brawly's Bulk Up, Dragon
+        # Dance, Calm Mind...) only hands it free turns to do the same.
+        grow = {C(n) for n in ("EFFECT_ATTACK_UP", "EFFECT_ATTACK_UP_2", "EFFECT_BULK_UP",
+                               "EFFECT_DRAGON_DANCE", "EFFECT_CALM_MIND", "EFFECT_BELLY_DRUM",
+                               "EFFECT_SPECIAL_ATTACK_UP", "EFFECT_SPECIAL_ATTACK_UP_2")}
+        if foes and any(self.data.move(mv.id).effect in grow for mv in foes[0][1].moves if mv.id):
+            return None
+        if foes and foes[0][1].ability == C("ABILITY_TRUANT"):
+            threat /= 2                        # Slaking attacks every other turn
         if me_bm.hp < me_bm.max_hp * 0.6 or threat * 2 >= me_bm.hp:
             return None
         # Boosts last the whole battle: against a full team, set up on the
@@ -653,7 +663,7 @@ class Battle:
         if best.score >= 0.05 and (not wild or self.policy.important) \
                 and me_bm.hp < me_bm.max_hp * 0.35 \
                 and not (we_ko and we_first):
-            potion = self.best_potion(me_bm)
+            potion = self.best_potion(me_bm, threat)
             if potion and threat < me_bm.hp + potion[1]:
                 return Choice("item", potion[0], target=self.game.battler_party_index(battler),
                               why=f"heal: hp {me_bm.hp}, threat {threat:.0f}")
@@ -724,7 +734,10 @@ class Battle:
                 if eff in ("EFFECT_EXPLOSION",):
                     score *= 0.1
                 if eff in ("EFFECT_RECOIL", "EFFECT_DOUBLE_EDGE"):
-                    score *= 0.9
+                    # Recoil is a quarter of the damage dealt: low on HP it
+                    # ended Marshtomp over four route fights (33 -> 7 HP).
+                    recoil = min(dmg, fbm.hp) / (3 if eff == "EFFECT_DOUBLE_EDGE" else 4)
+                    score *= 0.9 if recoil < me_bm.hp * 0.25 else 0.4
                 # Two-turn moves (Fly, Dig, Dive included) hand the foe a free
                 # turn: Rayquaza's Fly let Wallace's Milotic Ice Beam it.
                 if eff in ("EFFECT_SOLAR_BEAM", "EFFECT_RAZOR_WIND", "EFFECT_SKY_ATTACK",
@@ -760,14 +773,16 @@ class Battle:
                     "freeze": ["ITEM_ICE_HEAL", "ITEM_FULL_HEAL", "ITEM_FULL_RESTORE"]}
     BALLS = ["ITEM_ULTRA_BALL", "ITEM_GREAT_BALL", "ITEM_POKE_BALL"]
 
-    def best_potion(self, me_bm):
+    def best_potion(self, me_bm, threat: float = 0.0):
         missing = me_bm.max_hp - me_bm.hp
         have = [(C(n), heal) for n, heal in self.POTIONS
                 if self.game.has_item(n) and C(n) not in getattr(self, "_bad_items", ())]
         if not have:
             return None
-        # smallest potion that covers most of the gap, else the biggest
-        enough = [h for h in have if h[1] >= missing * 0.7]
+        # The smallest potion that covers most of the gap and clearly outheals
+        # the next hit, else the biggest: Super Potions (50) against a 53 a
+        # turn Tropius were five lost turns in a row.
+        enough = [h for h in have if h[1] >= missing * 0.7 and min(h[1], missing) > threat * 1.3]
         return min(enough, key=lambda h: h[1]) if enough else max(have, key=lambda h: h[1])
 
     def catcher(self, battle, fbm):
