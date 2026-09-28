@@ -425,7 +425,7 @@ ROUTE: list[Milestone] = [
               # double battle at 53 (it arrives at ~52), while training a
               # partner here costs ~110 battles in L27 grass. (55 cost 38 min;
               # at 52 Solrock's Solar Beam in sun once blacked it out.)
-              min_level=50, important=True,
+              min_level=53, important=True,
               hint="beat Tate and Liza at the Mossdeep Gym"),
     Milestone("space_center", flag("FLAG_DEFEATED_MAGMA_SPACE_CENTER"),
               [goto("MAP_MOSSDEEP_CITY_SPACE_CENTER_2F"),

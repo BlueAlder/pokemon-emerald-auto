@@ -303,7 +303,14 @@ class Battle:
                          else "not using it again this battle")
         self._item_count_before = None
         self._submitted.pop(battler, None)
-        self._refused.pop(battler, None)
+        # A move bounced just now (Torment, Taunt...) sends the game back to
+        # this menu: keep it banned for this decision, or the same move was
+        # chosen again forever (Sidney's Shiftry, a 30-minute stuck battle).
+        keep = self.__dict__.setdefault("_refused_keep", set())
+        if battler in keep:
+            keep.discard(battler)
+        else:
+            self._refused.pop(battler, None)
         choice = self.decide(battler)
         if choice.kind == "item" and self._items_disabled:
             choice = self._no_item_fallback(battler)
@@ -356,6 +363,7 @@ class Battle:
             if bounces[key] >= 2 or re.search(
                     r"disabled|can't|cannot|no PP|no moves|taunt|torment|won't", text, re.I):
                 self._refused.setdefault(battler, set()).add(slot)
+                self.__dict__.setdefault("_refused_keep", set()).add(battler)
                 log.info("BATTLE move slot %d refused (%r); choosing again", slot, text[-50:])
                 self._pending.pop(battler, None)
         choice = self._pending.get(battler)

@@ -44,9 +44,12 @@ class Agent:
         self.ctl.repel_hook = self.maybe_repel
         # Trainers are the cheapest experience while it is needed; above the
         # next bosses' levels (late game, Rayquaza) each is ~45 s for nothing.
+        # (Only once Rayquaza carries the fights, or far ahead: skipping them
+        # mid-game left Swampert at bare minimum levels for the next boss.)
         self.ctl.trainer_cost = lambda: 60.0 if (
-            self.lead() is not None and not self.grinding
-            and self.lead().level >= self.__dict__.get("level_needed", 99) + 2) else 0.0
+            self.lead() is not None and not self.grinding and (
+                any(p.species_name == "RAYQUAZA" for p in self.game.party())
+                or self.lead().level >= self.__dict__.get("level_needed", 99) + 5)) else 0.0
         self.ctl.repel_ready = lambda: not self.wild_wanted() and (
             self.game.var("VAR_REPEL_STEP_COUNT") > 0
             or any(self.game.has_item(n) for n, _ in self.REPELS))
